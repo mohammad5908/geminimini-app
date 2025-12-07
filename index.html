@@ -3,63 +3,66 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Gemini Store</title>
+<title>Gemini Premium Store</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
 <script>
-tailwind.config={theme:{extend:{colors:{p:'#8b5cf6',s:'#6366f1',d:'#0f0c29',g:'rgba(255,255,255,0.08)'},animation:{'spin-slow':'spin 3s linear infinite','pulse-fast':'pulse 1.5s cubic-bezier(0.4,0,0.6,1) infinite'}}}}
+tailwind.config={theme:{extend:{colors:{p:'#8b5cf6',s:'#6366f1',d:'#0f0c29',g:'rgba(255,255,255,0.05)'},animation:{'spin-slow':'spin 3s linear infinite','pulse-fast':'pulse 1.5s cubic-bezier(0.4,0,0.6,1) infinite'}}}}
 </script>
 <style>
-body{font-family:'Vazirmatn',sans-serif;-webkit-tap-highlight-color:transparent;user-select:none}
-.glass{background:rgba(20,20,40,0.6);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.08)}
+body{font-family:'Vazirmatn',sans-serif;-webkit-tap-highlight-color:transparent;user-select:none;background-color:#050510}
+.glass{background:rgba(20,20,40,0.7);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.1)}
 .shimmer{background:linear-gradient(90deg,rgba(255,255,255,0.03) 25%,rgba(255,255,255,0.08) 50%,rgba(255,255,255,0.03) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 .fade-enter-active,.fade-leave-active{transition:opacity 0.2s}
 .fade-enter-from,.fade-leave-to{opacity:0}
-.slide-enter-active,.slide-leave-active{transition:all 0.3s ease}
+.slide-enter-active,.slide-leave-active{transition:all 0.3s cubic-bezier(0.4,0,0.2,1)}
 .slide-enter-from{opacity:0;transform:translateY(10px)}
 .slide-leave-to{opacity:0;transform:translateY(-10px)}
+::-webkit-scrollbar{width:0px}
 </style>
 </head>
-<body class="bg-[#050510] text-white min-h-screen overflow-hidden">
+<body class="text-white min-h-screen overflow-hidden">
 <div id="app" class="h-screen flex flex-col relative bg-[url('https://grainy-gradients.vercel.app/noise.svg')]">
 
 <transition name="fade">
-<div v-if="toast.v" class="fixed top-4 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-3 px-4 py-3 rounded-2xl shadow-2xl border border-white/10 glass">
-<i :class="toast.t==='e'?'fa-circle-xmark text-red-500':'fa-circle-check text-green-400'" class="fa-solid text-lg"></i>
+<div v-if="toast.v" class="fixed top-6 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-3 px-5 py-3 rounded-2xl shadow-2xl border border-white/10 glass min-w-[200px] justify-center">
+<i :class="toast.t==='e'?'fa-circle-xmark text-red-500':'fa-circle-check text-green-400'" class="fa-solid text-xl"></i>
 <span class="text-sm font-bold tracking-wide">{{toast.m}}</span>
 </div>
 </transition>
 
-<main class="flex-1 overflow-y-auto pb-24 px-4 pt-6 scrollbar-hide">
+<main class="flex-1 overflow-y-auto pb-28 px-4 pt-6">
 <div v-if="loading" class="space-y-4">
-<div class="h-48 rounded-3xl shimmer w-full mb-6"></div>
+<div class="h-52 rounded-3xl shimmer w-full mb-6"></div>
 <div class="h-12 w-full rounded-xl shimmer mb-4"></div>
 <div v-for="i in 3" :key="i" class="h-24 rounded-2xl shimmer w-full"></div>
 </div>
 
 <div v-else>
 <transition name="slide" mode="out-in">
+
 <div v-if="tab==='shop'" key="shop">
-<div class="relative h-48 rounded-3xl overflow-hidden mb-6 glass flex items-center justify-center group shadow-lg shadow-p/20">
-<div class="absolute inset-0 bg-gradient-to-tr from-p/40 to-transparent opacity-50"></div>
-<img src="https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg" class="w-20 drop-shadow-[0_0_15px_rgba(255,255,255,0.5)] z-10 animate-pulse-fast">
-<div class="absolute bottom-4 text-xs text-white/50 font-mono tracking-widest">GEMINI CENTER</div>
+<div class="relative h-52 rounded-3xl overflow-hidden mb-8 glass flex items-center justify-center group shadow-2xl shadow-p/20 border border-white/10">
+<div class="absolute inset-0 bg-gradient-to-tr from-p/30 via-transparent to-s/20 opacity-60"></div>
+<img src="https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg" class="w-24 drop-shadow-[0_0_25px_rgba(139,92,246,0.6)] z-10 animate-pulse-fast">
+<div class="absolute bottom-4 right-4 text-xs text-white/70 font-mono tracking-widest border border-white/10 px-2 py-1 rounded-lg glass">OFFICIAL CENTER</div>
 </div>
 
-<h2 class="text-lg font-bold mb-4 flex items-center gap-2"><i class="fa-solid fa-layer-group text-p"></i> اشتراک‌های ویژه</h2>
+<h2 class="text-lg font-bold mb-4 flex items-center gap-2 px-1"><i class="fa-solid fa-gem text-p"></i> اشتراک‌های ویژه</h2>
 <div class="space-y-3">
-<div v-for="p in plans" :key="p.id" @click="addCart(p)" class="glass rounded-2xl p-4 flex justify-between items-center active:scale-95 transition-all border-r-4 hover:bg-white/5" :style="{borderRightColor:p.c}">
-<div class="flex items-center gap-4">
-<div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-xl shadow-inner"><i :class="p.i" :style="{color:p.c}"></i></div>
-<div><h3 class="font-bold text-base">{{p.n}}</h3><p class="text-[10px] text-gray-400 mt-1">{{p.d}}</p></div>
+<div v-for="p in plans" :key="p.id" @click="addCart(p)" class="glass rounded-2xl p-4 flex justify-between items-center active:scale-[0.98] transition-all border-r-4 hover:bg-white/5 relative overflow-hidden group" :style="{borderRightColor:p.c}">
+<div class="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="flex items-center gap-4 relative z-10">
+<div class="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center text-2xl shadow-inner border border-white/5"><i :class="p.i" :style="{color:p.c}"></i></div>
+<div><h3 class="font-bold text-base">{{p.n}}</h3><p class="text-[11px] text-gray-400 mt-1 flex items-center gap-1"><i class="fa-solid fa-check-circle text-[8px]"></i> {{p.d}}</p></div>
 </div>
-<div class="flex flex-col items-end">
-<span class="font-black text-lg text-white">{{p.pr}}</span>
-<button class="text-[10px] bg-white/10 px-2 py-0.5 rounded text-gray-300 mt-1 hover:bg-p hover:text-white transition-colors">افزودن</button>
+<div class="flex flex-col items-end relative z-10">
+<span class="font-black text-lg text-white tracking-tight">{{p.pr}}</span>
+<button class="text-[10px] bg-white/10 px-3 py-1 rounded-lg text-gray-300 mt-1 group-hover:bg-p group-hover:text-white transition-colors shadow-lg">خرید</button>
 </div>
 </div>
 </div>
@@ -67,88 +70,100 @@ body{font-family:'Vazirmatn',sans-serif;-webkit-tap-highlight-color:transparent;
 
 <div v-else-if="tab==='cart'" key="cart" class="h-full flex flex-col">
 <h2 class="text-xl font-bold mb-6 flex items-center gap-2"><i class="fa-solid fa-basket-shopping text-s"></i> سبد خرید</h2>
-<div v-if="!cart" class="flex-1 flex flex-col items-center justify-center opacity-50">
-<i class="fa-solid fa-cart-arrow-down text-6xl mb-4 text-gray-600"></i>
-<p class="text-sm">سبد خرید شما خالی است</p>
-<button @click="setTab('shop')" class="mt-4 px-6 py-2 bg-white/5 rounded-full text-xs hover:bg-white/10 transition">مشاهده محصولات</button>
+<div v-if="!cart" class="flex-1 flex flex-col items-center justify-center opacity-40 space-y-4">
+<div class="w-24 h-24 rounded-full bg-white/5 flex items-center justify-center"><i class="fa-solid fa-cart-arrow-down text-5xl text-gray-500"></i></div>
+<p class="text-sm font-medium">سبد خرید شما خالی است</p>
+<button @click="setTab('shop')" class="px-8 py-2.5 bg-p/20 border border-p/50 rounded-xl text-xs hover:bg-p hover:text-white transition-all">مشاهده فروشگاه</button>
 </div>
-<div v-else class="glass rounded-3xl p-6 relative overflow-hidden shadow-2xl">
-<div class="absolute -right-10 -top-10 w-32 h-32 bg-p/20 blur-3xl rounded-full animate-pulse-slow"></div>
-<div class="flex justify-between items-center mb-6 relative z-10">
-<div class="flex items-center gap-3">
-<div class="w-14 h-14 rounded-2xl bg-black/30 flex items-center justify-center text-2xl"><i :class="cart.i" :style="{color:cart.c}"></i></div>
-<div><h3 class="font-bold text-lg">{{cart.n}}</h3><span class="text-[10px] bg-white/10 px-2 py-0.5 rounded text-gray-300">License Key</span></div>
+<div v-else class="glass rounded-3xl p-6 relative overflow-hidden shadow-2xl border border-white/10">
+<div class="absolute -right-12 -top-12 w-40 h-40 bg-p/20 blur-[50px] rounded-full animate-pulse"></div>
+<div class="flex justify-between items-start mb-6 relative z-10">
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 rounded-2xl bg-black/40 flex items-center justify-center text-3xl shadow-lg border border-white/5"><i :class="cart.i" :style="{color:cart.c}"></i></div>
+<div><h3 class="font-bold text-xl">{{cart.n}}</h3><span class="text-[10px] bg-green-500/20 text-green-400 px-2 py-0.5 rounded border border-green-500/30 mt-1 inline-block">گارانتی فعال</span></div>
 </div>
-<button @click="rmCart" class="w-8 h-8 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center hover:bg-red-500 hover:text-white transition"><i class="fa-solid fa-trash text-xs"></i></button>
+<button @click="rmCart" class="w-9 h-9 rounded-full bg-red-500/10 text-red-400 flex items-center justify-center hover:bg-red-500 hover:text-white transition border border-red-500/20"><i class="fa-solid fa-trash text-xs"></i></button>
 </div>
-<div class="space-y-3 mb-8 relative z-10 bg-black/20 p-4 rounded-xl">
-<div class="flex justify-between text-sm text-gray-400"><span>قیمت پایه</span><span>{{cart.pr}}</span></div>
-<div class="flex justify-between text-sm text-green-400"><span>تخفیف ویژه</span><span>0</span></div>
+<div class="space-y-3 mb-8 relative z-10 bg-black/30 p-5 rounded-2xl border border-white/5">
+<div class="flex justify-between text-sm text-gray-400"><span>قیمت اصلی</span><span class="line-through opacity-50">{{parseInt(cart.pr.replace(/,/g,'')) * 1.1}}</span></div>
+<div class="flex justify-between text-sm text-gray-300"><span>قیمت جشنواره</span><span>{{cart.pr}}</span></div>
 <div class="h-px bg-white/10 my-2"></div>
-<div class="flex justify-between font-bold text-lg"><span>قابل پرداخت</span><span class="text-p">{{cart.pr}} <span class="text-xs">تومان</span></span></div>
+<div class="flex justify-between font-bold text-xl items-center"><span>مبلغ نهایی</span><span class="text-p">{{cart.pr}} <span class="text-xs text-gray-500">تومان</span></span></div>
 </div>
-<button @click="pay" class="w-full py-4 rounded-xl font-bold bg-gradient-to-r from-p to-s shadow-lg shadow-p/30 active:scale-95 transition-all flex justify-center items-center gap-2 relative z-10 overflow-hidden group">
-<div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform"></div>
-<span>تایید و پرداخت نهایی</span><i class="fa-solid fa-check"></i>
+<button @click="pay" class="w-full py-4 rounded-xl font-bold bg-gradient-to-r from-p to-s shadow-[0_10px_30px_-10px_rgba(139,92,246,0.5)] active:scale-95 transition-all flex justify-center items-center gap-3 relative z-10 overflow-hidden group text-lg">
+<div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+<span>تکمیل خرید</span><i class="fa-solid fa-arrow-left"></i>
 </button>
 </div>
 </div>
 
 <div v-else-if="tab==='profile'" key="profile">
-<div class="text-center mt-6 mb-8">
-<div class="relative inline-block group">
-<div class="w-28 h-28 rounded-full p-1 bg-gradient-to-tr from-p to-s shadow-2xl shadow-p/40">
+<div class="text-center mt-4 mb-8 relative">
+<div class="w-32 h-32 rounded-full p-1.5 bg-gradient-to-tr from-p to-s shadow-2xl shadow-p/30 mx-auto relative group">
 <img :src="u.photo_url||'https://cdn-icons-png.flaticon.com/512/149/149071.png'" class="w-full h-full rounded-full object-cover border-4 border-[#050510]">
+<div class="absolute bottom-2 right-2 bg-green-500 w-7 h-7 rounded-full border-4 border-[#050510] flex items-center justify-center"><i class="fa-solid fa-check text-[8px]"></i></div>
 </div>
-<div class="absolute bottom-1 right-1 bg-green-500 w-6 h-6 rounded-full border-4 border-[#050510] animate-pulse"></div>
-</div>
-<h2 class="text-2xl font-black mt-4 tracking-tight">{{u.first_name}}</h2>
-<div class="flex justify-center items-center gap-2 mt-1 opacity-60 text-xs font-mono bg-white/5 inline-block px-3 py-1 rounded-full mx-auto"><span>ID: {{u.id}}</span><i class="fa-regular fa-copy cursor-pointer"></i></div>
+<h2 class="text-2xl font-black mt-4 tracking-tight">{{u.first_name}} {{u.last_name}}</h2>
+<div @click="copyId" class="flex justify-center items-center gap-2 mt-2 opacity-70 text-xs font-mono bg-white/5 inline-flex px-4 py-1.5 rounded-full mx-auto border border-white/5 active:bg-white/10 transition cursor-pointer"><span>ID: {{u.id}}</span><i class="fa-regular fa-copy"></i></div>
 </div>
 <div class="grid grid-cols-2 gap-3 mb-6">
-<div class="glass p-4 rounded-2xl text-center hover:bg-white/5 transition"><div class="text-2xl font-black text-p">0</div><div class="text-[10px] text-gray-400">سفارشات فعال</div></div>
-<div class="glass p-4 rounded-2xl text-center hover:bg-white/5 transition"><div class="text-2xl font-black text-s">0</div><div class="text-[10px] text-gray-400">اعتبار کیف پول</div></div>
+<div class="glass p-5 rounded-2xl text-center hover:bg-white/5 transition border border-white/5"><div class="text-3xl font-black text-p mb-1">0</div><div class="text-[11px] text-gray-400 font-bold">سفارشات من</div></div>
+<div class="glass p-5 rounded-2xl text-center hover:bg-white/5 transition border border-white/5"><div class="text-3xl font-black text-s mb-1">0</div><div class="text-[11px] text-gray-400 font-bold">کیف پول (تومان)</div></div>
 </div>
-<div class="space-y-2">
-<button class="w-full glass p-4 rounded-xl flex justify-between items-center text-sm hover:bg-white/5 transition group"><span class="flex items-center gap-3"><i class="fa-solid fa-headset text-gray-400 group-hover:text-white transition"></i> پشتیبانی آنلاین</span><i class="fa-solid fa-chevron-left text-xs opacity-50"></i></button>
-<button class="w-full glass p-4 rounded-xl flex justify-between items-center text-sm hover:bg-white/5 transition group"><span class="flex items-center gap-3"><i class="fa-solid fa-file-contract text-gray-400 group-hover:text-white transition"></i> قوانین و مقررات</span><i class="fa-solid fa-chevron-left text-xs opacity-50"></i></button>
-<button class="w-full glass p-4 rounded-xl flex justify-between items-center text-sm hover:bg-red-500/10 transition group text-red-400"><span class="flex items-center gap-3"><i class="fa-solid fa-power-off"></i> خروج از حساب</span></button>
+<div class="space-y-2.5">
+<button class="w-full glass p-4 rounded-xl flex justify-between items-center text-sm hover:bg-white/5 transition group"><span class="flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-p/20 flex items-center justify-center text-p"><i class="fa-solid fa-headset"></i></div> پشتیبانی</span><i class="fa-solid fa-chevron-left text-xs opacity-30"></i></button>
+<button class="w-full glass p-4 rounded-xl flex justify-between items-center text-sm hover:bg-white/5 transition group"><span class="flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400"><i class="fa-solid fa-shield-halved"></i></div> قوانین</span><i class="fa-solid fa-chevron-left text-xs opacity-30"></i></button>
+<button class="w-full glass p-4 rounded-xl flex justify-between items-center text-sm hover:bg-red-500/10 transition group text-red-400"><span class="flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center"><i class="fa-solid fa-power-off"></i></div> خروج</span></button>
 </div>
 </div>
 </transition>
 </div>
 </main>
 
-<nav v-if="!loading" class="fixed bottom-4 left-4 right-4 h-16 glass rounded-2xl flex justify-around items-center z-50 shadow-2xl backdrop-blur-xl border-t border-white/10">
-<button @click="setTab('shop')" :class="tab==='shop'?'text-white -translate-y-1':'text-gray-500'" class="flex flex-col items-center gap-1 transition-all w-16">
-<div :class="tab==='shop'?'bg-p shadow-[0_0_10px_#8b5cf6]':''" class="p-1 rounded-lg transition-all"><i class="fa-solid fa-store text-xl"></i></div>
-<span class="text-[9px] font-bold opacity-80" v-if="tab==='shop'">فروشگاه</span>
+<nav v-if="!loading" class="fixed bottom-5 left-4 right-4 h-[70px] glass rounded-2xl flex justify-around items-center z-50 shadow-2xl backdrop-blur-xl border border-white/10">
+<button @click="setTab('shop')" :class="tab==='shop'?'text-white -translate-y-2':'text-gray-500'" class="flex flex-col items-center gap-1.5 transition-all duration-300 w-16">
+<div :class="tab==='shop'?'bg-p shadow-[0_4px_15px_-3px_#8b5cf6] scale-110':''" class="p-2.5 rounded-xl transition-all"><i class="fa-solid fa-store text-xl"></i></div>
+<span class="text-[10px] font-bold opacity-0 transition-opacity duration-300" :class="{'opacity-100':tab==='shop'}">فروشگاه</span>
 </button>
-<button @click="setTab('cart')" :class="tab==='cart'?'text-white -translate-y-1':'text-gray-500'" class="flex flex-col items-center gap-1 transition-all w-16 relative">
-<div :class="tab==='cart'?'bg-p shadow-[0_0_10px_#8b5cf6]':''" class="p-1 rounded-lg transition-all"><i class="fa-solid fa-bag-shopping text-xl"></i></div>
-<span class="text-[9px] font-bold opacity-80" v-if="tab==='cart'">سبد خرید</span>
-<span v-if="cart" class="absolute top-0 right-3 w-2.5 h-2.5 bg-red-500 rounded-full animate-bounce shadow-lg border border-[#050510]"></span>
+<button @click="setTab('cart')" :class="tab==='cart'?'text-white -translate-y-2':'text-gray-500'" class="flex flex-col items-center gap-1.5 transition-all duration-300 w-16 relative">
+<div :class="tab==='cart'?'bg-p shadow-[0_4px_15px_-3px_#8b5cf6] scale-110':''" class="p-2.5 rounded-xl transition-all"><i class="fa-solid fa-bag-shopping text-xl"></i></div>
+<span class="text-[10px] font-bold opacity-0 transition-opacity duration-300" :class="{'opacity-100':tab==='cart'}">سبد خرید</span>
+<span v-if="cart" class="absolute top-0 right-2 w-3 h-3 bg-red-500 rounded-full animate-bounce shadow border border-[#050510]"></span>
 </button>
-<button @click="setTab('profile')" :class="tab==='profile'?'text-white -translate-y-1':'text-gray-500'" class="flex flex-col items-center gap-1 transition-all w-16">
-<div :class="tab==='profile'?'bg-p shadow-[0_0_10px_#8b5cf6]':''" class="p-1 rounded-lg transition-all"><i class="fa-regular fa-user text-xl"></i></div>
-<span class="text-[9px] font-bold opacity-80" v-if="tab==='profile'">پروفایل</span>
+<button @click="setTab('profile')" :class="tab==='profile'?'text-white -translate-y-2':'text-gray-500'" class="flex flex-col items-center gap-1.5 transition-all duration-300 w-16">
+<div :class="tab==='profile'?'bg-p shadow-[0_4px_15px_-3px_#8b5cf6] scale-110':''" class="p-2.5 rounded-xl transition-all"><i class="fa-regular fa-user text-xl"></i></div>
+<span class="text-[10px] font-bold opacity-0 transition-opacity duration-300" :class="{'opacity-100':tab==='profile'}">پروفایل</span>
 </button>
 </nav>
-
 </div>
+
 <script>
-const {createApp,ref,onMounted}=Vue;createApp({setup(){
-const tg=window.Telegram.WebApp;const u=ref(tg.initDataUnsafe?.user||{first_name:'کاربر',last_name:'گرامی',id:'12345678'});
-const tab=ref('shop');const loading=ref(true);const cart=ref(null);const toast=ref({v:false,m:'',t:''});
-const plans=[{id:'m',n:'ماهانه Pro',pr:'300,000',d:'تست و روزمره',i:'fa-star',c:'#60a5fa'},{id:'y',n:'سالانه VIP',pr:'1,200,000',d:'۱۵ ماه + گارانتی',i:'fa-crown',c:'#fbbf24'},{id:'u',n:'اشتراک Ultra',pr:'1,800,000',d:'قدرت صنعتی',i:'fa-rocket',c:'#f472b6'}];
+const {createApp,ref,onMounted,watch}=Vue;
+createApp({setup(){
+const tg=window.Telegram.WebApp;
+const u=ref(tg.initDataUnsafe?.user||{first_name:'کاربر',last_name:'مهمان',id:'12345678',photo_url:null});
+const tab=ref('shop');const loading=ref(true);const toast=ref({v:false,m:'',t:''});
+const cart=ref(JSON.parse(localStorage.getItem('gemini_cart'))||null);
+watch(cart,(newVal)=>{if(newVal)localStorage.setItem('gemini_cart',JSON.stringify(newVal));else localStorage.removeItem('gemini_cart')});
+const plans=[
+{id:'m_pro',n:'ماهانه Pro',pr:'300,000',d:'مناسب تست و کارهای سبک',i:'fa-star',c:'#60a5fa'},
+{id:'y_vip',n:'سالانه VIP',pr:'1,200,000',d:'۱۵ ماه دسترسی + بیمه تورم',i:'fa-crown',c:'#fbbf24'},
+{id:'u_max',n:'اشتراک Ultra',pr:'1,800,000',d:'قدرت نامحدود و صنعتی',i:'fa-rocket',c:'#f472b6'}
+];
 const haptic=(s='light')=>{if(tg.HapticFeedback)tg.HapticFeedback.impactOccurred(s)};
-const notify=(m,t='s')=>{toast.value={v:true,m,t};if(tg.HapticFeedback)tg.HapticFeedback.notificationOccurred(t==='s'?'success':'error');setTimeout(()=>toast.value.v=false,2500)};
-onMounted(()=>{tg.expand();tg.setHeaderColor('#050510');setTimeout(()=>{loading.value=false;haptic('medium')},1500)});
+const notify=(m,t='s')=>{toast.value={v:true,m,t};if(tg.HapticFeedback)tg.HapticFeedback.notificationOccurred(t==='s'?'success':'error');setTimeout(()=>toast.value.v=false,3000)};
+const copyId=()=>{navigator.clipboard.writeText(u.value.id);notify('آیدی کپی شد');haptic('light')};
+onMounted(()=>{tg.expand();tg.setHeaderColor('#050510');setTimeout(()=>{loading.value=false;haptic('medium')},1200)});
 const setTab=(t)=>{if(tab.value===t)return;tab.value=t;haptic('light')};
 const addCart=(p)=>{cart.value=p;notify('به سبد خرید اضافه شد');haptic('medium')};
-const rmCart=()=>{cart.value=null;haptic('heavy')};
-const pay=()=>{if(!cart.value)return;haptic('heavy');tg.sendData(JSON.stringify({action:'buy',plan:cart.value.id,uid:u.value.id}));notify('درخواست ارسال شد');setTimeout(()=>tg.close(),800)};
-return{u,tab,loading,cart,toast,plans,setTab,addCart,rmCart,pay}
+const rmCart=()=>{cart.value=null;notify('سبد خرید خالی شد','e');haptic('heavy')};
+const pay=()=>{
+if(!cart.value)return;haptic('heavy');
+const data=JSON.stringify({action:'buy',plan_id:cart.value.id,plan_name:cart.value.n,price:cart.value.pr,user_id:u.value.id,user_name:u.value.first_name});
+tg.sendData(data);notify('در حال انتقال به درگاه...');
+setTimeout(()=>tg.close(),1000);
+};
+return{u,tab,loading,cart,toast,plans,setTab,addCart,rmCart,pay,copyId}
 }}).mount('#app');
 </script>
 </body>
