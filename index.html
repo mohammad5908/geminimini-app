@@ -1,202 +1,123 @@
-'use client';
-import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, CartesianGrid, Tooltip } from 'recharts';
-import { ShoppingBag, Heart, Star, Zap, TrendingUp, Gift, Lock, Truck, Clock, Percent, Users, Award, Sparkles, Send, MessageCircle, ArrowRight, Check, AlertCircle, Flame, Eye, Share2, Home, User, Menu, Search, Filter, ChevronRight, Copy, Plus, Minus, Trash2, Phone, Mail, CreditCard, Volume2, Bell, X as CloseIcon, RotateCcw, LogOut } from 'lucide-react';
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Gemini Store</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet"/>
+    <style>
+        body { font-family: 'Vazirmatn', sans-serif; -webkit-tap-highlight-color: transparent; user-select: none; }
+        .glass { background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .glass-active { background: rgba(255, 255, 255, 0.15); border-color: #a78bfa; box-shadow: 0 0 15px rgba(139, 92, 246, 0.3); }
+        .loader { border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid #fff; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .fade-enter-active, .fade-leave-active { transition: opacity 0.3s; }
+        .fade-enter-from, .fade-leave-to { opacity: 0; }
+    </style>
+</head>
+<body class="bg-[#0f0c29] text-white min-h-screen flex flex-col items-center p-4 bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e]">
+    <div id="app" class="w-full max-w-md pb-24 relative">
+        
+        <header class="text-center mb-6 pt-4 animate-pulse">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg" alt="Logo" class="w-16 mx-auto drop-shadow-lg mb-3">
+            <h1 class="text-xl font-black">جمنای <span class="text-purple-400">سنتر</span></h1>
+            <p class="text-xs text-gray-400 mt-1" v-if="user">سلام {{ user.first_name }} 👋</p>
+        </header>
 
-// ============================================================================
-// ZUSTAND STORE
-// ============================================================================
-const useUltimateStore = create(persist((set, get) => ({
-  user: { id: '8821', name: 'علی رضایی', email: 'ali@example.com', phone: '09120000000', balance: 5000000, level: 'VIP Gold', points: 2847, badges: ['first-purchase', 'super-buyer', '5-star-reviewer'], purchaseCount: 23, referralCode: 'ALI-8821-VIP', referredCount: 12 },
-  cart: [],
-  favorites: [],
-  orders: [{ id: 'ORD-001', date: '1402/09/20', amount: 450000, status: 'delivered', items: 3 }, { id: 'ORD-002', date: '1402/09/15', amount: 850000, status: 'delivered', items: 5 }],
-  notifications: [],
-  messages: [],
-  theme: 'dark',
-  activeTab: 'home',
-  addToCart: (product) => set(state => ({ cart: [...state.cart, { ...product, cartId: `${product.id}-${Date.now()}`, quantity: 1 }] })),
-  removeFromCart: (cartId) => set(state => ({ cart: state.cart.filter(item => item.cartId !== cartId) })),
-  updateQuantity: (cartId, quantity) => set(state => ({ cart: state.cart.map(item => item.cartId === cartId ? { ...item, quantity: Math.max(1, Math.min(quantity, 100)) } : item) })),
-  toggleFavorite: (productId) => set(state => ({ favorites: state.favorites.includes(productId) ? state.favorites.filter(id => id !== productId) : [...state.favorites, productId] })),
-  checkout: (amount) => set(state => { const total = Math.max(0, amount); if (state.user.balance < total) return state; return { cart: [], user: { ...state.user, balance: state.user.balance - total, purchaseCount: state.user.purchaseCount + 1, points: state.user.points + Math.floor(total / 10000) }, orders: [...state.orders, { id: `ORD-${Date.now()}`, date: new Date().toLocaleDateString('fa-IR'), amount: total, status: 'processing', items: state.cart.length }] }; }),
-  addNotification: (notification) => set(state => ({ notifications: [...state.notifications, { ...notification, id: Date.now() }] })),
-  removeNotification: (id) => set(state => ({ notifications: state.notifications.filter(n => n.id !== id) })),
-  setTab: (tab) => set({ activeTab: tab }),
-  setTheme: (theme) => set({ theme }),
-  clearCart: () => set({ cart: [] }),
-}), { name: 'gemini-ultimate-store' }));
+        <div class="space-y-3">
+            <div v-for="p in products" :key="p.id" @click="select(p.id)" 
+                 :class="['glass rounded-xl p-4 cursor-pointer transition-all duration-300 flex justify-between items-center', selected === p.id ? 'glass-active scale-[1.02]' : 'hover:bg-white/5']">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl">{{ p.icon }}</span>
+                    <div>
+                        <h3 class="font-bold text-sm">{{ p.title }}</h3>
+                        <p class="text-[10px] text-gray-300">{{ p.desc }}</p>
+                    </div>
+                </div>
+                <div class="bg-purple-600/90 px-3 py-1 rounded-lg text-xs font-bold shadow">{{ p.price }} T</div>
+            </div>
+        </div>
 
-// ============================================================================
-// PRODUCTS DATABASE
-// ============================================================================
-const PRODUCTS = [
-  { id: 1, name: 'اشتراک طلایی ۱ ماهه', price: 299000, originalPrice: 450000, discount: 33, category: 'subscription', image: '👑', color: 'from-yellow-500 to-orange-500', rating: 4.9, reviews: 2847, sales: 15420, hot: true, flashSale: true, flashEndsIn: '02:45:30', description: 'دسترسی کامل به تمام فیچرها', features: ['دسترسی ۲۴/۷', 'پشتیبانی فوری', 'آپلود نامحدود'], inStock: true, seller: 'Gemini Center', delivery: '۱-۲ ساعت', warranty: '۳۰ روز' },
-  { id: 2, name: 'اشتراک الماسی ۳ ماهه', price: 799000, originalPrice: 1200000, discount: 33, category: 'subscription', image: '💎', color: 'from-purple-500 to-pink-500', rating: 4.95, reviews: 5234, sales: 28960, hot: true, flashSale: true, flashEndsIn: '02:45:30', description: 'بهترین انتخاب با ۳۰٪ صرفه‌جویی', features: ['API نامحدود', 'اولویت پشتیبانی', 'کنسول رایگان'], inStock: true, seller: 'Gemini Center', delivery: 'فوری', warranty: '۹۰ روز', badge: 'BESTSELLER' },
-  { id: 3, name: 'اشتراک پلاتینی ۶ ماهه', price: 1499000, originalPrice: 2400000, discount: 37, category: 'subscription', image: '⭐', color: 'from-blue-500 to-cyan-500', rating: 4.98, reviews: 8932, sales: 42850, hot: true, description: 'پکیج اقتصادی برای کسب‌وکارها', features: ['مشاوره شخصی', 'آناليتیک پیشرفته', 'داشبورد سفارشی'], inStock: true, seller: 'Gemini Center', delivery: 'فوری', warranty: '۶ ماهه', badge: 'TOP CHOICE' },
-  { id: 4, name: 'API Premium Bundle', price: 449000, originalPrice: 650000, discount: 30, category: 'api', image: '⚙️', color: 'from-green-500 to-emerald-500', rating: 4.85, reviews: 3421, sales: 9875, description: '۱۰۰۰۰ درخواست درثانیه', features: ['تحمل بالا', 'لاگ‌های دقیق', 'تیم ۲۴/۷'], inStock: true, seller: 'Gemini Center', delivery: '۱ ساعت' },
-  { id: 5, name: 'پشتیبانی اختصاصی', price: 199000, originalPrice: 350000, discount: 43, category: 'support', image: '📞', color: 'from-red-500 to-pink-500', rating: 4.92, reviews: 6754, sales: 31200, hot: true, description: 'پاسخ فوری به تمام سوالات', features: ['Chat فوری', 'ویدئو کال', 'ایمیل+تلفن'], inStock: true, seller: 'Gemini Center', delivery: 'فوری' },
-  { id: 6, name: 'Analytics Pro', price: 299000, originalPrice: 500000, discount: 40, category: 'analytics', image: '📊', color: 'from-indigo-500 to-blue-500', rating: 4.88, reviews: 4521, sales: 12340, description: 'تحلیل داده‌های پیشرفته', features: ['داشبورد ریئل‌تایم', 'Export PDF', 'AI predictions'], inStock: true },
-  { id: 7, name: 'SEO Optimizer', price: 399000, originalPrice: 700000, discount: 43, category: 'seo', image: '🔍', color: 'from-orange-500 to-red-500', rating: 4.91, reviews: 5678, sales: 18950, description: 'بهینه‌سازی SEO خودکار', features: ['Keyword research', 'Backlink checker', 'Rank tracking'], inStock: true },
-  ...Array(13).fill(null).map((_, i) => ({ id: i + 8, name: `محصول Premium ${i + 1}`, price: 199000 + i * 50000, originalPrice: 350000 + i * 75000, discount: Math.floor(40 - i % 20), category: 'services', image: ['🎁', '💝', '🎀', '🎊', '🌟', '✨', '🔥', '🚀', '💼', '🎯', '⚡', '🏆', '👑'][i], color: ['from-rose-500 to-pink-500', 'from-fuchsia-500 to-purple-500', 'from-violet-500 to-indigo-500', 'from-indigo-500 to-blue-500', 'from-blue-500 to-cyan-500', 'from-cyan-500 to-emerald-500', 'from-emerald-500 to-green-500', 'from-green-500 to-lime-500', 'from-lime-500 to-yellow-500', 'from-yellow-500 to-orange-500', 'from-orange-500 to-red-500', 'from-red-500 to-pink-500', 'from-pink-500 to-rose-500'][i], rating: 4.7 + Math.random() * 0.25, reviews: 2000 + i * 500, sales: 8000 + i * 1200, description: `خدمات حرفه‌ای تیم ${i + 1}`, features: ['Support full', 'کوالیتی عالی', 'تحویل سریع'], inStock: Math.random() > 0.1 }))
-];
+        <div class="fixed bottom-5 left-0 right-0 px-4 w-full max-w-md mx-auto z-50">
+            <button @click="submit" :disabled="loading || !selected"
+                    class="w-full py-3.5 rounded-xl font-bold text-lg shadow-xl transition-all duration-200 flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-purple-600 to-indigo-600 hover:scale-[1.02] active:scale-95">
+                <span v-if="loading" class="loader"></span>
+                <span v-else>{{ btnText }}</span>
+            </button>
+        </div>
 
-// ============================================================================
-// ANIMATIONS
-// ============================================================================
-const ANIMATIONS = {
-  container: { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.08 } } },
-  item: { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100 } } },
-  slideIn: { hidden: { x: 50, opacity: 0 }, visible: { x: 0, opacity: 1 } },
-  pulse: { scale: [1, 1.05, 1], transition: { duration: 2, repeat: Infinity } },
-  fadeIn: { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } },
-};
-
-const TESTIMONIALS = [
-  { name: 'محمد صادقی', role: 'مدیر فروش', text: 'بهترین سرویسی که تا حالا استفاده کردم! 🌟', avatar: '👨‍💼', rating: 5 },
-  { name: 'فاطمه احمدی', role: 'کارآفرین', text: 'کسب و کار من ۳۰۰٪ رشد کرد!', avatar: '👩‍💼', rating: 5 },
-  { name: 'علی رضایی', role: 'مهندس', text: 'قابلیت اطمینان عالی و پشتیبانی سریع', avatar: '👨‍💻', rating: 5 },
-];
-
-// ============================================================================
-// COMPONENTS
-// ============================================================================
-
-const Toast = ({ notification, onClose }) => {
-  useEffect(() => { const timer = setTimeout(onClose, 3000); return () => clearTimeout(timer); }, [onClose]);
-  const bgColor = { success: 'from-green-500 to-emerald-500', error: 'from-red-500 to-pink-500', warning: 'from-yellow-500 to-orange-500', info: 'from-blue-500 to-cyan-500' }[notification.type] || 'from-purple-500 to-pink-500';
-  return <motion.div initial={{ opacity: 0, x: 100 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 100 }} className={`bg-gradient-to-r ${bgColor} text-white px-6 py-3 rounded-xl shadow-xl flex items-center justify-between`}><span className="text-sm font-medium">{notification.message}</span><button onClick={onClose} className="ml-3"><CloseIcon size={16} /></button></motion.div>;
-};
-
-const PremiumButton = ({ children, onClick, variant = 'primary', size = 'md', disabled, className, animated }) => {
-  const variants = { primary: `bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 text-white ${disabled ? 'opacity-50' : 'shadow-lg shadow-purple-500/50 hover:shadow-purple-500/75'}`, secondary: 'bg-white/10 backdrop-blur text-white border border-white/20 hover:bg-white/20', outline: 'border-2 border-white/30 text-white hover:border-white/50' };
-  const sizes = { sm: 'px-3 py-1.5 text-sm', md: 'px-6 py-3 text-base', lg: 'px-8 py-4 text-lg' };
-  return <motion.button whileHover={disabled ? {} : { scale: 1.05 }} whileTap={disabled ? {} : { scale: 0.95 }} disabled={disabled} onClick={onClick} className={`rounded-2xl font-bold transition-all ${variants[variant]} ${sizes[size]} ${className}`} {...(animated && { animate: ANIMATIONS.pulse })}>{children}</motion.button>;
-};
-
-const CountdownTimer = ({ endTime = '02:45:30' }) => {
-  const [time, setTime] = useState(endTime);
-  const [isEnded, setIsEnded] = useState(false);
-  useEffect(() => { const interval = setInterval(() => { setTime(prev => { const [h, m, s] = prev.split(':').map(Number); let newS = s - 1, newM = m, newH = h; if (newS < 0) { newS = 59; newM--; } if (newM < 0) { newM = 59; newH--; } if (newH === 0 && newM === 0 && newS === 0) { setIsEnded(true); return '00:00:00'; } return `${String(newH).padStart(2, '0')}:${String(newM).padStart(2, '0')}:${String(newS).padStart(2, '0')}`; }); }, 1000); return () => clearInterval(interval); }, []);
-  if (isEnded) return <span className="text-red-400 text-sm font-bold">پایان یافت</span>;
-  return <div className="flex items-center gap-1 text-orange-400 font-bold text-sm"><Flame size={16} className="animate-pulse" />{time}</div>;
-};
-
-const UltimateProductCard = ({ product, onAddCart, onFavorite, isFavorite }) => {
-  return <motion.div variants={ANIMATIONS.item} whileHover={{ y: -8 }} className="relative bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl overflow-hidden border border-white/10 hover:border-purple-500/50 transition-all group h-full flex flex-col">
-    <div className="absolute top-4 right-4 left-4 z-10 flex gap-2 flex-wrap">{product.hot && <div className="bg-gradient-to-r from-red-500 to-orange-500 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1"><Flame size={14} /> داغ</div>}{product.badge && <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-1 rounded-full text-xs font-bold">{product.badge}</div>}</div>
-    <div className={`h-48 bg-gradient-to-br ${product.color} flex items-center justify-center text-6xl relative overflow-hidden flex-shrink-0`} role="img" aria-label={product.name}><motion.div animate={ANIMATIONS.pulse} className="absolute inset-0 bg-white/10" /><span className="relative z-10 text-5xl">{product.image}</span><div className="absolute bottom-3 left-3 bg-black/60 backdrop-blur px-2 py-1 rounded-lg text-xs text-white flex items-center gap-1"><TrendingUp size={14} /> {(product.sales / 1000).toFixed(1)}K</div></div>
-    <div className="p-5 space-y-4 flex-grow flex flex-col"><h3 className="text-base font-bold text-white line-clamp-2">{product.name}</h3>
-    <div className="flex items-center gap-2"><div className="flex gap-0.5">{[...Array(5)].map((_, i) => <Star key={`star-${i}`} size={14} className={i < Math.floor(product.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-600'} />)}</div><span className="text-xs text-gray-400">({(product.reviews / 1000).toFixed(1)}K)</span></div>
-    <div className="space-y-2"><div className="flex items-center gap-2 flex-wrap"><span className="text-2xl font-black text-white">{(product.price / 1000).toFixed(0)}K</span>{product.originalPrice && <span className="text-xs text-gray-500 line-through">{(product.originalPrice / 1000).toFixed(0)}K</span>}{product.discount && <span className="bg-red-500/20 text-red-400 px-2 py-1 rounded text-xs font-bold">{product.discount}%</span>}</div>{product.flashSale && <CountdownTimer endTime={product.flashEndsIn} />}</div>
-    <div className="flex items-center gap-2 text-sm"><Check className={product.inStock ? 'text-green-500' : 'text-red-500'} size={16} /><span className={product.inStock ? 'text-green-400 text-xs' : 'text-red-400 text-xs'}>{product.inStock ? `${Math.floor(Math.random() * 50) + 10} موجود` : 'تمام شده'}</span></div>
-    <div className="space-y-1 flex-grow">{product.features.slice(0, 2).map((feature, idx) => <div key={`feat-${idx}`} className="text-xs text-gray-400 flex items-center gap-2"><ChevronRight size={12} className="text-purple-500" />{feature}</div>)}</div>
-    <div className="pt-4 space-y-3 border-t border-white/10"><PremiumButton onClick={() => onAddCart(product)} className="w-full" disabled={!product.inStock}><ShoppingBag size={16} className="inline ml-2" />خریدار</PremiumButton><button onClick={() => onFavorite(product.id)} className={`w-full py-2 rounded-lg border transition-all text-xs font-medium ${isFavorite ? 'border-pink-500 bg-pink-500/20 text-pink-400' : 'border-white/20 text-white hover:border-pink-500'}`}><Heart size={14} className={`inline ml-2 ${isFavorite ? 'fill-pink-500' : ''}`} />{isFavorite ? 'ذخیره شده' : 'ذخیره'}</button></div>
+        <transition name="fade">
+            <div v-if="toast.show" :class="toast.type === 'err' ? 'bg-red-600' : 'bg-green-600'" 
+                 class="fixed top-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded-full shadow-2xl text-xs font-bold z-50 flex items-center gap-2 min-w-[200px] justify-center">
+                <span>{{ toast.msg }}</span>
+            </div>
+        </transition>
     </div>
-  </motion.div>;
-};
 
-const CartSummary = ({ cart }) => {
-  const { total, discount } = useMemo(() => { const t = cart.reduce((sum, item) => sum + (item.price || 0) * (item.quantity || 1), 0); const d = cart.reduce((sum, item) => sum + ((item.originalPrice || item.price) - (item.price || 0)) * (item.quantity || 1), 0); return { total: t, discount: d }; }, [cart]);
-  const tax = Math.floor(total * 0.09);
-  const final = total + tax;
-  return <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-3 bg-white/5 backdrop-blur p-4 rounded-2xl border border-white/10"><div className="space-y-2 text-sm"><div className="flex justify-between text-gray-400"><span>قیمت کل:</span><span>{(total / 1000).toFixed(1)}K</span></div>{discount > 0 && <div className="flex justify-between text-green-400"><span>تخفیف:</span><span>-{(discount / 1000).toFixed(1)}K</span></div>}<div className="flex justify-between text-blue-400"><span>مالیات (۹%):</span><span>{(tax / 1000).toFixed(1)}K</span></div><div className="h-px bg-white/10" /><div className="flex justify-between text-lg font-bold text-white"><span>کل:</span><span>{(final / 1000).toFixed(1)}K</span></div></div></motion.div>;
-};
+    <script>
+        const { createApp, ref, computed, onMounted } = Vue;
+        createApp({
+            setup() {
+                const tg = window.Telegram.WebApp;
+                const user = ref(tg.initDataUnsafe?.user || null);
+                const selected = ref(null);
+                const loading = ref(false);
+                const toast = ref({ show: false, msg: '', type: 'info' });
 
-const AIChatSeller = ({ isOpen, onClose }) => {
-  const [messages, setMessages] = useState([{ id: 0, sender: 'bot', text: '👋 سلام! من دستیار فروش Gemini هستم. چطور کمک کنم?' }]);
-  const [input, setInput] = useState('');
-  const messagesEndRef = useRef(null);
-  useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
-  const handleSend = useCallback(() => { if (!input.trim()) return; const userMsg = { id: Date.now(), sender: 'user', text: input }; setMessages(prev => [...prev, userMsg]); setInput(''); setTimeout(() => { const responses = ['این محصول ۳۰٪ تخفیف داره! 🎉', 'آیا سوال دیگری؟ 😊', 'پکیج شامل گارانتی ۹۰ روزه‌ای است!', 'بهترین انتخاب برای بودجه شما! 💡']; const response = responses[Math.floor(Math.random() * responses.length)]; setMessages(prev => [...prev, { id: Date.now(), sender: 'bot', text: response }]); }, 800); }, [input]);
-  return <AnimatePresence>{isOpen && <motion.div {...ANIMATIONS.fadeIn} initial={{ opacity: 0, y: 100, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 100, scale: 0.9 }} className="fixed bottom-24 left-4 right-4 max-w-md mx-auto bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl border border-white/10 shadow-2xl z-50 flex flex-col h-96 overflow-hidden"><div className="p-4 border-b border-white/10 flex justify-between items-center flex-shrink-0"><span className="font-bold text-white text-sm">AI Seller 🤖</span><button onClick={onClose} className="text-gray-400 hover:text-white transition-colors"><CloseIcon size={18} /></button></div><div className="flex-1 overflow-y-auto p-4 space-y-3">{messages.map(msg => <motion.div key={msg.id} initial={{ opacity: 0, x: msg.sender === 'user' ? 20 : -20 }} animate={{ opacity: 1, x: 0 }} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}><div className={`max-w-xs px-4 py-2 rounded-2xl text-sm ${msg.sender === 'user' ? 'bg-purple-600 text-white' : 'bg-white/10 text-gray-200'}`}>{msg.text}</div></motion.div>)}<div ref={messagesEndRef} /></div><div className="p-4 border-t border-white/10 flex gap-2 flex-shrink-0"><input value={input} onChange={e => setInput(e.target.value)} onKeyPress={e => e.key === 'Enter' && handleSend()} placeholder="سوالت..." className="flex-1 bg-white/10 border border-white/20 text-white rounded-2xl px-4 py-2 text-sm placeholder-gray-500 focus:outline-none focus:border-purple-500" autoComplete="off" /><button onClick={handleSend} className="bg-purple-600 text-white p-2 rounded-full hover:bg-purple-500 transition-all flex-shrink-0"><Send size={16} /></button></div></motion.div>}</AnimatePresence>;
-};
+                const products = [
+                    { id: 'monthly', title: 'اشتراک ماهانه (Pro)', price: '300,000', desc: 'مناسب تست و کارهای روزمره', icon: '💎' },
+                    { id: 'yearly', title: 'اشتراک سالانه (VIP)', price: '1,200,000', desc: '۱۵ ماه دسترسی + بیمه تورم', icon: '⭐️' },
+                    { id: 'ultra', title: 'اشتراک اولترا (Ultra)', price: '1,800,000', desc: 'قدرت صنعتی و نامحدود', icon: '☢️' }
+                ];
 
-const StatsDashboard = ({ user }) => {
-  const stats = [
-    { id: 'purchases', label: 'سفارش‌ها', value: user.purchaseCount, icon: ShoppingBag, color: 'from-blue-500 to-blue-600' },
-    { id: 'points', label: 'امتیازات', value: user.points, icon: Star, color: 'from-yellow-500 to-orange-500' },
-    { id: 'level', label: 'سطح', value: user.level, icon: Award, color: 'from-purple-500 to-pink-500' },
-    { id: 'referrals', label: 'دوستان', value: user.referredCount, icon: Users, color: 'from-green-500 to-emerald-500' },
-  ];
-  return <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="grid grid-cols-2 gap-3">{stats.map((stat) => <motion.div key={stat.id} variants={ANIMATIONS.item} className={`bg-gradient-to-br ${stat.color} p-4 rounded-2xl text-white text-center`}><stat.icon size={20} className="opacity-70 mx-auto mb-2" /><div className="text-2xl font-bold">{stat.value}</div><div className="text-xs opacity-75">{stat.label}</div></motion.div>)}</motion.div>;
-};
+                onMounted(() => {
+                    tg.expand();
+                    tg.MainButton.hide();
+                    tg.setHeaderColor('#0f0c29');
+                });
 
-// ============================================================================
-// TABS
-// ============================================================================
+                const btnText = computed(() => selected.value ? 'تایید و پرداخت نهایی' : 'یک پلن انتخاب کنید');
 
-const HomeTab = ({ onChatOpen }) => {
-  const { user } = useUltimateStore();
-  return <motion.div variants={ANIMATIONS.container} initial="hidden" animate="visible" className="space-y-6 pb-32">
-    <motion.div variants={ANIMATIONS.item} className="relative bg-gradient-to-br from-purple-600 via-pink-600 to-red-600 rounded-3xl p-6 overflow-hidden"><div className="absolute inset-0 opacity-10"><div className="absolute w-40 h-40 bg-white rounded-full blur-3xl -top-10 -left-10" /><div className="absolute w-40 h-40 bg-white rounded-full blur-3xl bottom-0 right-0" /></div><div className="relative z-10"><h1 className="text-3xl font-black text-white mb-2">سلام {user.name}! 👋</h1><p className="text-white/80 text-sm">شما {user.level} هستید</p><PremiumButton variant="secondary" size="sm" className="mt-4">جوایز بیشتر ⭐</PremiumButton></div></motion.div>
-    <motion.div variants={ANIMATIONS.item}><h2 className="text-lg font-bold text-white mb-3">آمار شما</h2><StatsDashboard user={user} /></motion.div>
-    <motion.div variants={ANIMATIONS.item} className="bg-gradient-to-r from-orange-500 to-red-500 rounded-3xl p-6 text-white"><div className="flex items-center justify-between mb-3"><h3 className="text-xl font-bold flex items-center gap-2"><Flame size={20} /> فروش فلش</h3><CountdownTimer /></div><p className="text-sm opacity-90 mb-4">تا ۵۰٪ تخفیف!</p><PremiumButton variant="secondary" className="w-full text-xs py-2">دیدن همه <ArrowRight size={14} className="inline ml-2" /></PremiumButton></motion.div>
-    <motion.div variants={ANIMATIONS.item}><h2 className="text-lg font-bold text-white mb-3">نظر مشتریان</h2><div className="space-y-3">{TESTIMONIALS.map((testimonial, i) => <motion.div key={`testimonial-${i}`} variants={ANIMATIONS.item} className="bg-white/5 border border-white/10 rounded-2xl p-4"><div className="flex items-center gap-3 mb-2"><span className="text-3xl">{testimonial.avatar}</span><div><h4 className="font-bold text-white text-sm">{testimonial.name}</h4><p className="text-xs text-gray-400">{testimonial.role}</p></div></div><p className="text-sm text-gray-300 mb-2">{testimonial.text}</p><div className="flex gap-0.5">{[...Array(testimonial.rating)].map((_, idx) => <Star key={`tstar-${idx}`} size={12} className="fill-yellow-400 text-yellow-400" />)}</div></motion.div>)}</div></motion.div>
-    <motion.button variants={ANIMATIONS.item} onClick={onChatOpen} className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 text-white py-4 rounded-2xl font-bold hover:shadow-lg transition-all text-sm">با دستیار شروع کنید 🤖</motion.button>
-  </motion.div>;
-};
+                const showToast = (msg, type = 'info') => {
+                    toast.value = { show: true, msg, type };
+                    setTimeout(() => toast.value.show = false, 3000);
+                };
 
-const ShopTab = () => {
-  const { favorites, addToCart, toggleFavorite } = useUltimateStore();
-  const [search, setSearch] = useState('');
-  const filteredProducts = useMemo(() => PRODUCTS.filter(p => p.name.includes(search) || p.description.includes(search)), [search]);
-  return <motion.div variants={ANIMATIONS.container} initial="hidden" animate="visible" className="space-y-4 pb-32">
-    <motion.div variants={ANIMATIONS.item} className="flex gap-2"><div className="flex-1 bg-white/10 border border-white/20 rounded-2xl px-4 py-2 flex items-center gap-2"><Search size={16} className="text-gray-400" /><input type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder="جستجو..." className="flex-1 bg-transparent outline-none text-white placeholder-gray-500 text-sm" /></div><button className="bg-white/10 hover:bg-white/20 border border-white/20 p-2 rounded-2xl transition-all"><Filter size={18} className="text-white" /></button></motion.div>
-    <motion.div variants={ANIMATIONS.container} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">{filteredProducts.map(product => <UltimateProductCard key={`product-${product.id}`} product={product} onAddCart={addToCart} onFavorite={toggleFavorite} isFavorite={favorites.includes(product.id)} />)}</motion.div>
-    {filteredProducts.length === 0 && <motion.div variants={ANIMATIONS.item} className="text-center py-12"><Eye size={48} className="mx-auto text-gray-600 mb-2" /><p className="text-gray-400">محصولی یافت نشد</p></motion.div>}
-  </motion.div>;
-};
+                const select = (id) => {
+                    selected.value = id;
+                    if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+                };
 
-const CartTab = () => {
-  const { cart, removeFromCart, updateQuantity, checkout, user, addNotification } = useUltimateStore();
-  const { total, discount } = useMemo(() => { const t = cart.reduce((sum, item) => sum + (item.price || 0) * (item.quantity || 1), 0); const d = cart.reduce((sum, item) => sum + ((item.originalPrice || item.price) - (item.price || 0)) * (item.quantity || 1), 0); return { total: t, discount: d }; }, [cart]);
-  const handleCheckout = useCallback(() => { if (cart.length === 0) { addNotification({ type: 'warning', message: 'سبد خرید خالی است!' }); return; } if (user.balance < total) { addNotification({ type: 'error', message: 'موجودی کافی نیست!' }); return; } checkout(total); addNotification({ type: 'success', message: `✅ خریدار تکمیل! (${(total / 1000).toFixed(1)}K)` }); }, [cart, total, user.balance, checkout, addNotification]);
-  return <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4 pb-32">
-    {cart.length === 0 ? <div className="flex flex-col items-center justify-center py-20 text-gray-400"><ShoppingBag size={48} className="mb-4 opacity-50" /><p className="text-sm">سبد خرید خالی است</p></div> : <>
-      <div className="space-y-3">{cart.map((item) => <motion.div key={item.cartId} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="bg-white/5 border border-white/10 rounded-2xl p-4 flex gap-4"><div className={`h-20 w-20 bg-gradient-to-br ${item.color} rounded-xl flex items-center justify-center text-3xl flex-shrink-0`}>{item.image}</div><div className="flex-1"><h4 className="font-bold text-white text-sm">{item.name}</h4><p className="text-xs text-gray-400">{(item.price / 1000).toFixed(1)}K</p><div className="flex items-center gap-2 mt-2"><button onClick={() => updateQuantity(item.cartId, item.quantity - 1)} className="bg-white/10 p-1 rounded hover:bg-white/20"><Minus size={14} /></button><span className="text-xs w-8 text-center">{item.quantity}</span><button onClick={() => updateQuantity(item.cartId, item.quantity + 1)} className="bg-white/10 p-1 rounded hover:bg-white/20"><Plus size={14} /></button></div></div><button onClick={() => removeFromCart(item.cartId)} className="text-red-500 hover:text-red-400 flex-shrink-0"><Trash2 size={18} /></button></motion.div>)}</div>
-      <CartSummary cart={cart} />
-      <PremiumButton onClick={handleCheckout} className="w-full py-4"><CreditCard size={16} className="inline ml-2" />تکمیل خریدار</PremiumButton>
-      <div className="grid grid-cols-3 gap-2 text-center text-xs text-gray-400"><div className="flex flex-col items-center gap-1"><Lock size={16} className="text-green-500" />امن</div><div className="flex flex-col items-center gap-1"><Truck size={16} className="text-blue-500" />سریع</div><div className="flex flex-col items-center gap-1"><RotateCcw size={16} className="text-orange-500" />برگشت</div></div>
-    </>}
-  </motion.div>;
-};
+                const submit = async () => {
+                    if (!selected.value || loading.value) return;
+                    loading.value = true;
+                    if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
 
-const ProfileTab = () => {
-  const { user } = useUltimateStore();
-  const copyToClipboard = useCallback(async () => { await navigator.clipboard.writeText(user.referralCode); alert('کپی شد! ✓'); }, [user.referralCode]);
-  return <motion.div variants={ANIMATIONS.container} initial="hidden" animate="visible" className="space-y-6 pb-32">
-    <motion.div variants={ANIMATIONS.item} className="relative bg-gradient-to-br from-purple-600 to-pink-600 rounded-3xl p-6 text-white overflow-hidden"><div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full blur-3xl -mr-20 -mt-20" /><div className="relative z-10"><div className="text-6xl mb-4">👤</div><h2 className="text-2xl font-bold">{user.name}</h2><p className="text-white/80 text-sm">{user.email}</p><div className="mt-4 flex items-center gap-2 flex-wrap"><span className="bg-white/20 px-3 py-1 rounded-full text-xs">{user.level}</span><span className="bg-white/20 px-3 py-1 rounded-full text-xs flex items-center gap-1"><Star size={12} className="fill-yellow-300 text-yellow-300" />{user.points}</span></div></div></motion.div>
-    <motion.div variants={ANIMATIONS.item}><StatsDashboard user={user} /></motion.div>
-    <motion.div variants={ANIMATIONS.item} className="bg-white/5 border border-white/10 rounded-2xl p-4"><h3 className="text-xs font-bold text-gray-400 mb-2">کد دعوت</h3><div className="flex items-center gap-2"><input type="text" value={user.referralCode} readOnly className="flex-1 bg-black/20 border border-white/10 rounded-lg px-3 py-2 text-white font-mono text-sm outline-none" /><button onClick={copyToClipboard} className="bg-purple-600 p-2 rounded-lg hover:bg-purple-500 transition-all flex-shrink-0"><Copy size={16} className="text-white" /></button></div></motion.div>
-    <motion.div variants={ANIMATIONS.item} className="space-y-2">{[{ icon: CreditCard, label: 'کیف پول', value: `${(user.balance / 1000).toFixed(1)}K` }, { icon: ShoppingBag, label: 'سفارش‌ها', value: `${user.purchaseCount} عدد` }, { icon: Award, label: 'نشان‌ها', value: `${user.badges.length} عدد` }, { icon: MessageCircle, label: 'پشتیبانی', value: '24/7' }].map((item, i) => <motion.div key={`profile-item-${i}`} whileHover={{ x: 4 }} className="flex items-center justify-between bg-white/5 border border-white/10 hover:border-purple-500/50 rounded-2xl p-4 transition-all cursor-pointer"><div className="flex items-center gap-3"><item.icon size={18} className="text-purple-500" /><span className="font-medium text-white text-sm">{item.label}</span></div><span className="text-xs text-gray-400">{item.value}</span></motion.div>)}</motion.div>
-    <motion.button variants={ANIMATIONS.item} className="w-full py-3 border-2 border-red-500/50 text-red-500 rounded-2xl font-bold hover:bg-red-500/10 transition-all text-sm flex items-center justify-center gap-2"><LogOut size={16} />خروج</motion.button>
-  </motion.div>;
-};
+                    try {
+                        // Validation
+                        if (!['monthly', 'yearly', 'ultra'].includes(selected.value)) throw new Error("پلن نامعتبر");
 
-// ============================================================================
-// MAIN APP
-// ============================================================================
-const GeminiUltimateApp = () => {
-  const { activeTab, setTab, theme, setTheme, cart, notifications, removeNotification } = useUltimateStore();
-  const [chatOpen, setChatOpen] = useState(false);
-  const tabs = [
-    { id: 'home', icon: Home, label: 'خانه' },
-    { id: 'shop', icon: ShoppingBag, label: 'فروشگاه' },
-    { id: 'cart', icon: ShoppingBag, label: 'سبد', badge: cart.length },
-    { id: 'profile', icon: User, label: 'پروفایل' },
-  ];
-  return <div className={`min-h-screen ${theme === 'dark' ? 'bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white' : 'bg-gradient-to-br from-white to-gray-100 text-gray-900'} transition-colors`} dir="rtl">
-    <motion.header initial={{ y: -100 }} animate={{ y: 0 }} className="sticky top-0 z-40 bg-white/10 backdrop-blur-xl border-b border-white/10"><div className="max-w-2xl mx-auto px-4 py-4 flex items-center justify-between"><button className="p-2 hover:bg-white/10 rounded-lg transition-all"><Menu size={20} /></button><h1 className="text-xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Gemini ✨</h1><button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className="p-2 hover:bg-white/10 rounded-lg transition-all text-lg">{theme === 'dark' ? '☀️' : '🌙'}</button></div></motion.header>
-    <main className="max-w-2xl mx-auto px-4 py-6"><AnimatePresence mode="wait">{activeTab === 'home' && <HomeTab key="home" onChatOpen={() => setChatOpen(true)} />}{activeTab === 'shop' && <ShopTab key="shop" />}{activeTab === 'cart' && <CartTab key="cart" />}{activeTab === 'profile' && <ProfileTab key="profile" />}</AnimatePresence></main>
-    <motion.nav initial={{ y: 100 }} animate={{ y: 0 }} className="fixed bottom-0 left-0 right-0 bg-white/10 backdrop-blur-xl border-t border-white/10 z-30"><div className="max-w-2xl mx-auto flex justify-around px-2 py-3">{tabs.map(tab => <motion.button key={`nav-${tab.id}`} whileTap={{ scale: 0.88 }} onClick={() => setTab(tab.id)} className={`relative p-2 rounded-xl transition-all text-xs flex flex-col items-center gap-0.5 ${activeTab === tab.id ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white' : 'text-gray-400 hover:text-white'}`}><tab.icon size={20} /><span>{tab.label}</span>{tab.badge > 0 && <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">{tab.badge}</motion.span>}</motion.button>)}</div></motion.nav>
-    <AIChatSeller isOpen={chatOpen} onClose={() => setChatOpen(false)} />
-    <motion.button animate={ANIMATIONS.pulse} onClick={() => setChatOpen(!chatOpen)} className="fixed bottom-24 left-6 w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center text-white shadow-xl hover:shadow-2xl transition-all z-40" aria-label="دستیار فروش"><MessageCircle size={20} /></motion.button>
-    <div className="fixed top-20 left-4 right-4 max-w-sm mx-auto space-y-2 z-50 pointer-events-none"><AnimatePresence>{notifications.map(notif => <div key={notif.id} className="pointer-events-auto"><Toast notification={notif} onClose={() => removeNotification(notif.id)} /></div>)}</AnimatePresence></div>
-  </div>;
-};
+                        const payload = JSON.stringify({
+                            action: "buy",
+                            plan: selected.value,
+                            user_id: user.value?.id,
+                            ts: Date.now()
+                        });
 
-export default GeminiUltimateApp;
+                        tg.sendData(payload);
+                    } catch (e) {
+                        console.error(e);
+                        showToast('خطا در ارتباط. مجدد تلاش کنید', 'err');
+                        loading.value = false;
+                    }
+                };
+
+                return { user, products, selected, loading, toast, btnText, select, submit };
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
