@@ -4,12 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#000000">
-    <title>Gemini Premium Store</title>
+    <title>Gemini Center</title>
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
 
     <script>
@@ -18,25 +16,7 @@
                 extend: {
                     fontFamily: { sans: ['Vazirmatn', 'sans-serif'] },
                     colors: {
-                        void: '#000000',
-                        glass: 'rgba(255, 255, 255, 0.05)',
-                        neon: { purple: '#A855F7', pink: '#EC4899', gold: '#F59E0B' }
-                    },
-                    animation: {
-                        'blob': 'blob 7s infinite',
-                        'shimmer': 'shimmer 2s linear infinite',
-                    },
-                    keyframes: {
-                        blob: {
-                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
-                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
-                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
-                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
-                        },
-                        shimmer: {
-                            'from': { backgroundPosition: '0 0' },
-                            'to': { backgroundPosition: '-200% 0' }
-                        }
+                        ios: { bg: '#000000', card: '#1C1C1E', border: '#2C2C2E', blue: '#0A84FF', gray: '#8E8E93' }
                     }
                 }
             }
@@ -44,213 +24,163 @@
     </script>
 
     <style>
-        /* استایل‌های سینمایی */
-        body { background-color: #000; color: #fff; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
+        body { background-color: #000; color: #fff; -webkit-tap-highlight-color: transparent; }
         
-        .glass-card {
-            background: rgba(20, 20, 20, 0.7);
+        /* استایل شیشه‌ای مات (Apple Style) */
+        .bento-card {
+            background-color: rgba(28, 28, 30, 0.6);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+            transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
         }
+        
+        .bento-card:active { transform: scale(0.97); background-color: rgba(44, 44, 46, 0.8); }
 
-        .hero-gradient {
-            background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(236, 72, 153, 0.05) 100%);
+        /* دکمه اصلی */
+        .action-btn {
+            background: #0A84FF;
+            box-shadow: 0 0 20px rgba(10, 132, 255, 0.3);
+            transition: all 0.3s ease;
         }
+        .action-btn:active { transform: scale(0.96); box-shadow: none; opacity: 0.8; }
 
-        .gold-text {
-            background: linear-gradient(to bottom, #FCD34D, #F59E0B);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
-        }
+        /* تایپوگرافی اعداد */
+        .num-font { font-feature-settings: "ss01"; font-variant-numeric: tabular-nums; letter-spacing: -0.5px; }
 
-        .shimmer-btn {
-            background: linear-gradient(to right, #7C3AED 0%, #9333EA 20%, #DB2777 40%, #7C3AED 100%);
-            background-size: 200% auto;
-            animation: shimmer 3s linear infinite;
-        }
-
-        /* لودینگ گرد */
-        .spinner {
-            width: 24px; height: 24px; border: 3px solid rgba(255,255,255,0.3);
-            border-radius: 50%; border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
+        /* لودینگ ظریف */
+        .loader {
+            width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.1);
+            border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="antialiased min-h-screen relative">
+<body class="antialiased min-h-screen p-5 flex flex-col">
 
-    <div class="fixed inset-0 z-0">
-        <div class="absolute top-0 -left-4 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-blob"></div>
-        <div class="absolute top-0 -right-4 w-72 h-72 bg-pink-500 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-blob" style="animation-delay: 2s"></div>
-        <div class="absolute -bottom-8 left-20 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-blob" style="animation-delay: 4s"></div>
+    <header class="flex justify-between items-center mb-6 opacity-0 animate-[fadeIn_0.6s_ease-out_forwards]">
+        <div>
+            <h1 class="text-2xl font-black tracking-tight">Gemini Center</h1>
+            <p class="text-xs text-ios-gray mt-1">فروشگاه رسمی اشتراک هوش مصنوعی</p>
+        </div>
+        <div class="w-10 h-10 rounded-full bg-ios-card border border-ios-border flex items-center justify-center">
+             <svg class="w-5 h-5 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+        </div>
+    </header>
+
+    <div onclick="buy('gemini_ultra_monthly_ready')" class="bento-card rounded-[24px] p-6 mb-4 relative overflow-hidden group cursor-pointer opacity-0 animate-[fadeIn_0.6s_ease-out_0.1s_forwards]">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-blue-600/20 blur-[60px] rounded-full"></div>
+        
+        <div class="relative z-10 flex flex-col h-full justify-between min-h-[160px]">
+            <div class="flex justify-between items-start">
+                <div class="bg-blue-500/20 text-blue-400 px-3 py-1 rounded-full text-[10px] font-bold border border-blue-500/20">ULTRA 1.5</div>
+                <svg class="w-6 h-6 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+            </div>
+            
+            <div>
+                <h2 class="text-3xl font-bold text-white mb-1">Gemini Ultra</h2>
+                <p class="text-sm text-ios-gray line-clamp-2">قدرتمندترین مدل. تحلیل تصویر و کدنویسی.</p>
+            </div>
+
+            <div class="flex justify-between items-end mt-4">
+                <div>
+                    <span id="price-ultra" class="text-2xl font-bold text-white num-font">1,850,000</span>
+                    <span class="text-[10px] text-white/40">تومان / ماهانه</span>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center">
+                    <svg class="w-5 h-5 -rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div id="app" class="relative z-10 max-w-md mx-auto px-5 pt-6 pb-12">
+    <div class="grid grid-cols-2 gap-3 mb-6">
         
-        <div v-if="loading" class="fixed inset-0 bg-black z-50 flex flex-col items-center justify-center">
-            <div class="w-16 h-16 border-4 border-neon-purple border-t-transparent rounded-full animate-spin mb-4"></div>
-            <p class="text-xs tracking-[0.3em] text-neon-purple animate-pulse">GEMINI CENTER</p>
-        </div>
-
-        <div v-else class="animate-[fadeIn_0.5s_ease-out]">
-            
-            <header class="flex justify-between items-center mb-8">
-                <div class="flex items-center gap-3">
-                    <div class="relative">
-                        <img :src="user.photo_url || 'https://cdn-icons-png.flaticon.com/512/149/149071.png'" class="w-12 h-12 rounded-full border-2 border-white/10 object-cover">
-                        <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-black rounded-full shadow-[0_0_10px_#22c55e]"></div>
-                    </div>
-                    <div>
-                        <p class="text-[10px] text-white/50 uppercase tracking-wider font-bold">Welcome back</p>
-                        <h2 class="text-lg font-bold text-white leading-none mt-1">{{ user.first_name }}</h2>
-                    </div>
-                </div>
-                <div class="w-10 h-10 rounded-full glass-card flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors">
-                    <i class="fa-solid fa-gem text-neon-purple"></i>
-                </div>
-            </header>
-
-            <div class="glass-card rounded-[32px] p-6 mb-8 relative overflow-hidden group border border-neon-purple/30">
-                <div class="absolute top-0 right-0 p-4 opacity-50">
-                    <i class="fa-solid fa-rocket text-8xl text-white/5 -rotate-12 group-hover:rotate-0 transition-transform duration-700"></i>
-                </div>
-                
-                <div class="relative z-10">
-                    <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-neon-purple/10 border border-neon-purple/20 mb-3">
-                        <span class="relative flex h-2 w-2">
-                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-neon-purple opacity-75"></span>
-                          <span class="relative inline-flex rounded-full h-2 w-2 bg-neon-purple"></span>
-                        </span>
-                        <span class="text-[10px] font-bold text-neon-purple tracking-wide">PREMIUM CHOICE</span>
-                    </div>
-
-                    <h1 class="text-3xl font-black mb-2 text-white">Gemini <span class="text-transparent bg-clip-text bg-gradient-to-r from-neon-purple to-neon-pink">Ultra</span></h1>
-                    <p class="text-xs text-white/60 mb-6 leading-relaxed max-w-[85%]">
-                        قدرتمندترین مدل هوش مصنوعی گوگل. تحلیل تصویر، کدنویسی و سرعت پردازش خارق‌العاده.
-                    </p>
-
-                    <button @click="buyProduct('gemini_ultra_monthly_ready')" class="w-full py-4 rounded-xl shimmer-btn text-white font-bold text-sm shadow-lg shadow-neon-purple/20 active:scale-95 transition-transform flex items-center justify-center gap-2">
-                        <span>خرید آنی (1,850,000 ت)</span>
-                        <i class="fa-solid fa-arrow-left"></i>
-                    </button>
-                </div>
+        <div onclick="buy('gemini_pro_monthly_ready')" class="bento-card rounded-[20px] p-4 cursor-pointer flex flex-col justify-between h-[140px] opacity-0 animate-[fadeIn_0.6s_ease-out_0.2s_forwards]">
+            <div class="flex justify-between">
+                <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-lg">💎</div>
             </div>
-
-            <div class="space-y-4">
-                <div class="flex items-center justify-between px-1 mb-2">
-                    <h3 class="font-bold text-lg flex items-center gap-2">
-                        <i class="fa-solid fa-fire text-neon-gold"></i> پرفروش‌ترین‌ها
-                    </h3>
-                </div>
-
-                <div @click="buyProduct('gemini_pro_monthly_ready')" class="glass-card rounded-2xl p-4 flex items-center gap-4 cursor-pointer hover:border-neon-purple/50 transition-all active:scale-98 relative overflow-hidden">
-                    <div class="w-14 h-14 rounded-xl bg-white/5 flex items-center justify-center text-2xl border border-white/10">💎</div>
-                    <div class="flex-1">
-                        <h4 class="font-bold text-base text-white">Gemini Pro ماهانه</h4>
-                        <p class="text-[10px] text-white/40 mt-1">اکانت آماده • تحویل فوری</p>
-                    </div>
-                    <div class="text-right">
-                        <div class="gold-text font-bold text-lg">380,000</div>
-                        <div class="text-[9px] text-white/30">تومان</div>
-                    </div>
-                </div>
-
-                <div @click="buyProduct('gemini_pro_yearly_ready')" class="glass-card rounded-2xl p-4 flex items-center gap-4 cursor-pointer hover:border-neon-pink/50 transition-all active:scale-98 relative overflow-hidden">
-                    <div class="absolute -top-2 -right-2 bg-neon-pink text-white text-[8px] px-2 py-1 rounded-bl-lg font-bold">تخفیف</div>
-                    <div class="w-14 h-14 rounded-xl bg-white/5 flex items-center justify-center text-2xl border border-white/10">👑</div>
-                    <div class="flex-1">
-                        <h4 class="font-bold text-base text-white">Gemini Pro سالانه</h4>
-                        <p class="text-[10px] text-white/40 mt-1">اکانت آماده • یکساله</p>
-                    </div>
-                    <div class="text-right">
-                        <div class="gold-text font-bold text-lg">1,280,000</div>
-                        <div class="text-[9px] text-white/30">تومان</div>
-                    </div>
-                </div>
-
-                <div @click="buyProduct('gemini_pro_monthly_personal')" class="glass-card rounded-2xl p-4 flex items-center gap-4 cursor-pointer hover:border-neon-cyan/50 transition-all active:scale-98 relative overflow-hidden">
-                    <div class="w-14 h-14 rounded-xl bg-white/5 flex items-center justify-center text-2xl border border-white/10">📧</div>
-                    <div class="flex-1">
-                        <h4 class="font-bold text-base text-white">شارژ ایمیل شخصی</h4>
-                        <p class="text-[10px] text-white/40 mt-1">فعال‌سازی قانونی روی Gmail</p>
-                    </div>
-                    <div class="text-right">
-                        <div class="gold-text font-bold text-lg">300,000</div>
-                        <div class="text-[9px] text-white/30">تومان</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="mt-10 text-center opacity-30">
-                <i class="fa-brands fa-telegram text-2xl mb-2"></i>
-                <p class="text-[10px] font-mono tracking-widest">SECURED BY TELEGRAM</p>
+            <div>
+                <h3 class="font-bold text-sm mb-1">Pro ماهانه</h3>
+                <p class="text-[10px] text-ios-gray mb-2">اکانت آماده</p>
+                <div class="text-lg font-bold num-font" id="price-pro-m">380,000</div>
             </div>
         </div>
 
-        <transition name="fade">
-            <div v-if="sending" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center">
-                <span class="spinner mb-4"></span>
-                <p class="text-sm font-bold text-white tracking-wide">در حال اتصال به ربات...</p>
+        <div onclick="buy('gemini_pro_yearly_ready')" class="bento-card rounded-[20px] p-4 cursor-pointer flex flex-col justify-between h-[140px] opacity-0 animate-[fadeIn_0.6s_ease-out_0.3s_forwards]">
+            <div class="flex justify-between items-start">
+                <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-lg">👑</div>
+                <span class="text-[9px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">صرفه</span>
             </div>
-        </transition>
+            <div>
+                <h3 class="font-bold text-sm mb-1">Pro سالانه</h3>
+                <p class="text-[10px] text-ios-gray mb-2">۱۲ ماهه</p>
+                <div class="text-lg font-bold num-font" id="price-pro-y">1,280,000</div>
+            </div>
+        </div>
+    </div>
 
+    <div onclick="buy('gemini_pro_monthly_personal')" class="bento-card rounded-[20px] p-4 flex items-center justify-between cursor-pointer opacity-0 animate-[fadeIn_0.6s_ease-out_0.4s_forwards]">
+        <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+            </div>
+            <div>
+                <h3 class="font-bold text-sm">شارژ ایمیل شخصی</h3>
+                <p class="text-[10px] text-ios-gray">قانونی روی Gmail شما</p>
+            </div>
+        </div>
+        <div class="text-right">
+            <div class="font-bold num-font" id="price-personal">300,000</div>
+            <div class="text-[9px] text-white/30">تومان</div>
+        </div>
+    </div>
+
+    <div id="loader" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex flex-col items-center justify-center hidden opacity-0 transition-opacity duration-300">
+        <div class="loader mb-4"></div>
+        <p class="text-xs text-white/50 tracking-widest font-mono">PROCESSING</p>
     </div>
 
     <script>
-        const { createApp, ref, onMounted } = Vue;
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+        tg.enableClosingConfirmation();
+        tg.setHeaderColor('#000000');
+        tg.setBackgroundColor('#000000');
 
-        createApp({
-            setup() {
-                const tg = window.Telegram.WebApp;
-                const loading = ref(true);
-                const sending = ref(false);
-                const user = ref({});
+        // 1. سیستم قیمت‌دهی داینامیک (از URL)
+        // ربات باید لینک را اینطور بسازد: url?p1=1850000&p2=380000...
+        function updatePricesFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            
+            const format = (n) => Number(n).toLocaleString();
 
-                // تابع اصلی خرید
-                const buyProduct = (productId) => {
-                    // 1. ویبره سنگین برای حس خرید
-                    if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('heavy');
-                    
-                    // 2. نمایش لودینگ
-                    sending.value = true;
+            // اگر در لینک قیمتی بود، جایگزین کن. اگر نه، پیش‌فرض بماند.
+            if(params.get('ultra')) document.getElementById('price-ultra').innerText = format(params.get('ultra'));
+            if(params.get('pro_m')) document.getElementById('price-pro-m').innerText = format(params.get('pro_m'));
+            if(params.get('pro_y')) document.getElementById('price-pro-y').innerText = format(params.get('pro_y'));
+            if(params.get('personal')) document.getElementById('price-personal').innerText = format(params.get('personal'));
+        }
 
-                    // 3. ارسال دیتا با کمی تاخیر برای نمایش انیمیشن
-                    setTimeout(() => {
-                        tg.sendData(productId);
-                    }, 600);
-                };
+        // 2. تابع خرید
+        function buy(productId) {
+            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+            
+            const loader = document.getElementById('loader');
+            loader.classList.remove('hidden');
+            requestAnimationFrame(() => loader.classList.remove('opacity-0'));
 
-                onMounted(() => {
-                    // تنظیمات تلگرام
-                    tg.expand();
-                    tg.setHeaderColor('#000000');
-                    tg.setBackgroundColor('#000000');
-                    tg.enableClosingConfirmation();
+            setTimeout(() => {
+                tg.sendData(productId);
+            }, 400); // تاخیر کمتر برای حس سرعت بالاتر
+        }
 
-                    // دریافت اطلاعات کاربر
-                    if (tg.initDataUnsafe?.user) {
-                        user.value = tg.initDataUnsafe.user;
-                    } else {
-                        user.value = { first_name: 'کاربر گرامی', photo_url: null };
-                    }
+        // اجرا هنگام لود
+        updatePricesFromURL();
 
-                    // حذف لودینگ اولیه
-                    setTimeout(() => {
-                        loading.value = false;
-                    }, 800);
-                });
-
-                return { loading, sending, user, buyProduct };
-            }
-        }).mount('#app');
     </script>
 
     <style>
-        .fade-enter-active, .fade-leave-active { transition: opacity 0.3s ease; }
-        .fade-enter-from, .fade-leave-to { opacity: 0; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </body>
