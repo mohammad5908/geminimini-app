@@ -4,202 +4,289 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#000000">
-    <title>Gemini Center</title>
+    <title>Gemini Premium</title>
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Vazirmatn', 'sans-serif'] },
-                    colors: {
-                        bg: '#000000',
-                        glass: 'rgba(255, 255, 255, 0.05)',
-                        border: 'rgba(255, 255, 255, 0.1)',
-                        accent: '#8B5CF6', // بنفش
-                        gold: '#F59E0B',
-                        success: '#10B981'
-                    },
-                    animation: {
-                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'slide-down': 'slideDown 0.5s ease-out forwards',
-                    },
-                    keyframes: {
-                        slideDown: { '0%': { transform: 'translateY(-20px)', opacity: 0 }, '100%': { transform: 'translateY(0)', opacity: 1 } }
-                    }
-                }
-            }
-        }
-    </script>
-
     <style>
-        body { background-color: #000; color: #fff; -webkit-tap-highlight-color: transparent; user-select: none; overflow-x: hidden; }
-        
-        /* افکت شیشه‌ای پیشرفته */
-        .glass-panel {
-            background: linear-gradient(180deg, rgba(30, 30, 30, 0.7) 0%, rgba(10, 10, 10, 0.9) 100%);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        /* --- 2. دیزاین سیستم اختصاصی (Luxury Dark Mode) --- */
+        :root {
+            --bg: #000000;
+            --surface: #121212;
+            --surface-light: #1E1E1E;
+            --border: rgba(255, 255, 255, 0.08);
+            --primary: #8B5CF6; /* بنفش اصلی */
+            --accent: #EC4899;  /* صورتی */
+            --gold: #F59E0B;    /* طلایی */
+            --text-main: #FFFFFF;
+            --text-muted: #888888;
         }
 
-        /* کارت پروفایل */
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; user-select: none; }
+
+        body {
+            margin: 0; padding: 0;
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: 'Vazirmatn', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex; flex-direction: column;
+        }
+
+        /* بافت نویز سینمایی (برای حس لاکچری) */
+        .noise-bg {
+            position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* نورهای محیطی */
+        .ambient-light {
+            position: fixed; inset: 0; z-index: -1; pointer-events: none;
+            background: 
+                radial-gradient(circle at 10% 0%, rgba(139, 92, 246, 0.15), transparent 40%),
+                radial-gradient(circle at 90% 100%, rgba(236, 72, 153, 0.1), transparent 40%);
+        }
+
+        /* کانتینر اصلی */
+        .app-container {
+            max-width: 480px; margin: 0 auto; width: 100%;
+            padding: 20px; flex: 1; display: flex; flex-direction: column;
+            position: relative; z-index: 1;
+        }
+
+        /* --- پنل کاربری پیشرفته --- */
         .profile-card {
-            display: flex; align-items: center; gap: 15px;
-            padding: 15px; border-radius: 20px;
-            background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-            margin-bottom: 25px; transition: all 0.3s;
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 16px;
+            display: flex; align-items: center; gap: 16px;
+            margin-bottom: 24px;
+            animation: slideDown 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .avatar-wrapper {
+            position: relative; width: 56px; height: 56px; flex-shrink: 0;
         }
         
-        .avatar-box {
-            position: relative; width: 50px; height: 50px; flex-shrink: 0;
-        }
         .avatar-img {
-            width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
-            border: 2px solid #000; padding: 2px; background: linear-gradient(45deg, #8B5CF6, #EC4899);
+            width: 100%; height: 100%; border-radius: 50%; object-fit: cover;
+            border: 2px solid var(--bg); padding: 2px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
         }
+        
+        /* آواتار جایگزین (حروف اسم) */
         .avatar-placeholder {
             width: 100%; height: 100%; border-radius: 50%;
-            background: linear-gradient(45deg, #8B5CF6, #EC4899);
+            background: linear-gradient(135deg, var(--surface-light), var(--surface));
             display: flex; align-items: center; justify-content: center;
-            font-weight: bold; font-size: 18px; text-transform: uppercase;
+            font-size: 20px; font-weight: bold; color: var(--text-muted);
+            border: 1px solid var(--border);
         }
+
         .status-badge {
-            position: absolute; bottom: 0; right: 0; width: 12px; height: 12px;
-            background: #10B981; border: 2px solid #000; border-radius: 50%;
-            box-shadow: 0 0 10px #10B981; animation: pulse 2s infinite;
+            position: absolute; bottom: 2px; right: 2px;
+            width: 14px; height: 14px; background: #10B981;
+            border: 2px solid var(--bg); border-radius: 50%;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
         }
 
-        /* دکمه کپی آیدی */
-        .id-badge {
-            display: inline-flex; align-items: center; gap: 6px;
-            background: rgba(0,0,0,0.3); padding: 4px 10px; border-radius: 8px;
-            font-size: 11px; font-family: monospace; color: #aaa;
-            cursor: pointer; transition: 0.2s; border: 1px solid transparent;
-        }
-        .id-badge:active { background: rgba(139, 92, 246, 0.2); color: #fff; border-color: #8B5CF6; }
-
-        /* تایپوگرافی */
-        .num-font { font-variant-numeric: tabular-nums; letter-spacing: -0.5px; }
+        .user-info { flex: 1; overflow: hidden; }
+        .user-name { font-size: 16px; font-weight: 800; margin: 0 0 4px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
-        /* نوتیفیکیشن کپی */
+        .user-id-box {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 8px;
+            font-size: 11px; font-family: monospace; color: var(--text-muted);
+            cursor: pointer; transition: 0.2s;
+        }
+        .user-id-box:active { background: rgba(139, 92, 246, 0.2); color: var(--primary); }
+
+        /* --- کارت محصول ویژه (Hero) --- */
+        .hero-card {
+            position: relative; overflow: hidden;
+            background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
+            border: 1px solid var(--border); border-radius: 28px;
+            padding: 24px; margin-bottom: 20px;
+            cursor: pointer; transition: transform 0.2s;
+            animation: slideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards;
+        }
+        .hero-card:active { transform: scale(0.98); border-color: var(--primary); }
+        
+        .hero-card::before {
+            content: ''; position: absolute; top: -50%; right: -50%; width: 100%; height: 100%;
+            background: radial-gradient(circle, rgba(139,92,246,0.2), transparent 70%);
+            filter: blur(40px);
+        }
+
+        .hero-badge {
+            display: inline-block; background: rgba(139, 92, 246, 0.15); color: var(--primary);
+            padding: 6px 12px; border-radius: 8px; font-size: 10px; font-weight: 900; letter-spacing: 1px;
+            border: 1px solid rgba(139, 92, 246, 0.3); margin-bottom: 12px;
+        }
+
+        .hero-title { font-size: 32px; font-weight: 900; margin: 0 0 8px 0; line-height: 1.1; }
+        .text-gradient { background: linear-gradient(to right, #fff, #d8b4fe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .hero-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 20px; max-width: 85%; }
+
+        .price-row { display: flex; justify-content: space-between; align-items: flex-end; }
+        .price-val { font-size: 24px; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
+        .price-unit { font-size: 12px; color: var(--text-muted); font-weight: normal; margin-right: 4px; }
+        
+        .action-icon {
+            width: 44px; height: 44px; background: #fff; color: #000;
+            border-radius: 14px; display: flex; align-items: center; justify-content: center;
+            font-size: 20px; box-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+
+        /* --- لیست محصولات (Grid) --- */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s backwards; }
+
+        .card {
+            background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: 20px; padding: 16px;
+            display: flex; flex-direction: column; justify-content: space-between; height: 160px;
+            cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden;
+        }
+        .card:active { transform: scale(0.97); background: var(--surface-light); }
+
+        .card-icon { font-size: 32px; margin-bottom: 12px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5)); }
+        .card-title { font-size: 14px; font-weight: 700; margin: 0 0 4px 0; }
+        .card-sub { font-size: 11px; color: var(--text-muted); }
+        .card-price { font-size: 16px; font-weight: 800; color: var(--gold); margin-top: auto; }
+
+        /* کارت عریض (Personal) */
+        .wide-card {
+            background: linear-gradient(90deg, rgba(6,182,212,0.05), transparent);
+            border: 1px solid var(--border); border-radius: 20px; padding: 20px;
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 30px; cursor: pointer; transition: transform 0.2s;
+            animation: slideUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.3s backwards;
+        }
+        .wide-card:active { transform: scale(0.98); border-color: var(--accent); }
+        
+        .wide-content { display: flex; align-items: center; gap: 16px; }
+        .wide-icon { font-size: 24px; color: #06B6D4; }
+
+        /* --- نوتیفیکیشن (Toast) --- */
         #toast {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(20px);
-            background: #333; color: #fff; padding: 8px 16px; border-radius: 30px;
-            font-size: 12px; opacity: 0; transition: all 0.3s; pointer-events: none; z-index: 100;
-            display: flex; align-items: center; gap: 8px; border: 1px solid #555;
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px);
+            background: rgba(20, 20, 20, 0.9); backdrop-filter: blur(10px);
+            border: 1px solid var(--primary); padding: 10px 20px; border-radius: 50px;
+            color: #fff; font-size: 12px; font-weight: bold;
+            display: flex; align-items: center; gap: 8px;
+            z-index: 100; opacity: 0; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
-        /* لودینگ */
+        /* --- لودینگ فول اسکرین --- */
         #loader {
             position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 999;
-            display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: 0.3s;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: 0.3s;
         }
         #loader.active { opacity: 1; pointer-events: all; }
-        .spinner { width: 30px; height: 30px; border: 3px solid #333; border-top-color: #8B5CF6; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        
+        .spinner {
+            width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1);
+            border-top-color: var(--primary); border-radius: 50%;
+            animation: spin 0.8s linear infinite; margin-bottom: 15px;
+        }
+        .loading-text { font-size: 12px; letter-spacing: 2px; color: var(--text-muted); font-weight: bold; }
+
+        @keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         @keyframes spin { to { transform: rotate(360deg); } }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
     </style>
 </head>
 <body>
 
-    <div id="loader"><div class="spinner"></div></div>
+    <div class="noise-bg"></div>
+    <div class="ambient-light"></div>
 
-    <div id="toast"><i class="fa-solid fa-check text-green-500"></i> آیدی کپی شد</div>
+    <div id="loader">
+        <div class="spinner"></div>
+        <div class="loading-text">در حال پردازش</div>
+    </div>
 
-    <div class="max-w-md mx-auto min-h-screen flex flex-col p-5 relative">
+    <div id="toast">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        آیدی کپی شد
+    </div>
+
+    <div class="app-container">
         
-        <div class="fixed top-0 left-0 w-full h-[300px] bg-gradient-to-b from-accent/10 to-transparent pointer-events-none z-[-1]"></div>
-
-        <header class="profile-card animate-slide-down">
-            <div class="avatar-box">
-                <img id="user-photo" class="avatar-img hidden" src="" alt="Avatar">
-                <div id="user-initials" class="avatar-placeholder hidden">U</div>
+        <header class="profile-card">
+            <div class="avatar-wrapper">
+                <img id="user-photo" class="avatar-img" src="" style="display: none;">
+                <div id="user-initials" class="avatar-placeholder" style="display: none;">U</div>
                 <div class="status-badge"></div>
             </div>
-            <div class="flex-1">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <h2 id="user-name" class="text-sm font-bold text-white mb-1">کاربر مهمان</h2>
-                        <div onclick="copyId()" class="id-badge">
-                            <span id="user-id">ID: Loading...</span>
-                            <i class="fa-regular fa-copy text-[10px]"></i>
-                        </div>
-                    </div>
-                    <div class="bg-gold/20 text-gold text-[9px] px-2 py-1 rounded-md font-bold border border-gold/20">
-                        PREMIUM
-                    </div>
+            <div class="user-info">
+                <h2 id="user-name" class="user-name">کاربر مهمان</h2>
+                <div class="user-id-box" onclick="copyUserId()">
+                    <span id="user-id">ID: Loading...</span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px; opacity:0.7"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                 </div>
             </div>
         </header>
 
-        <div onclick="buy('gemini_ultra_monthly_ready')" class="relative glass-panel rounded-[28px] p-6 mb-4 cursor-pointer group overflow-hidden">
-            <div class="absolute top-0 right-0 w-40 h-40 bg-accent/20 rounded-full blur-[50px] group-hover:bg-accent/30 transition-all"></div>
+        <div class="hero-card" onclick="buy('gemini_ultra_monthly_ready')">
+            <div class="hero-badge">BEST CHOICE</div>
+            <h1 class="hero-title">Gemini <span class="text-gradient">Ultra 1.5</span></h1>
+            <p class="hero-desc">قدرتمندترین مدل هوش مصنوعی گوگل. <br>تحلیل تصویر، کدنویسی و سرعت بالا.</p>
             
-            <div class="relative z-10">
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="text-[10px] font-bold text-accent bg-accent/10 px-2 py-0.5 rounded border border-accent/20">پیشنهاد ویژه</span>
-                </div>
-                <h1 class="text-3xl font-black mb-2">Gemini <span class="text-transparent bg-clip-text bg-gradient-to-r from-accent to-pink-500">Ultra</span></h1>
-                <p class="text-xs text-zinc-400 mb-6 max-w-[80%]">قدرتمندترین مدل هوش مصنوعی گوگل با قابلیت کدنویسی و تحلیل تصویر.</p>
-                
-                <div class="flex justify-between items-end">
-                    <div>
-                        <span id="p-ultra" class="text-xl font-bold text-white num-font">1,850,000</span>
-                        <span class="text-[10px] text-zinc-500">تومان</span>
-                    </div>
-                    <button class="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-arrow-left -rotate-45"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-3 mb-4">
-            
-            <div onclick="buy('gemini_pro_monthly_ready')" class="glass-panel rounded-[24px] p-4 cursor-pointer active:scale-95 transition-transform flex flex-col justify-between h-[150px]">
-                <div class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-xl border border-white/5">💎</div>
+            <div class="price-row">
                 <div>
-                    <h3 class="font-bold text-sm mb-1">Pro ماهانه</h3>
-                    <p class="text-[10px] text-zinc-500 mb-2">تحویل آنی</p>
-                    <div id="p-pro-m" class="text-gold font-bold text-base num-font">380,000</div>
+                    <span class="price-val" id="p-ultra">1,850,000</span>
+                    <span class="price-unit">تومان</span>
+                </div>
+                <div class="action-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
                 </div>
             </div>
+        </div>
 
-            <div onclick="buy('gemini_pro_yearly_ready')" class="glass-panel rounded-[24px] p-4 cursor-pointer active:scale-95 transition-transform flex flex-col justify-between h-[150px]">
-                <div class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-xl border border-white/5">👑</div>
+        <div class="grid">
+            <div class="card" onclick="buy('gemini_pro_monthly_ready')">
+                <div class="card-icon">💎</div>
                 <div>
-                    <h3 class="font-bold text-sm mb-1">Pro سالانه</h3>
-                    <p class="text-[10px] text-zinc-500 mb-2">اقتصادی</p>
-                    <div id="p-pro-y" class="text-gold font-bold text-base num-font">1,280,000</div>
+                    <div class="card-title">Pro ماهانه</div>
+                    <div class="card-sub">اکانت آماده • تحویل آنی</div>
                 </div>
+                <div class="card-price" id="p-pro-m">380,000</div>
             </div>
-        </div>
 
-        <div onclick="buy('gemini_pro_monthly_personal')" class="glass-panel rounded-[24px] p-4 flex items-center justify-between cursor-pointer active:scale-95 transition-transform">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 text-xl border border-blue-500/20">
-                    <i class="fa-solid fa-envelope"></i>
-                </div>
+            <div class="card" onclick="buy('gemini_pro_yearly_ready')">
+                <div class="card-icon">👑</div>
                 <div>
-                    <h3 class="font-bold text-sm">شارژ ایمیل شخصی</h3>
-                    <p class="text-[10px] text-zinc-500">فعال‌سازی روی Gmail</p>
+                    <div class="card-title">Pro سالانه</div>
+                    <div class="card-sub">۱۲ ماه اعتبار کامل</div>
                 </div>
+                <div class="card-price" id="p-pro-y">1,280,000</div>
             </div>
-            <div id="p-personal" class="text-white font-bold num-font">300,000</div>
         </div>
 
-        <div class="mt-auto pt-8 text-center opacity-30 pb-4">
-            <i class="fa-brands fa-telegram text-xl"></i>
-            <p class="text-[9px] mt-2 font-mono tracking-widest">SECURED BY TELEGRAM</p>
+        <div class="wide-card" onclick="buy('gemini_pro_monthly_personal')">
+            <div class="wide-content">
+                <div class="wide-icon">📧</div>
+                <div>
+                    <div class="card-title">شارژ ایمیل شخصی</div>
+                    <div class="card-sub">فعال‌سازی قانونی روی Gmail</div>
+                </div>
+            </div>
+            <div class="card-price" style="color: #06B6D4;" id="p-personal">300,000</div>
         </div>
+
+        <footer style="margin-top: auto; text-align: center; opacity: 0.3; font-size: 10px; padding-bottom: 10px;">
+            SECURED BY TELEGRAM
+        </footer>
 
     </div>
 
@@ -213,55 +300,57 @@
         tg.setBackgroundColor('#000000');
 
         // ==========================================
-        // 👤 مدیریت کاربر (User Data Management)
+        // 1. مدیریت پروفایل هوشمند
         // ==========================================
         const user = tg.initDataUnsafe.user;
-        
+        const photoEl = document.getElementById('user-photo');
+        const initialEl = document.getElementById('user-initials');
+        const nameEl = document.getElementById('user-name');
+        const idEl = document.getElementById('user-id');
+
         if (user) {
-            // 1. نمایش نام
-            document.getElementById('user-name').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '');
+            // نام
+            nameEl.innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '');
             
-            // 2. نمایش آیدی عددی (User ID)
-            document.getElementById('user-id').innerText = user.id;
+            // آیدی
+            idEl.innerText = user.id;
 
-            // 3. مدیریت عکس پروفایل (Photo Handling)
-            const photoEl = document.getElementById('user-photo');
-            const initialEl = document.getElementById('user-initials');
-
+            // عکس
             if (user.photo_url) {
                 photoEl.src = user.photo_url;
-                photoEl.classList.remove('hidden');
+                photoEl.style.display = 'block';
             } else {
-                // اگر عکس نداشت، حرف اول اسم را نشان بده
-                initialEl.innerText = user.first_name.charAt(0).toUpperCase();
-                initialEl.classList.remove('hidden');
+                // ساخت آواتار حروف اول (Fallback)
+                const initial = user.first_name.charAt(0).toUpperCase();
+                initialEl.innerText = initial;
+                initialEl.style.display = 'flex';
             }
         } else {
-            // حالت مهمان (اگر خارج از تلگرام باز شود)
-            document.getElementById('user-id').innerText = 'Unknown';
-            document.getElementById('user-initials').classList.remove('hidden');
+            // حالت دمو (خارج از تلگرام)
+            nameEl.innerText = 'کاربر مهمان';
+            idEl.innerText = 'Unknown';
+            initialEl.innerText = '?';
+            initialEl.style.display = 'flex';
         }
 
         // ==========================================
-        // 📋 تابع کپی آیدی (Copy Utility)
+        // 2. تابع کپی آیدی (با فیدبک)
         // ==========================================
-        function copyId() {
+        function copyUserId() {
             const idText = document.getElementById('user-id').innerText;
-            if (idText === 'Unknown') return;
+            if(idText === 'Unknown') return;
 
             navigator.clipboard.writeText(idText).then(() => {
-                // نمایش تست (Toast)
                 if(tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+                
                 const toast = document.getElementById('toast');
                 toast.classList.add('show');
                 setTimeout(() => toast.classList.remove('show'), 2000);
-            }).catch(err => {
-                console.error('Failed to copy: ', err);
             });
         }
 
         // ==========================================
-        // 💲 قیمت‌دهی داینامیک (URL Parsing)
+        // 3. آپدیت قیمت‌ها از لینک (Dynamic Pricing)
         // ==========================================
         const params = new URLSearchParams(window.location.search);
         const format = (n) => Number(n).toLocaleString();
@@ -272,21 +361,27 @@
         if(params.has('gemini_pro_monthly_personal')) document.getElementById('p-personal').innerText = format(params.get('gemini_pro_monthly_personal'));
 
         // ==========================================
-        // 🚀 تابع خرید امن (Secure Buy)
+        // 4. هسته خرید (Safe Buy)
         // ==========================================
         function buy(productId) {
+            // الف: ویبره
             if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('heavy');
+
+            // ب: لودینگ
             document.getElementById('loader').classList.add('active');
 
+            // ج: ارسال با تاخیر امنیتی
             setTimeout(() => {
                 try {
                     tg.sendData(productId);
+                    
+                    // اطمینان از بسته شدن
                     setTimeout(() => tg.close(), 100);
                 } catch (e) {
                     alert('Error: ' + e.message);
                     document.getElementById('loader').classList.remove('active');
                 }
-            }, 500);
+            }, 400);
         }
     </script>
 </body>
