@@ -1,350 +1,257 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#000000">
-<title>Gemini Ultra Premium Center</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
-<script>tailwind.config={theme:{extend:{colors:{cosmic:{950:'#000000',900:'#0a0015',800:'#1a0033',700:'#2d0052'},neon:{purple:'#8b5cf6',pink:'#ec4899',cyan:'#06b6d4'},gold:{400:'#fbbf24',500:'#f59e0b',600:'#d97706'}}}}}</script>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Vazirmatn',-apple-system,sans-serif;background:#000;color:#fff;overflow-x:hidden;-webkit-tap-highlight-color:transparent;user-select:none;touch-action:pan-y}
-#constellation-canvas{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1;background:radial-gradient(ellipse at top,#1a0033 0%,#000 60%);pointer-events:none}
-.glass-effect{background:rgba(255,255,255,.02);backdrop-filter:blur(30px) saturate(200%);-webkit-backdrop-filter:blur(30px) saturate(200%);border:1px solid rgba(139,92,246,.2);box-shadow:0 8px 32px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.05);position:relative}
-.glass-effect::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E");pointer-events:none;opacity:.3;z-index:0}
-.text-gradient-gold{background:linear-gradient(135deg,#fbbf24 0%,#f59e0b 50%,#d97706 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:900}
-.text-gradient-purple{background:linear-gradient(135deg,#8b5cf6 0%,#ec4899 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.card-3d{transform-style:preserve-3d;transition:transform .4s cubic-bezier(.175,.885,.32,1.275);will-change:transform;touch-action:pan-y}
-.card-3d:active{transform:scale(.95)}
-.glow-neon{box-shadow:0 0 20px rgba(139,92,246,.5),0 0 40px rgba(139,92,246,.3),0 0 60px rgba(139,92,246,.1)}
-.glow-gold{box-shadow:0 0 20px rgba(251,191,36,.5),0 0 40px rgba(251,191,36,.3)}
-@keyframes shimmer-slide{0%{background-position:-200% center}100%{background-position:200% center}}
-.shimmer{background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.1) 50%,transparent 100%);background-size:200% 100%;animation:shimmer-slide 3s infinite}
-@keyframes float-up{0%,100%{transform:translateY(0)}50%{transform:translateY(-25px)}}
-.float-anim{animation:float-up 8s ease-in-out infinite}
-@keyframes pulse-glow{0%,100%{box-shadow:0 0 20px rgba(139,92,246,.3)}50%{box-shadow:0 0 40px rgba(139,92,246,.8),0 0 60px rgba(139,92,246,.4)}}
-.pulse-glow{animation:pulse-glow 3s ease-in-out infinite}
-@keyframes spin-slow{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-.spin-slow{animation:spin-slow 20s linear infinite}
-@keyframes slide-in-right{from{opacity:0;transform:translateX(100px)}to{opacity:1;transform:translateX(0)}}
-.slide-in{animation:slide-in-right .6s cubic-bezier(.68,-.55,.265,1.55)}
-@keyframes fade-in-up{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
-.fade-in-up{animation:fade-in-up .5s ease-out}
-@keyframes badge-bounce{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
-.badge-bounce{animation:badge-bounce 2s ease-in-out infinite}
-.modal-backdrop{background:rgba(0,0,0,.90);backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px);z-index:9998}
-.modal-content{z-index:9999;position:relative}
-.modal-enter-active,.modal-leave-active{transition:all .3s ease}
-.modal-enter-from,.modal-leave-to{opacity:0;transform:scale(.8)}
-.toast-enter-active,.toast-leave-active{transition:all .4s cubic-bezier(.68,-.55,.265,1.55)}
-.toast-enter-from{opacity:0;transform:translateY(-80px) scale(.6)}
-.toast-leave-to{opacity:0;transform:translateY(-40px) scale(.8)}
-.page-enter-active,.page-leave-active{transition:all .5s cubic-bezier(.4,0,.2,1)}
-.page-enter-from{opacity:0;transform:translateX(60px)}
-.page-leave-to{opacity:0;transform:translateX(-60px)}
-.btn-press{transition:all .2s;position:relative;overflow:hidden}
-.btn-press:active{transform:scale(.92)}
-.btn-press::after{content:'';position:absolute;top:50%;left:50%;width:0;height:0;border-radius:50%;background:rgba(255,255,255,.3);transform:translate(-50%,-50%);transition:width .6s,height .6s}
-.btn-press:active::after{width:400px;height:400px}
-::-webkit-scrollbar{width:8px}
-::-webkit-scrollbar-track{background:rgba(139,92,246,.1)}
-::-webkit-scrollbar-thumb{background:rgba(139,92,246,.4);border-radius:10px}
-::-webkit-scrollbar-thumb:hover{background:rgba(139,92,246,.6)}
-.nav-bar{backdrop-filter:blur(25px) saturate(180%);-webkit-backdrop-filter:blur(25px) saturate(180%);background:rgba(0,0,0,.9);border-top:1px solid rgba(139,92,246,.2);z-index:1000}
-.nav-btn{transition:all .5s cubic-bezier(.68,-.55,.265,1.55)}
-.product-grid{display:grid;gap:1.5rem}
-@media(min-width:640px){.product-grid{grid-template-columns:repeat(2,1fr)}}
-.link-external{color:#8b5cf6;text-decoration:none;transition:all .3s}
-.link-external:hover{color:#ec4899;text-decoration:underline}
-.app-container{position:relative;z-index:10}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#000000">
+    <title>Gemini Premium Store</title>
+    
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Vazirmatn', 'sans-serif'] },
+                    colors: {
+                        void: '#000000',
+                        glass: 'rgba(255, 255, 255, 0.05)',
+                        neon: { purple: '#A855F7', pink: '#EC4899', gold: '#F59E0B' }
+                    },
+                    animation: {
+                        'blob': 'blob 7s infinite',
+                        'shimmer': 'shimmer 2s linear infinite',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        shimmer: {
+                            'from': { backgroundPosition: '0 0' },
+                            'to': { backgroundPosition: '-200% 0' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* استایل‌های سینمایی */
+        body { background-color: #000; color: #fff; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
+        
+        .glass-card {
+            background: rgba(20, 20, 20, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(236, 72, 153, 0.05) 100%);
+        }
+
+        .gold-text {
+            background: linear-gradient(to bottom, #FCD34D, #F59E0B);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+        }
+
+        .shimmer-btn {
+            background: linear-gradient(to right, #7C3AED 0%, #9333EA 20%, #DB2777 40%, #7C3AED 100%);
+            background-size: 200% auto;
+            animation: shimmer 3s linear infinite;
+        }
+
+        /* لودینگ گرد */
+        .spinner {
+            width: 24px; height: 24px; border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%; border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
 </head>
-<body>
-<canvas id="constellation-canvas"></canvas>
-<div id="app" class="min-h-screen flex flex-col app-container">
-<transition-group name="toast" tag="div" class="fixed top-4 left-0 right-0 z-[10000] flex flex-col items-center gap-3 pointer-events-none px-4">
-<div v-for="toast in toasts" :key="toast.id" class="glass-effect rounded-2xl px-6 py-4 flex items-center gap-4 shadow-2xl pointer-events-auto max-w-md w-full" :class="{'border-l-4 border-green-400':toast.type==='success','border-l-4 border-red-400':toast.type==='error','border-l-4 border-blue-400':toast.type==='info'}">
-<i :class="toast.type==='success'?'fa-solid fa-circle-check text-green-400':toast.type==='error'?'fa-solid fa-triangle-exclamation text-red-400':'fa-solid fa-info-circle text-blue-400'" class="text-2xl flex-shrink-0"></i>
-<div class="flex-1 min-w-0"><h4 class="font-bold text-sm">{{toast.type==='success'?'موفقیت':toast.type==='error'?'خطا':'اطلاعات'}}</h4><p class="text-xs text-white/70 mt-0.5 line-clamp-2">{{toast.message}}</p></div>
-</div>
-</transition-group>
-<div v-if="loading" class="fixed inset-0 z-[10001] flex flex-col items-center justify-center bg-black">
-<div class="relative"><div class="w-40 h-40 rounded-full border-4 border-transparent border-t-neon-purple border-r-neon-pink animate-spin"></div><i class="fa-solid fa-gem absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-5xl text-gold-400 pulse-glow"></i></div>
-<p class="mt-10 text-lg text-white/60 animate-pulse font-bold">در حال بارگذاری تجربه پریمیوم...</p>
-</div>
-<main v-else class="flex-1 pb-28 overflow-y-auto">
-<transition name="page" mode="out-in">
-<div v-if="currentPage==='shop'" key="shop" class="px-4 pt-6 space-y-6">
-<div class="glass-effect rounded-[40px] p-10 text-center relative overflow-hidden min-h-[320px] flex flex-col items-center justify-center">
-<div class="absolute inset-0 bg-gradient-to-b from-neon-purple/10 via-transparent to-transparent"></div>
-<div class="absolute top-10 right-10 w-32 h-32 bg-neon-purple/20 rounded-full blur-3xl"></div>
-<div class="absolute bottom-10 left-10 w-40 h-40 bg-gold-400/10 rounded-full blur-3xl"></div>
-<img src="https://cdn-icons-png.flaticon.com/512/6124/6124996.png" class="w-40 h-40 object-contain drop-shadow-[0_0_50px_rgba(139,92,246,0.8)] float-anim relative z-10" @error="handleImageError">
-<h1 class="text-5xl font-black mt-8 relative z-10 tracking-tight">GEMINI <span class="text-gradient-purple">ULTRA</span></h1>
-<p class="text-sm text-white/70 uppercase tracking-[0.4em] mt-3 px-6 py-2 rounded-full border border-neon-purple/30 backdrop-blur-md relative z-10 shimmer">Premium AI Subscriptions</p>
-<div class="flex gap-3 mt-6 relative z-10">
-<a href="https://t.me/geminicenter_ir" target="_blank" class="px-5 py-2 rounded-full bg-neon-purple/20 border border-neon-purple/40 text-xs font-bold hover:bg-neon-purple/30 transition-all btn-press flex items-center gap-2">
-<i class="fa-brands fa-telegram"></i><span>کانال رسمی</span>
-</a>
-<a href="https://t.me/GeminiCenterAdmin" target="_blank" class="px-5 py-2 rounded-full bg-gold-400/20 border border-gold-400/40 text-xs font-bold hover:bg-gold-400/30 transition-all btn-press flex items-center gap-2">
-<i class="fa-solid fa-headset"></i><span>پشتیبانی</span>
-</a>
-</div>
-</div>
-<div class="flex items-center justify-between px-2">
-<div class="flex items-center gap-3"><div class="w-1.5 h-10 bg-gradient-to-b from-neon-purple to-neon-pink rounded-full glow-neon"></div><h2 class="text-3xl font-black">محصولات ویژه</h2></div>
-<span class="text-xs text-white/40 font-mono px-4 py-2 rounded-xl bg-white/5 border border-white/10">{{products.length}} پکیج</span>
-</div>
-<div class="product-grid">
-<div v-for="product in products" :key="product.id" @click="openProductModal(product)" :ref="el=>setCardRef(el,product.id)" class="glass-effect card-3d rounded-[30px] p-6 cursor-pointer relative group hover:border-neon-purple/50 transition-all">
-<div class="absolute top-5 right-5 left-5 flex gap-2 flex-wrap z-10">
-<span class="px-3 py-1.5 rounded-full text-[10px] font-bold bg-gradient-to-r from-gold-400 to-gold-600 text-black shadow-lg">PREMIUM</span>
-<span v-if="product.popular" class="px-3 py-1.5 rounded-full text-[10px] font-bold bg-neon-purple/30 text-neon-purple border border-neon-purple/50 badge-bounce">پرفروش</span>
-</div>
-<div class="flex justify-center mb-6 mt-10">
-<div class="relative"><div class="absolute inset-0 bg-gradient-to-br from-neon-purple/40 to-neon-pink/40 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-<img :src="product.image" :alt="product.name" class="w-36 h-36 object-contain relative z-10 drop-shadow-2xl transform group-hover:scale-110 transition-transform duration-500" @error="handleImageError"></div>
-</div>
-<div class="space-y-4">
-<div><h3 class="text-2xl font-black mb-2 group-hover:text-gradient-purple transition-all">{{product.name}}</h3><p class="text-sm text-white/60 leading-relaxed line-clamp-2">{{product.description}}</p></div>
-<div class="pt-4 border-t border-white/10">
-<div class="text-4xl text-gradient-gold mb-1">{{formatPrice(product.price)}}<span class="text-xs text-white/50 align-middle mr-1">تومان</span></div>
-<div v-if="product.oldPrice" class="text-sm text-white/40 line-through">{{formatPrice(product.oldPrice)}} تومان</div>
-</div>
-<button class="w-full py-4 rounded-2xl bg-gradient-to-r from-neon-purple to-neon-pink text-white font-bold shadow-2xl hover:shadow-neon-purple/50 transition-all btn-press flex items-center justify-center gap-2 text-base">
-<i class="fa-solid fa-eye"></i><span>مشاهده جزئیات</span>
-</button>
-</div>
-</div>
-</div>
-</div>
-<div v-else-if="currentPage==='cart'" key="cart" class="px-4 pt-6 space-y-6 min-h-[calc(100vh-250px)] flex flex-col">
-<h2 class="text-4xl font-black flex items-center gap-3"><i class="fa-solid fa-basket-shopping text-neon-pink"></i>سبد خرید شما</h2>
-<div v-if="cart.length===0" class="flex-1 flex flex-col items-center justify-center text-center space-y-8 py-12">
-<div class="relative"><div class="absolute inset-0 bg-white/5 blur-3xl rounded-full"></div>
-<img src="https://cdn-icons-png.flaticon.com/512/11329/11329060.png" class="w-56 h-56 object-contain grayscale opacity-20 relative z-10 float-anim" @error="handleImageError"></div>
-<div><p class="text-2xl font-bold text-white/50">سبد خرید خالی است</p><p class="text-base text-white/30 mt-3">محصولات پریمیوم را به سبد اضافه کنید</p></div>
-<button @click="navigateTo('shop')" class="px-10 py-5 rounded-full bg-gradient-to-r from-neon-purple to-neon-pink text-white font-bold text-lg shadow-2xl glow-neon btn-press">مشاهده محصولات</button>
-</div>
-<div v-else class="space-y-5 flex-1">
-<div v-for="item in cart" :key="item.id" class="glass-effect rounded-[30px] p-6 relative overflow-hidden slide-in">
-<div class="absolute top-0 right-0 w-72 h-72 bg-gradient-to-br from-neon-purple/10 to-transparent blur-3xl rounded-full"></div>
-<div class="flex gap-6 items-start relative z-10">
-<img :src="item.image" class="w-32 h-32 object-contain drop-shadow-2xl flex-shrink-0" @error="handleImageError">
-<div class="flex-1 min-w-0">
-<h3 class="text-2xl font-black mb-2">{{item.name}}</h3>
-<p class="text-sm text-white/60 mb-4 line-clamp-2">{{item.description}}</p>
-<div class="flex gap-2 flex-wrap mb-4">
-<span class="text-[10px] bg-green-500/20 text-green-400 px-3 py-1.5 rounded-full border border-green-500/30 font-bold"><i class="fa-solid fa-shield-check"></i> گارانتی معتبر</span>
-<span class="text-[10px] bg-blue-500/20 text-blue-400 px-3 py-1.5 rounded-full border border-blue-500/30 font-bold"><i class="fa-solid fa-bolt"></i> تحویل فوری</span>
-</div>
-<div class="text-2xl text-gradient-gold">{{formatPrice(item.price)}} تومان</div>
-</div>
-<button @click="removeFromCart(item.id)" class="w-14 h-14 rounded-2xl bg-red-500/10 border-2 border-red-500/30 text-red-400 hover:bg-red-500 hover:text-white transition-all flex items-center justify-center flex-shrink-0 btn-press text-lg">
-<i class="fa-solid fa-trash"></i>
-</button>
-</div>
-</div>
-<div class="glass-effect rounded-[30px] p-8 space-y-5 sticky bottom-0 glow-neon">
-<div class="space-y-4 bg-black/30 rounded-2xl p-6 backdrop-blur-md border border-white/5">
-<div class="flex justify-between text-base text-white/70"><span>جمع جزء ({{cart.length}} محصول)</span><span class="font-bold">{{formatPrice(cartSubtotal)}} تومان</span></div>
-<div class="flex justify-between text-base text-green-400"><span>تخفیف ویژه</span><span class="font-bold">0 تومان</span></div>
-<div class="flex justify-between text-base text-blue-400"><span>مالیات</span><span class="font-bold">0 تومان</span></div>
-<div class="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-<div class="flex justify-between items-center"><span class="font-black text-xl">مبلغ نهایی</span><span class="text-4xl text-gradient-gold">{{formatPrice(cartTotal)}}</span></div>
-</div>
-<button @click="checkout" class="w-full py-6 rounded-2xl bg-gradient-to-r from-gold-400 via-gold-500 to-gold-600 text-black font-black text-2xl shadow-2xl glow-gold btn-press flex items-center justify-center gap-3">
-<span>پرداخت نهایی</span><i class="fa-solid fa-arrow-left"></i>
-</button>
-</div>
-</div>
-</div>
-<div v-else-if="currentPage==='profile'" key="profile" class="px-4 pt-8 space-y-6 pb-8">
-<div class="glass-effect rounded-[40px] p-10 text-center relative overflow-hidden">
-<div class="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent"></div>
-<div class="w-44 h-44 mx-auto rounded-full p-1.5 bg-gradient-to-tr from-neon-purple via-neon-pink to-gold-400 relative z-10 spin-slow">
-<img :src="user.photo_url||'https://cdn-icons-png.flaticon.com/512/9308/9308226.png'" class="w-full h-full rounded-full object-cover border-4 border-black" @error="e=>e.target.src='https://cdn-icons-png.flaticon.com/512/9308/9308226.png'">
-<div class="absolute bottom-4 right-4 w-12 h-12 rounded-full bg-green-500 border-4 border-black flex items-center justify-center shadow-2xl pulse-glow"><i class="fa-solid fa-check text-lg"></i></div>
-</div>
-<h2 class="text-4xl font-black mt-8 tracking-tight">{{user.first_name}} {{user.last_name}}</h2>
-<div @click="copyUserId" class="mt-4 inline-flex items-center gap-3 px-6 py-3 rounded-full bg-black/40 border border-neon-purple/30 cursor-pointer hover:bg-black/60 transition-all btn-press">
-<span class="font-mono text-neon-purple tracking-wider text-base font-bold">{{user.id}}</span><i class="fa-regular fa-copy text-sm text-white/50"></i>
-</div>
-<div class="grid grid-cols-2 gap-5 mt-10">
-<div class="glass-effect rounded-2xl p-6 hover:border-neon-purple/50 transition-all cursor-pointer group">
-<div class="text-5xl font-black text-gradient-purple mb-2">{{orderCount}}</div>
-<div class="text-xs uppercase tracking-widest text-white/60 font-bold">سفارشات ثبت شده</div>
-</div>
-<div class="glass-effect rounded-2xl p-6 hover:border-gold-400/50 transition-all cursor-pointer group">
-<div class="text-5xl font-black text-gradient-gold mb-2">{{formatPrice(walletBalance)}}</div>
-<div class="text-xs uppercase tracking-widest text-white/60 font-bold">موجودی کیف پول</div>
-</div>
-</div>
-</div>
-<div class="space-y-4">
-<a href="https://t.me/GeminiCenterAdmin" target="_blank" class="w-full glass-effect rounded-2xl p-6 flex items-center justify-between hover:bg-white/5 transition-all group btn-press block">
-<div class="flex items-center gap-4">
-<div class="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-600/10 flex items-center justify-center text-xl">
-<i class="fa-solid fa-headset text-blue-400"></i>
-</div>
-<div class="text-right"><div class="font-black text-lg">پشتیبانی آنلاین</div><div class="text-xs text-white/50 mt-1">تماس با ادمین</div></div>
-</div>
-<i class="fa-solid fa-chevron-left text-sm text-white/30 group-hover:-translate-x-2 transition-transform"></i>
-</a>
-<a href="https://t.me/geminicenter_ir" target="_blank" class="w-full glass-effect rounded-2xl p-6 flex items-center justify-between hover:bg-white/5 transition-all group btn-press block">
-<div class="flex items-center gap-4">
-<div class="w-14 h-14 rounded-xl bg-gradient-to-br from-neon-purple/20 to-neon-pink/10 flex items-center justify-center text-xl">
-<i class="fa-brands fa-telegram text-neon-purple"></i>
-</div>
-<div class="text-right"><div class="font-black text-lg">کانال رسمی</div><div class="text-xs text-white/50 mt-1">عضویت در کانال</div></div>
-</div>
-<i class="fa-solid fa-chevron-left text-sm text-white/30 group-hover:-translate-x-2 transition-transform"></i>
-</a>
-<button @click="showToast('بخش تاریخچه خرید به‌زودی فعال خواهد شد','info')" class="w-full glass-effect rounded-2xl p-6 flex items-center justify-between hover:bg-white/5 transition-all group btn-press">
-<div class="flex items-center gap-4">
-<div class="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-500/20 to-purple-600/10 flex items-center justify-center text-xl">
-<i class="fa-solid fa-clock-rotate-left text-purple-400"></i>
-</div>
-<div class="text-right"><div class="font-black text-lg">تاریخچه خرید</div><div class="text-xs text-white/50 mt-1">سفارشات قبلی</div></div>
-</div>
-<i class="fa-solid fa-chevron-left text-sm text-white/30 group-hover:-translate-x-2 transition-transform"></i>
-</button>
-<button @click="showToast('بخش تنظیمات به‌زودی در دسترس خواهد بود','info')" class="w-full glass-effect rounded-2xl p-6 flex items-center justify-between hover:bg-white/5 transition-all group btn-press">
-<div class="flex items-center gap-4">
-<div class="w-14 h-14 rounded-xl bg-gradient-to-br from-gold-400/20 to-gold-600/10 flex items-center justify-center text-xl">
-<i class="fa-solid fa-gear text-gold-400"></i>
-</div>
-<div class="text-right"><div class="font-black text-lg">تنظیمات حساب</div><div class="text-xs text-white/50 mt-1">مدیریت پروفایل</div></div>
-</div>
-<i class="fa-solid fa-chevron-left text-sm text-white/30 group-hover:-translate-x-2 transition-transform"></i>
-</button>
-</div>
-<div class="text-center space-y-2 pt-4">
-<p class="text-xs text-white/30 font-mono">Gemini Ultra Premium Center v3.0</p>
-<p class="text-[10px] text-white/20 font-mono">Build 2025.12.07 • Enterprise Edition</p>
-<div class="flex justify-center gap-3 mt-4">
-<a href="https://t.me/geminicenter_ir" target="_blank" class="text-xs text-neon-purple hover:text-neon-pink transition-colors">کانال</a>
-<span class="text-xs text-white/20">•</span>
-<a href="https://t.me/GeminiCenterAdmin" target="_blank" class="text-xs text-neon-purple hover:text-neon-pink transition-colors">پشتیبانی</a>
-</div>
-</div>
-</div>
-</transition>
-</main>
-<nav class="fixed bottom-0 left-0 right-0 h-24 nav-bar px-4">
-<div class="h-full flex items-center justify-around max-w-md mx-auto">
-<button v-for="page in pages" :key="page.id" @click="navigateTo(page.id)" class="relative flex flex-col items-center gap-1.5 nav-btn py-2 px-5 rounded-2xl" :class="currentPage===page.id?'-translate-y-5':''">
-<div class="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl transition-all duration-500 shadow-xl relative" :class="currentPage===page.id?'bg-gradient-to-br from-neon-purple to-neon-pink text-white scale-125 rotate-12 glow-neon':'text-white/40 bg-white/5'">
-<i :class="page.icon"></i>
-<span v-if="page.id==='cart'&&cart.length>0" class="absolute -top-2 -right-2 w-7 h-7 bg-red-500 rounded-full text-xs font-black flex items-center justify-center text-white shadow-2xl badge-bounce">{{cart.length}}</span>
-</div>
-<span class="text-[11px] font-black transition-all duration-300 absolute -bottom-2 whitespace-nowrap" :class="currentPage===page.id?'opacity-100 translate-y-0 text-neon-purple':'opacity-0 translate-y-3'">{{page.label}}</span>
-</button>
-</div>
-</nav>
-<transition name="modal">
-<div v-if="selectedProduct" @click="closeProductModal" class="fixed inset-0 flex items-end sm:items-center justify-center px-4 modal-backdrop">
-<div @click.stop class="glass-effect rounded-t-[40px] sm:rounded-[40px] p-8 max-w-2xl w-full max-h-[85vh] overflow-y-auto relative modal-content">
-<button @click="closeProductModal" class="absolute top-6 left-6 w-12 h-12 rounded-full bg-red-500/20 border border-red-500/40 text-red-400 hover:bg-red-500 hover:text-white transition-all btn-press flex items-center justify-center z-10">
-<i class="fa-solid fa-times text-xl"></i>
-</button>
-<div class="text-center mb-8">
-<div class="relative inline-block">
-<div class="absolute inset-0 bg-gradient-to-br from-neon-purple/50 to-neon-pink/50 blur-3xl rounded-full"></div>
-<img :src="selectedProduct.image" class="w-48 h-48 object-contain relative z-10 drop-shadow-2xl" @error="handleImageError">
-</div>
-</div>
-<div class="space-y-6">
-<div>
-<div class="flex items-center gap-2 mb-3 flex-wrap">
-<span class="px-3 py-1.5 rounded-full text-xs font-bold bg-gradient-to-r from-gold-400 to-gold-600 text-black">PREMIUM</span>
-<span v-if="selectedProduct.popular" class="px-3 py-1.5 rounded-full text-xs font-bold bg-neon-purple/30 text-neon-purple border border-neon-purple/50">پرفروش</span>
-</div>
-<h2 class="text-4xl font-black mb-3">{{selectedProduct.name}}</h2>
-<p class="text-base text-white/70 leading-relaxed">{{selectedProduct.description}}</p>
-</div>
-<div class="bg-black/30 rounded-2xl p-6 space-y-3">
-<h3 class="text-xl font-bold mb-4 flex items-center gap-2"><i class="fa-solid fa-list-check text-neon-purple"></i> امکانات و ویژگی‌ها</h3>
-<ul class="space-y-3">
-<li v-for="feature in selectedProduct.features" :key="feature" class="flex items-start gap-3 text-sm">
-<i class="fa-solid fa-circle-check text-green-400 text-lg mt-0.5 flex-shrink-0"></i>
-<span class="text-white/80 leading-relaxed">{{feature}}</span>
-</li>
-</ul>
-</div>
-<div class="bg-gradient-to-r from-neon-purple/10 to-neon-pink/10 rounded-2xl p-6 border border-neon-purple/30">
-<div class="flex items-center justify-between mb-2">
-<span class="text-lg font-bold">قیمت نهایی:</span>
-<div class="text-right">
-<div class="text-4xl text-gradient-gold font-black">{{formatPrice(selectedProduct.price)}}<span class="text-sm text-white/50 mr-1">تومان</span></div>
-<div v-if="selectedProduct.oldPrice" class="text-base text-white/40 line-through mt-1">{{formatPrice(selectedProduct.oldPrice)}} تومان</div>
-</div>
-</div>
-</div>
-<button @click="addToCartFromModal" class="w-full py-6 rounded-2xl bg-gradient-to-r from-neon-purple to-neon-pink text-white font-black text-xl shadow-2xl glow-neon btn-press flex items-center justify-center gap-3">
-<i class="fa-solid fa-cart-plus text-2xl"></i><span>افزودن به سبد خرید</span>
-</button>
-</div>
-</div>
-</div>
-</transition>
-</div>
-<script>
-class ConstellationEngine{constructor(canvas){this.canvas=canvas;this.ctx=canvas.getContext('2d');this.particles=[];this.mouse={x:null,y:null,radius:150};this.animationId=null;this.init()}init(){this.resize();window.addEventListener('resize',()=>this.resize());const handleMove=e=>{const rect=this.canvas.getBoundingClientRect();if(e.touches){const touch=e.touches[0];this.mouse.x=touch.clientX-rect.left;this.mouse.y=touch.clientY-rect.top}else{this.mouse.x=e.clientX-rect.left;this.mouse.y=e.clientY-rect.top}};this.canvas.addEventListener('mousemove',handleMove);this.canvas.addEventListener('touchmove',e=>{e.preventDefault();handleMove(e)},{passive:false});this.canvas.addEventListener('mouseleave',()=>{this.mouse.x=null;this.mouse.y=null});this.canvas.addEventListener('touchend',()=>{this.mouse.x=null;this.mouse.y=null});this.createParticles();this.animate()}resize(){this.canvas.width=window.innerWidth;this.canvas.height=window.innerHeight}createParticles(){this.particles=[];const count=Math.floor(this.canvas.width*this.canvas.height/8000);for(let i=0;i<count;i++){this.particles.push({x:Math.random()*this.canvas.width,y:Math.random()*this.canvas.height,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,radius:Math.random()*1.5+.5,opacity:Math.random()*.6+.2})}}drawParticle(p){this.ctx.beginPath();this.ctx.arc(p.x,p.y,p.radius,0,Math.PI*2);this.ctx.fillStyle=`rgba(139,92,246,${p.opacity})`;this.ctx.fill();this.ctx.shadowBlur=8;this.ctx.shadowColor='rgba(139,92,246,0.8)';this.ctx.fill();this.ctx.shadowBlur=0}connectParticles(){for(let i=0;i<this.particles.length;i++){for(let j=i+1;j<this.particles.length;j++){const p1=this.particles[i];const p2=this.particles[j];const dx=p1.x-p2.x;const dy=p1.y-p2.y;const dist=Math.sqrt(dx*dx+dy*dy);if(dist<120){const opacity=(1-dist/120)*.15;this.ctx.beginPath();this.ctx.strokeStyle=`rgba(139,92,246,${opacity})`;this.ctx.lineWidth=.5;this.ctx.moveTo(p1.x,p1.y);this.ctx.lineTo(p2.x,p2.y);this.ctx.stroke()}}}}updateParticles(){this.particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>this.canvas.width)p.vx*=-1;if(p.y<0||p.y>this.canvas.height)p.vy*=-1;if(this.mouse.x!==null&&this.mouse.y!==null){const dx=this.mouse.x-p.x;const dy=this.mouse.y-p.y;const dist=Math.sqrt(dx*dx+dy*dy);if(dist<this.mouse.radius){const forceX=dx/dist;const forceY=dy/dist;const force=(this.mouse.radius-dist)/this.mouse.radius;p.x-=forceX*force*3;p.y-=forceY*force*3}}})}animate(){this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);this.updateParticles();this.connectParticles();this.particles.forEach(p=>this.drawParticle(p));this.animationId=requestAnimationFrame(()=>this.animate())}destroy(){if(this.animationId){cancelAnimationFrame(this.animationId)}}}
-class Card3DTilt{constructor(){this.cardElements=new Map();this.init()}init(){const handleMove=(card,e)=>{const rect=card.getBoundingClientRect();let clientX,clientY;if(e.touches){const touch=e.touches[0];clientX=touch.clientX;clientY=touch.clientY}else{clientX=e.clientX;clientY=e.clientY}const x=clientX-rect.left-rect.width/2;const y=clientY-rect.top-rect.height/2;const rotateX=(y/rect.height)*-15;const rotateY=(x/rect.width)*15;card.style.transform=`perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05,1.05,1.05)`};const handleLeave=card=>{card.style.transform='perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)'};this.handleMove=handleMove;this.handleLeave=handleLeave}addCard(card){if(!card||this.cardElements.has(card))return;const moveHandler=e=>{e.stopPropagation();this.handleMove(card,e)};const leaveHandler=()=>this.handleLeave(card);card.addEventListener('mousemove',moveHandler);card.addEventListener('touchmove',moveHandler,{passive:true});card.addEventListener('mouseleave',leaveHandler);card.addEventListener('touchend',leaveHandler);this.cardElements.set(card,{moveHandler,leaveHandler})}removeCard(card){if(!card||!this.cardElements.has(card))return;const handlers=this.cardElements.get(card);card.removeEventListener('mousemove',handlers.moveHandler);card.removeEventListener('touchmove',handlers.moveHandler);card.removeEventListener('mouseleave',handlers.leaveHandler);card.removeEventListener('touchend',handlers.leaveHandler);this.cardElements.delete(card)}updateCards(cards){const currentCards=new Set(cards);this.cardElements.forEach((handlers,card)=>{if(!currentCards.has(card)){this.removeCard(card)}});cards.forEach(card=>this.addCard(card))}destroy(){this.cardElements.forEach((handlers,card)=>this.removeCard(card));this.cardElements.clear()}}
-const{createApp,ref,reactive,computed,onMounted,onBeforeUnmount,watch,nextTick}=Vue;
-createApp({setup(){
-const tg=window.Telegram.WebApp;
-tg.ready();tg.expand();
-const loading=ref(true);
-const currentPage=ref('shop');
-const toasts=ref([]);
-const selectedProduct=ref(null);
-const cardRefs=reactive(new Map());
-const user=reactive(tg.initDataUnsafe?.user||{id:'123456789',first_name:'کاربر',last_name:'مهمان',photo_url:null});
-const products=ref([
-{id:'diamond-monthly',name:'Diamond Monthly',description:'دسترسی ۳۰ روزه کامل به تمام قابلیت‌های هوش مصنوعی جمینی با سرور اختصاصی پرسرعت و پشتیبانی ۲۴ساعته',price:300000,oldPrice:450000,image:'https://cdn-icons-png.flaticon.com/512/4243/4243187.png',popular:false,features:['دسترسی کامل به Gemini Ultra و Gemini Pro','سرور اختصاصی با سرعت بالا','پشتیبانی ۲۴/۷ تلگرامی','بدون محدودیت تعداد پرسش','گارانتی بازگشت وجه ۷ روزه']},
-{id:'crown-yearly',name:'Royal Crown VIP',description:'اشتراک یکساله پریمیوم با بیمه قطعی، IP اختصاصی ثابت، اولویت پشتیبانی و امکانات ویژه سازمانی',price:1200000,oldPrice:1800000,image:'https://cdn-icons-png.flaticon.com/512/2544/2544087.png',popular:true,features:['تمام امکانات پکیج Diamond','IP اختصاصی ثابت برای امنیت بیشتر','بیمه ۳۰ روزه بازگشت کامل وجه','اولویت در پشتیبانی و پاسخگویی','API اختصاصی برای توسعه‌دهندگان','تخفیف ویژه تمدید اشتراک']},
-{id:'galactic-ultra',name:'Galactic Ultra Unlimited',description:'دسترسی نامحدود واقعی به تمام سرویس‌ها، پنل نمایندگی اختصاصی با کمیسیون ۳۰٪ و آموزش کامل رایگان',price:1800000,oldPrice:2500000,image:'https://cdn-icons-png.flaticon.com/512/3211/3211361.png',popular:false,features:['تمام امکانات پکیج VIP','پنل نمایندگی اختصاصی برای کسب درآمد','کمیسیون ۳۰٪ از فروش زیرمجموعه','آموزش کامل بازاریابی رایگان','پشتیبانی اختصاصی ویژه نمایندگان','ماژول‌های آموزشی اختصاصی','دسترسی به نسخه‌های بتا جدید']}
-]);
-const loadCartFromStorage=()=>{try{const stored=localStorage.getItem('gemini_ultra_cart');if(!stored)return[];const parsed=JSON.parse(stored);return Array.isArray(parsed)?parsed:[]}catch(e){console.error('Cart load error:',e);return[]}};
-const cart=ref(loadCartFromStorage());
-watch(cart,newCart=>{try{localStorage.setItem('gemini_ultra_cart',JSON.stringify(newCart));updateMainButton()}catch(e){console.error('Cart save error:',e)}},{deep:true,immediate:true});
-const cartSubtotal=computed(()=>cart.value.reduce((sum,item)=>sum+(item.price||0),0));
-const cartTotal=computed(()=>cartSubtotal.value);
-const orderCount=computed(()=>{try{const orders=JSON.parse(localStorage.getItem('gemini_ultra_orders')||'[]');return Array.isArray(orders)?orders.length:0}catch(e){return 0}});
-const walletBalance=computed(()=>0);
-const pages=[{id:'shop',label:'فروشگاه',icon:'fa-solid fa-gem'},{id:'cart',label:'سبد خرید',icon:'fa-solid fa-basket-shopping'},{id:'profile',label:'پروفایل',icon:'fa-solid fa-user-astronaut'}];
-const formatPrice=price=>{if(!price&&price!==0)return'0';return price.toString().replace(/B(?=(d{3})+(?!d))/g,',')};
-const hapticFeedback=(style='medium')=>{try{if(tg.HapticFeedback){tg.HapticFeedback.impactOccurred(style)}}catch(e){console.error('Haptic error:',e)}};
-const showToast=(message,type='success')=>{const id=Date.now()+Math.random();toasts.value.push({id,message,type});hapticFeedback(type==='success'?'light':'heavy');setTimeout(()=>{toasts.value=toasts.value.filter(t=>t.id!==id)},3500)};
-const navigateTo=page=>{if(currentPage.value===page)return;hapticFeedback('light');currentPage.value=page};
-const openProductModal=product=>{selectedProduct.value=product;hapticFeedback('medium')};
-const closeProductModal=()=>{selectedProduct.value=null;hapticFeedback('light')};
-const handleImageError=e=>{e.target.src='https://cdn-icons-png.flaticon.com/512/679/679720.png'};
-const addToCartFromModal=()=>{if(!selectedProduct.value)return;const product=selectedProduct.value;const exists=cart.value.find(item=>item.id===product.id);if(exists){showToast('این محصول قبلاً به سبد خرید اضافه شده است','error');hapticFeedback('heavy');return}cart.value.push({...product});showToast(`${product.name} با موفقیت به سبد خرید اضافه شد`);hapticFeedback('medium');closeProductModal()};
-const removeFromCart=productId=>{const product=cart.value.find(item=>item.id===productId);if(!product)return;cart.value=cart.value.filter(item=>item.id!==productId);showToast(`${product.name} از سبد خرید حذف شد`,'error');hapticFeedback('heavy')};
-const checkout=()=>{if(cart.value.length===0)return;hapticFeedback('heavy');try{const orders=JSON.parse(localStorage.getItem('gemini_ultra_orders')||'[]');orders.push({id:`ORD-${Date.now()}`,date:new Date().toISOString(),items:[...cart.value],total:cartTotal.value,status:'pending'});localStorage.setItem('gemini_ultra_orders',JSON.stringify(orders));const checkoutData={action:'checkout',user_id:user.id,items:cart.value.map(item=>({id:item.id,name:item.name,price:item.price})),total:cartTotal.value,timestamp:Date.now()};tg.sendData(JSON.stringify(checkoutData));showToast('در حال انتقال به درگاه پرداخت...');setTimeout(()=>{cart.value=[];tg.close()},2000)}catch(e){console.error('Checkout error:',e);showToast('خطا در پردازش. لطفاً دوباره تلاش کنید','error')}};
-const copyUserId=()=>{try{navigator.clipboard.writeText(user.id);showToast('شناسه کاربری با موفقیت کپی شد');hapticFeedback('light')}catch(e){showToast('خطا در کپی کردن','error')}};
-let mainButtonHandler=null;
-const updateMainButton=()=>{try{if(mainButtonHandler){tg.MainButton.offClick(mainButtonHandler)}if(cart.value.length>0){tg.MainButton.text=`پرداخت ${formatPrice(cartTotal.value)} تومان`;mainButtonHandler=checkout;tg.MainButton.onClick(mainButtonHandler);tg.MainButton.show()}else{tg.MainButton.hide()}}catch(e){console.error('MainButton error:',e)}};
-const setCardRef=(el,id)=>{if(el){cardRefs.set(id,el)}else{cardRefs.delete(id)}};
-let constellationEngine=null;
-let card3DTilt=null;
-onMounted(()=>{
-try{tg.setHeaderColor('#000000');tg.setBackgroundColor('#000000')}catch(e){console.error('Theme error:',e)}
-const canvas=document.getElementById('constellation-canvas');if(canvas){try{constellationEngine=new ConstellationEngine(canvas)}catch(e){console.error('Constellation error:',e)}}
-setTimeout(()=>{loading.value=false;nextTick(()=>{setTimeout(()=>{try{card3DTilt=new Card3DTilt();const cards=Array.from(cardRefs.values());if(cards.length>0){card3DTilt.updateCards(cards)}updateMainButton();hapticFeedback('rigid')}catch(e){console.error('Init error:',e)}},200)})},2200)
-});
-watch(currentPage,()=>{nextTick(()=>{setTimeout(()=>{if(currentPage.value==='shop'&&card3DTilt){try{const cards=Array.from(cardRefs.values());card3DTilt.updateCards(cards)}catch(e){console.error('Card update error:',e)}}},400)})});
-onBeforeUnmount(()=>{if(constellationEngine){try{constellationEngine.destroy()}catch(e){console.error('Cleanup error:',e)}}if(card3DTilt){try{card3DTilt.destroy()}catch(e){console.error('Cleanup error:',e)}}});
-return{loading,currentPage,toasts,selectedProduct,user,products,cart,pages,cartSubtotal,cartTotal,orderCount,walletBalance,formatPrice,navigateTo,openProductModal,closeProductModal,addToCartFromModal,removeFromCart,checkout,copyUserId,showToast,setCardRef,handleImageError}
-}}).mount('#app')
-</script>
+<body class="antialiased min-h-screen relative">
+
+    <div class="fixed inset-0 z-0">
+        <div class="absolute top-0 -left-4 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-blob"></div>
+        <div class="absolute top-0 -right-4 w-72 h-72 bg-pink-500 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-blob" style="animation-delay: 2s"></div>
+        <div class="absolute -bottom-8 left-20 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-blob" style="animation-delay: 4s"></div>
+    </div>
+
+    <div id="app" class="relative z-10 max-w-md mx-auto px-5 pt-6 pb-12">
+        
+        <div v-if="loading" class="fixed inset-0 bg-black z-50 flex flex-col items-center justify-center">
+            <div class="w-16 h-16 border-4 border-neon-purple border-t-transparent rounded-full animate-spin mb-4"></div>
+            <p class="text-xs tracking-[0.3em] text-neon-purple animate-pulse">GEMINI CENTER</p>
+        </div>
+
+        <div v-else class="animate-[fadeIn_0.5s_ease-out]">
+            
+            <header class="flex justify-between items-center mb-8">
+                <div class="flex items-center gap-3">
+                    <div class="relative">
+                        <img :src="user.photo_url || 'https://cdn-icons-png.flaticon.com/512/149/149071.png'" class="w-12 h-12 rounded-full border-2 border-white/10 object-cover">
+                        <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-black rounded-full shadow-[0_0_10px_#22c55e]"></div>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-white/50 uppercase tracking-wider font-bold">Welcome back</p>
+                        <h2 class="text-lg font-bold text-white leading-none mt-1">{{ user.first_name }}</h2>
+                    </div>
+                </div>
+                <div class="w-10 h-10 rounded-full glass-card flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors">
+                    <i class="fa-solid fa-gem text-neon-purple"></i>
+                </div>
+            </header>
+
+            <div class="glass-card rounded-[32px] p-6 mb-8 relative overflow-hidden group border border-neon-purple/30">
+                <div class="absolute top-0 right-0 p-4 opacity-50">
+                    <i class="fa-solid fa-rocket text-8xl text-white/5 -rotate-12 group-hover:rotate-0 transition-transform duration-700"></i>
+                </div>
+                
+                <div class="relative z-10">
+                    <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-neon-purple/10 border border-neon-purple/20 mb-3">
+                        <span class="relative flex h-2 w-2">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-neon-purple opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-2 w-2 bg-neon-purple"></span>
+                        </span>
+                        <span class="text-[10px] font-bold text-neon-purple tracking-wide">PREMIUM CHOICE</span>
+                    </div>
+
+                    <h1 class="text-3xl font-black mb-2 text-white">Gemini <span class="text-transparent bg-clip-text bg-gradient-to-r from-neon-purple to-neon-pink">Ultra</span></h1>
+                    <p class="text-xs text-white/60 mb-6 leading-relaxed max-w-[85%]">
+                        قدرتمندترین مدل هوش مصنوعی گوگل. تحلیل تصویر، کدنویسی و سرعت پردازش خارق‌العاده.
+                    </p>
+
+                    <button @click="buyProduct('gemini_ultra_monthly_ready')" class="w-full py-4 rounded-xl shimmer-btn text-white font-bold text-sm shadow-lg shadow-neon-purple/20 active:scale-95 transition-transform flex items-center justify-center gap-2">
+                        <span>خرید آنی (1,850,000 ت)</span>
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <div class="flex items-center justify-between px-1 mb-2">
+                    <h3 class="font-bold text-lg flex items-center gap-2">
+                        <i class="fa-solid fa-fire text-neon-gold"></i> پرفروش‌ترین‌ها
+                    </h3>
+                </div>
+
+                <div @click="buyProduct('gemini_pro_monthly_ready')" class="glass-card rounded-2xl p-4 flex items-center gap-4 cursor-pointer hover:border-neon-purple/50 transition-all active:scale-98 relative overflow-hidden">
+                    <div class="w-14 h-14 rounded-xl bg-white/5 flex items-center justify-center text-2xl border border-white/10">💎</div>
+                    <div class="flex-1">
+                        <h4 class="font-bold text-base text-white">Gemini Pro ماهانه</h4>
+                        <p class="text-[10px] text-white/40 mt-1">اکانت آماده • تحویل فوری</p>
+                    </div>
+                    <div class="text-right">
+                        <div class="gold-text font-bold text-lg">380,000</div>
+                        <div class="text-[9px] text-white/30">تومان</div>
+                    </div>
+                </div>
+
+                <div @click="buyProduct('gemini_pro_yearly_ready')" class="glass-card rounded-2xl p-4 flex items-center gap-4 cursor-pointer hover:border-neon-pink/50 transition-all active:scale-98 relative overflow-hidden">
+                    <div class="absolute -top-2 -right-2 bg-neon-pink text-white text-[8px] px-2 py-1 rounded-bl-lg font-bold">تخفیف</div>
+                    <div class="w-14 h-14 rounded-xl bg-white/5 flex items-center justify-center text-2xl border border-white/10">👑</div>
+                    <div class="flex-1">
+                        <h4 class="font-bold text-base text-white">Gemini Pro سالانه</h4>
+                        <p class="text-[10px] text-white/40 mt-1">اکانت آماده • یکساله</p>
+                    </div>
+                    <div class="text-right">
+                        <div class="gold-text font-bold text-lg">1,280,000</div>
+                        <div class="text-[9px] text-white/30">تومان</div>
+                    </div>
+                </div>
+
+                <div @click="buyProduct('gemini_pro_monthly_personal')" class="glass-card rounded-2xl p-4 flex items-center gap-4 cursor-pointer hover:border-neon-cyan/50 transition-all active:scale-98 relative overflow-hidden">
+                    <div class="w-14 h-14 rounded-xl bg-white/5 flex items-center justify-center text-2xl border border-white/10">📧</div>
+                    <div class="flex-1">
+                        <h4 class="font-bold text-base text-white">شارژ ایمیل شخصی</h4>
+                        <p class="text-[10px] text-white/40 mt-1">فعال‌سازی قانونی روی Gmail</p>
+                    </div>
+                    <div class="text-right">
+                        <div class="gold-text font-bold text-lg">300,000</div>
+                        <div class="text-[9px] text-white/30">تومان</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-10 text-center opacity-30">
+                <i class="fa-brands fa-telegram text-2xl mb-2"></i>
+                <p class="text-[10px] font-mono tracking-widest">SECURED BY TELEGRAM</p>
+            </div>
+        </div>
+
+        <transition name="fade">
+            <div v-if="sending" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center">
+                <span class="spinner mb-4"></span>
+                <p class="text-sm font-bold text-white tracking-wide">در حال اتصال به ربات...</p>
+            </div>
+        </transition>
+
+    </div>
+
+    <script>
+        const { createApp, ref, onMounted } = Vue;
+
+        createApp({
+            setup() {
+                const tg = window.Telegram.WebApp;
+                const loading = ref(true);
+                const sending = ref(false);
+                const user = ref({});
+
+                // تابع اصلی خرید
+                const buyProduct = (productId) => {
+                    // 1. ویبره سنگین برای حس خرید
+                    if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('heavy');
+                    
+                    // 2. نمایش لودینگ
+                    sending.value = true;
+
+                    // 3. ارسال دیتا با کمی تاخیر برای نمایش انیمیشن
+                    setTimeout(() => {
+                        tg.sendData(productId);
+                    }, 600);
+                };
+
+                onMounted(() => {
+                    // تنظیمات تلگرام
+                    tg.expand();
+                    tg.setHeaderColor('#000000');
+                    tg.setBackgroundColor('#000000');
+                    tg.enableClosingConfirmation();
+
+                    // دریافت اطلاعات کاربر
+                    if (tg.initDataUnsafe?.user) {
+                        user.value = tg.initDataUnsafe.user;
+                    } else {
+                        user.value = { first_name: 'کاربر گرامی', photo_url: null };
+                    }
+
+                    // حذف لودینگ اولیه
+                    setTimeout(() => {
+                        loading.value = false;
+                    }, 800);
+                });
+
+                return { loading, sending, user, buyProduct };
+            }
+        }).mount('#app');
+    </script>
+
+    <style>
+        .fade-enter-active, .fade-leave-active { transition: opacity 0.3s ease; }
+        .fade-enter-from, .fade-leave-to { opacity: 0; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
 </body>
 </html>
