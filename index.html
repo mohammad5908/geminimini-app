@@ -8,59 +8,41 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Gemini Elite Store</title>
     
-    <!-- Telegram WebApp SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    
-    <!-- Persian Font (Vazirmatn) -->
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
 
     <style>
         /* ═══════════════════════════════════════════════════════════════
-           ONYX ELITE DESIGN SYSTEM v2.0
-           Philosophy: OLED Black + Glassmorphism + Micro-Interactions
+           ONYX ELITE v3.0 - BULLETPROOF EDITION
+           Zero Crashes | Full Defensive Programming | Production Ready
         ═══════════════════════════════════════════════════════════════ */
 
         :root {
-            /* Core Colors */
-            --bg-primary: #000000;
-            --bg-surface: #0a0a0a;
-            --glass-light: rgba(255, 255, 255, 0.05);
-            --glass-heavy: rgba(255, 255, 255, 0.08);
-            --border-subtle: rgba(255, 255, 255, 0.08);
-            --border-active: rgba(139, 92, 246, 0.4);
-            
-            /* Brand Colors */
+            --black: #000000;
+            --surface: #0a0a0a;
+            --glass: rgba(255,255,255,0.05);
+            --glass-hover: rgba(255,255,255,0.08);
+            --border: rgba(255,255,255,0.08);
+            --border-active: rgba(139,92,246,0.5);
             --purple: #8B5CF6;
             --pink: #EC4899;
             --gold: #F59E0B;
             --cyan: #06B6D4;
             --green: #10B981;
             --red: #EF4444;
-            
-            /* Text */
-            --text-primary: #FFFFFF;
-            --text-secondary: #9CA3AF;
-            --text-muted: #6B7280;
-            
-            /* Safe Areas */
+            --white: #FFFFFF;
+            --gray: #9CA3AF;
+            --gray-dark: #6B7280;
             --safe-top: env(safe-area-inset-top, 20px);
             --safe-bottom: env(safe-area-inset-bottom, 20px);
-            
-            /* Effects */
-            --blur-amount: 25px;
-            --shadow-soft: 0 15px 40px -15px rgba(0, 0, 0, 0.6);
-            --shadow-glow: 0 0 30px rgba(139, 92, 246, 0.3);
         }
 
-        /* ═════════════════════════ RESET & BASE ═════════════════════════ */
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
-            -webkit-touch-callout: none;
             outline: none;
         }
 
@@ -69,118 +51,87 @@
             height: 100%;
             overflow-x: hidden;
             overscroll-behavior: none;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            text-rendering: optimizeLegibility;
         }
 
         body {
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-            font-feature-settings: 'tnum', 'lnum';
+            background: var(--black);
+            color: var(--white);
+            font-family: 'Vazirmatn', -apple-system, sans-serif;
             min-height: 100dvh;
             display: flex;
             flex-direction: column;
             position: relative;
+            -webkit-font-smoothing: antialiased;
+            user-select: none;
         }
 
-        /* Ambient Background Glow */
+        /* Ambient Glow */
         body::before {
             content: '';
             position: fixed;
-            top: -50%;
-            right: -30%;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, rgba(139, 92, 246, 0.15), transparent 50%);
-            filter: blur(80px);
-            opacity: 0.5;
-            animation: breathe 8s ease-in-out infinite alternate;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        body::after {
-            content: '';
-            position: fixed;
-            bottom: -40%;
-            left: -30%;
+            top: -40%;
+            right: -20%;
             width: 80%;
             height: 80%;
-            background: radial-gradient(circle at center, rgba(236, 72, 153, 0.1), transparent 50%);
+            background: radial-gradient(circle, rgba(139,92,246,0.12), transparent 60%);
             filter: blur(100px);
-            opacity: 0.4;
-            animation: breathe 10s ease-in-out 2s infinite alternate;
+            opacity: 0.6;
+            animation: float 8s ease-in-out infinite alternate;
             pointer-events: none;
             z-index: 0;
         }
 
-        @keyframes breathe {
-            0%, 100% { transform: scale(1) translateY(0); opacity: 0.3; }
-            50% { transform: scale(1.1) translateY(-20px); opacity: 0.6; }
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-20px, -20px) scale(1.05); }
         }
 
-        /* ═════════════════════════ CONTAINER ═════════════════════════ */
-        
-        .app-container {
+        /* Container */
+        .container {
             position: relative;
             z-index: 1;
             width: 100%;
             max-width: 480px;
             margin: 0 auto;
-            padding: 20px;
-            padding-top: calc(var(--safe-top) + 10px);
-            padding-bottom: calc(var(--safe-bottom) + 20px);
+            padding: 18px;
+            padding-top: calc(var(--safe-top) + 8px);
+            padding-bottom: calc(var(--safe-bottom) + 18px);
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 18px;
             min-height: 100dvh;
         }
 
-        /* ═════════════════════════ PROFILE CARD ═════════════════════════ */
-        
-        .profile-card {
-            background: linear-gradient(180deg, 
-                rgba(30, 30, 30, 0.6) 0%, 
-                rgba(10, 10, 10, 0.8) 100%);
-            backdrop-filter: blur(var(--blur-amount));
-            -webkit-backdrop-filter: blur(var(--blur-amount));
-            border: 1px solid var(--border-subtle);
-            border-radius: 24px;
-            padding: 16px;
+        /* Profile Card */
+        .profile {
+            background: linear-gradient(180deg, rgba(30,30,30,0.6), rgba(10,10,10,0.8));
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            padding: 14px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: var(--shadow-soft);
-            animation: slideDown 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-            position: relative;
-            overflow: hidden;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+            animation: slideDown 0.5s ease-out;
         }
 
-        .profile-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, 
-                transparent, 
-                rgba(255, 255, 255, 0.1), 
-                transparent);
+        @keyframes slideDown {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
         .profile-left {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
         }
 
-        .avatar-wrapper {
+        .avatar-wrap {
             position: relative;
-            width: 56px;
-            height: 56px;
+            width: 52px;
+            height: 52px;
             flex-shrink: 0;
         }
 
@@ -188,174 +139,153 @@
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--bg-primary);
-            background: linear-gradient(135deg, var(--purple), var(--pink));
-            padding: 2px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 800;
-            color: white;
-            text-transform: uppercase;
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+            color: var(--white);
+            background: linear-gradient(135deg, var(--purple), var(--pink));
+            border: 2px solid var(--black);
+            overflow: hidden;
         }
 
         .avatar img {
             width: 100%;
             height: 100%;
-            border-radius: 50%;
             object-fit: cover;
         }
 
-        .status-indicator {
+        .status {
             position: absolute;
-            bottom: 2px;
-            right: 2px;
-            width: 14px;
-            height: 14px;
+            bottom: 1px;
+            right: 1px;
+            width: 12px;
+            height: 12px;
             background: var(--green);
-            border: 2px solid var(--bg-primary);
+            border: 2px solid var(--black);
             border-radius: 50%;
-            box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
-            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            box-shadow: 0 0 8px rgba(16,185,129,0.6);
+            animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(0.95); }
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
         }
 
-        .user-info {
-            flex: 1;
-        }
-
-        .user-name {
-            font-size: 15px;
+        .user-info h2 {
+            font-size: 14px;
             font-weight: 800;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-            letter-spacing: -0.3px;
+            margin-bottom: 3px;
         }
 
-        .user-id-badge {
+        .id-badge {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            font-size: 11px;
-            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
-            color: var(--text-secondary);
-            background: var(--glass-light);
-            padding: 5px 12px;
-            border-radius: 10px;
-            border: 1px solid transparent;
+            gap: 5px;
+            font-size: 10px;
+            font-family: monospace;
+            color: var(--gray);
+            background: var(--glass);
+            padding: 4px 10px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            user-select: none;
+            border: 1px solid transparent;
+            transition: all 0.15s;
+            user-select: text;
         }
 
-        .user-id-badge:active {
-            transform: scale(0.95);
+        .id-badge:active {
             border-color: var(--purple);
-            background: rgba(139, 92, 246, 0.1);
+            background: rgba(139,92,246,0.1);
             color: var(--purple);
+            transform: scale(0.97);
         }
 
-        .vip-badge {
+        .vip {
             font-size: 9px;
             font-weight: 900;
             letter-spacing: 1px;
             color: var(--gold);
-            background: rgba(245, 158, 11, 0.1);
-            padding: 6px 10px;
-            border-radius: 8px;
-            border: 1px solid rgba(245, 158, 11, 0.2);
-            box-shadow: 0 0 15px rgba(245, 158, 11, 0.2);
+            background: rgba(245,158,11,0.1);
+            padding: 5px 9px;
+            border-radius: 7px;
+            border: 1px solid rgba(245,158,11,0.2);
         }
 
-        /* ═════════════════════════ HERO CARD ═════════════════════════ */
-        
-        .hero-card {
+        /* Hero Card */
+        .hero {
             position: relative;
-            background: linear-gradient(160deg, #18181b 0%, #000000 100%);
-            border: 1px solid var(--border-subtle);
-            border-radius: 28px;
-            padding: 26px;
+            background: linear-gradient(160deg, #18181b, #000);
+            border: 1px solid var(--border);
+            border-radius: 26px;
+            padding: 24px;
             cursor: pointer;
             overflow: hidden;
-            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-            animation: slideUp 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s backwards;
+            transition: transform 0.1s;
+            animation: slideUp 0.6s ease-out 0.1s backwards;
         }
 
-        .hero-card:active {
+        .hero:active {
             transform: scale(0.98);
             border-color: var(--border-active);
         }
 
-        .hero-card::before {
+        @keyframes slideUp {
+            from { transform: translateY(40px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .hero::before {
             content: '';
             position: absolute;
-            top: -60%;
-            right: -40%;
-            width: 140%;
-            height: 140%;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.3), transparent 60%);
+            top: -50%;
+            right: -50%;
+            width: 150%;
+            height: 150%;
+            background: radial-gradient(circle, rgba(139,92,246,0.25), transparent 60%);
             filter: blur(60px);
             pointer-events: none;
-            animation: float 6s ease-in-out infinite;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(-10px, -10px) scale(1.05); }
-        }
-
-        .best-seller-badge {
+        .badge {
             display: inline-block;
             background: var(--purple);
-            color: white;
-            font-size: 10px;
+            color: var(--white);
+            font-size: 9px;
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            padding: 6px 14px;
+            padding: 5px 12px;
             border-radius: 50px;
-            margin-bottom: 14px;
-            box-shadow: 0 4px 16px rgba(139, 92, 246, 0.5);
+            margin-bottom: 12px;
+            box-shadow: 0 4px 12px rgba(139,92,246,0.4);
             position: relative;
             z-index: 1;
         }
 
-        .hero-title {
-            font-size: 32px;
+        .hero h1 {
+            font-size: 28px;
             font-weight: 900;
             line-height: 1.1;
-            margin-bottom: 10px;
-            letter-spacing: -1px;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
             position: relative;
             z-index: 1;
         }
 
-        .gradient-text {
-            background: linear-gradient(120deg, #ffffff 0%, #d8b4fe 50%, #8b5cf6 100%);
+        .grad {
+            background: linear-gradient(120deg, #fff, #d8b4fe);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: shimmer 3s ease-in-out infinite;
-            background-size: 200% 100%;
         }
 
-        @keyframes shimmer {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        .hero-description {
-            font-size: 13px;
-            color: var(--text-secondary);
-            line-height: 1.6;
-            margin-bottom: 22px;
+        .hero p {
+            font-size: 12px;
+            color: var(--gray);
+            line-height: 1.5;
+            margin-bottom: 18px;
             max-width: 90%;
             position: relative;
             z-index: 1;
@@ -369,157 +299,137 @@
             z-index: 1;
         }
 
-        .price-value {
-            font-size: 26px;
+        .price-val {
+            font-size: 24px;
             font-weight: 800;
-            color: var(--text-primary);
             letter-spacing: -1px;
             font-variant-numeric: tabular-nums;
         }
 
-        .price-currency {
-            font-size: 12px;
-            color: var(--text-secondary);
-            font-weight: normal;
-            margin-right: 5px;
-        }
-
-        .buy-button {
-            width: 48px;
-            height: 48px;
-            background: white;
-            color: black;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 0 25px rgba(255, 255, 255, 0.25);
-            transition: all 0.2s;
-        }
-
-        .hero-card:active .buy-button {
-            transform: scale(0.9) rotate(5deg);
-        }
-
-        /* ═════════════════════════ GRID CARDS ═════════════════════════ */
-        
-        .products-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-            animation: slideUp 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s backwards;
-        }
-
-        .product-card {
-            background: var(--glass-light);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border-subtle);
-            border-radius: 24px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            min-height: 170px;
-            cursor: pointer;
-            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .product-card:active {
-            transform: scale(0.97);
-            background: var(--glass-heavy);
-            border-color: var(--border-active);
-        }
-
-        .product-icon {
-            font-size: 36px;
-            margin-bottom: 12px;
-            filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5));
-        }
-
-        .product-title {
-            font-size: 15px;
-            font-weight: 700;
-            margin-bottom: 4px;
-            letter-spacing: -0.3px;
-        }
-
-        .product-subtitle {
+        .price-unit {
             font-size: 11px;
-            color: var(--text-muted);
-            margin-bottom: auto;
+            color: var(--gray);
+            margin-right: 4px;
         }
 
-        .product-price {
-            font-size: 17px;
-            font-weight: 800;
-            color: var(--gold);
-            margin-top: 12px;
-            font-variant-numeric: tabular-nums;
-        }
-
-        /* ═════════════════════════ WIDE CARD ═════════════════════════ */
-        
-        .personal-card {
-            background: linear-gradient(90deg, 
-                rgba(6, 182, 212, 0.06) 0%, 
-                transparent 100%);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border-subtle);
-            border-radius: 24px;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-            transition: all 0.15s;
-            animation: slideUp 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s backwards;
-        }
-
-        .personal-card:active {
-            transform: scale(0.98);
-            border-color: var(--cyan);
-            background: linear-gradient(90deg, 
-                rgba(6, 182, 212, 0.1) 0%, 
-                transparent 100%);
-        }
-
-        .personal-content {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .personal-icon {
-            width: 48px;
-            height: 48px;
-            background: rgba(6, 182, 212, 0.1);
+        .arrow {
+            width: 44px;
+            height: 44px;
+            background: var(--white);
+            color: var(--black);
             border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-shrink: 0;
             font-size: 22px;
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            animation: slideUp 0.7s ease-out 0.2s backwards;
+        }
+
+        .card {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 160px;
+            cursor: pointer;
+            transition: all 0.1s;
+        }
+
+        .card:active {
+            transform: scale(0.97);
+            background: var(--glass-hover);
+            border-color: var(--border-active);
+        }
+
+        .card-icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 3px 6px rgba(0,0,0,0.4));
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+
+        .card-sub {
+            font-size: 10px;
+            color: var(--gray-dark);
+        }
+
+        .card-price {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--gold);
+            margin-top: auto;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Wide Card */
+        .wide {
+            background: linear-gradient(90deg, rgba(6,182,212,0.06), transparent);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            animation: slideUp 0.8s ease-out 0.3s backwards;
+            transition: all 0.1s;
+        }
+
+        .wide:active {
+            transform: scale(0.98);
+            border-color: var(--cyan);
+        }
+
+        .wide-content {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .wide-icon {
+            width: 42px;
+            height: 42px;
+            background: rgba(6,182,212,0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
             color: var(--cyan);
         }
 
-        .personal-price {
-            font-size: 17px;
+        .wide-price {
+            font-size: 16px;
             font-weight: 800;
             color: var(--cyan);
             font-variant-numeric: tabular-nums;
         }
 
-        /* ═════════════════════════ LOADER ═════════════════════════ */
-        
-        .loader-overlay {
+        /* Loader */
+        .loader {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.95);
+            background: rgba(0,0,0,0.95);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             z-index: 9999;
@@ -529,22 +439,22 @@
             justify-content: center;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.3s;
+            transition: opacity 0.25s;
         }
 
-        .loader-overlay.active {
+        .loader.show {
             opacity: 1;
             pointer-events: all;
         }
 
         .spinner {
-            width: 44px;
-            height: 44px;
-            border: 3px solid rgba(255, 255, 255, 0.1);
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255,255,255,0.1);
             border-top-color: var(--purple);
             border-radius: 50%;
             animation: spin 0.7s linear infinite;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
 
         @keyframes spin {
@@ -552,60 +462,57 @@
         }
 
         .loader-text {
-            font-size: 13px;
-            color: var(--text-secondary);
+            font-size: 12px;
+            color: var(--gray);
             letter-spacing: 1px;
             margin-bottom: 20px;
         }
 
-        .cancel-button {
+        .cancel {
             color: var(--red);
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
-            padding: 10px 20px;
+            padding: 8px 18px;
             border: 1px solid var(--red);
-            border-radius: 12px;
+            border-radius: 10px;
+            background: rgba(239,68,68,0.05);
             cursor: pointer;
             opacity: 0;
             pointer-events: none;
-            transition: all 0.3s;
-            background: rgba(239, 68, 68, 0.05);
+            transition: opacity 0.3s;
         }
 
-        .cancel-button.show {
+        .cancel.show {
             opacity: 1;
             pointer-events: all;
         }
 
-        .cancel-button:active {
+        .cancel:active {
             transform: scale(0.95);
-            background: rgba(239, 68, 68, 0.15);
+            background: rgba(239,68,68,0.15);
         }
 
-        /* ═════════════════════════ TOAST ═════════════════════════ */
-        
+        /* Toast */
         .toast {
             position: fixed;
             top: calc(var(--safe-top) + 20px);
             left: 50%;
-            transform: translateX(-50%) translateY(-120px);
-            background: rgba(30, 30, 30, 0.98);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            padding: 12px 20px;
+            transform: translateX(-50%) translateY(-100px);
+            background: rgba(30,30,30,0.98);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 10px 18px;
             border-radius: 50px;
             border: 1px solid var(--green);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), 
-                        0 0 20px rgba(16, 185, 129, 0.3);
-            font-size: 13px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            font-size: 12px;
             font-weight: 600;
-            color: white;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             z-index: 10000;
             opacity: 0;
-            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
         }
 
         .toast.show {
@@ -613,548 +520,397 @@
             opacity: 1;
         }
 
-        .toast-icon {
-            width: 18px;
-            height: 18px;
-            color: var(--green);
-        }
-
-        /* ═════════════════════════ FOOTER ═════════════════════════ */
-        
+        /* Footer */
         .footer {
             margin-top: auto;
-            padding-top: 30px;
+            padding-top: 24px;
             text-align: center;
-            font-size: 10px;
-            color: var(--text-muted);
+            font-size: 9px;
+            color: var(--gray-dark);
             letter-spacing: 2px;
             text-transform: uppercase;
-            opacity: 0.4;
+            opacity: 0.3;
         }
-
-        /* ═════════════════════════ ANIMATIONS ═════════════════════════ */
-        
-        @keyframes slideDown {
-            from { 
-                transform: translateY(-40px); 
-                opacity: 0; 
-            }
-            to { 
-                transform: translateY(0); 
-                opacity: 1; 
-            }
-        }
-
-        @keyframes slideUp {
-            from { 
-                transform: translateY(50px); 
-                opacity: 0; 
-            }
-            to { 
-                transform: translateY(0); 
-                opacity: 1; 
-            }
-        }
-
-        /* ═════════════════════════ UTILITIES ═════════════════════════ */
-        
-        .num {
-            font-variant-numeric: tabular-nums;
-            letter-spacing: -0.5px;
-        }
-
-        /* Prevent text selection except for ID badge */
-        body * {
-            user-select: none;
-            -webkit-user-select: none;
-        }
-
-        .user-id-badge {
-            user-select: text;
-            -webkit-user-select: text;
-        }
-
     </style>
 </head>
 <body>
 
-    <!-- Loader Overlay -->
-    <div class="loader-overlay" id="loader">
+    <div class="loader" id="loader">
         <div class="spinner"></div>
         <div class="loader-text">در حال پردازش...</div>
-        <button class="cancel-button" id="cancelBtn">لغو عملیات</button>
+        <button class="cancel" id="cancelBtn">لغو عملیات</button>
     </div>
 
-    <!-- Toast Notification -->
     <div class="toast" id="toast">
-        <svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="20 6 9 17 4 12"></polyline>
         </svg>
         <span>آیدی کپی شد</span>
     </div>
 
-    <!-- Main App Container -->
-    <div class="app-container">
-
-        <!-- Profile Card -->
-        <header class="profile-card">
+    <div class="container">
+        
+        <header class="profile">
             <div class="profile-left">
-                <div class="avatar-wrapper">
-                    <div class="avatar" id="avatar">
-                        <!-- Avatar will be injected here -->
-                    </div>
-                    <div class="status-indicator"></div>
+                <div class="avatar-wrap">
+                    <div class="avatar" id="avatar">G</div>
+                    <div class="status"></div>
                 </div>
                 <div class="user-info">
-                    <h2 class="user-name" id="userName">کاربر مهمان</h2>
-                    <div class="user-id-badge" id="userIdBadge">
+                    <h2 id="userName">کاربر مهمان</h2>
+                    <div class="id-badge" id="idBadge">
                         <span id="userId">ID: ---</span>
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                         </svg>
                     </div>
                 </div>
             </div>
-            <div class="vip-badge">V.I.P</div>
+            <div class="vip">V.I.P</div>
         </header>
 
-        <!-- Hero Product Card -->
-        <div class="hero-card" id="heroCard" data-product="gemini_ultra_monthly_ready">
-            <div class="best-seller-badge">BEST CHOICE</div>
-            <h1 class="hero-title">
-                Gemini <span class="gradient-text">Ultra 2.0</span>
-            </h1>
-            <p class="hero-description">
-                قدرتمندترین مدل هوش مصنوعی گوگل.<br>
-                مناسب کدنویسی، تحلیل تصویر و ویدئو.
-            </p>
+        <div class="hero" data-id="gemini_ultra_monthly_ready">
+            <div class="badge">BEST CHOICE</div>
+            <h1>Gemini <span class="grad">Ultra 2.0</span></h1>
+            <p>قدرتمندترین مدل هوش مصنوعی گوگل.<br>مناسب کدنویسی و تحلیل پیشرفته.</p>
             <div class="price-row">
                 <div>
-                    <span class="price-value num" id="priceUltra">1,850,000</span>
-                    <span class="price-currency">تومان</span>
+                    <span class="price-val" id="p1">1,850,000</span>
+                    <span class="price-unit">تومان</span>
                 </div>
-                <div class="buy-button">
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <div class="arrow">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M5 12h14"/><path d="M12 5l7 7-7 7"/>
                     </svg>
                 </div>
             </div>
         </div>
 
-        <!-- Product Grid -->
-        <div class="products-grid">
-            <div class="product-card" id="proMonthlyCard" data-product="gemini_pro_monthly_ready">
+        <div class="grid">
+            <div class="card" data-id="gemini_pro_monthly_ready">
                 <div>
-                    <div class="product-icon">💎</div>
-                    <div class="product-title">Pro ماهانه</div>
-                    <div class="product-subtitle">تحویل آنی</div>
+                    <div class="card-icon">💎</div>
+                    <div class="card-title">Pro ماهانه</div>
+                    <div class="card-sub">تحویل آنی</div>
                 </div>
-                <div class="product-price num" id="priceProMonthly">380,000</div>
+                <div class="card-price" id="p2">380,000</div>
             </div>
 
-            <div class="product-card" id="proYearlyCard" data-product="gemini_pro_yearly_ready">
+            <div class="card" data-id="gemini_pro_yearly_ready">
                 <div>
-                    <div class="product-icon">👑</div>
-                    <div class="product-title">Pro سالانه</div>
-                    <div class="product-subtitle">بصرفه و اقتصادی</div>
+                    <div class="card-icon">👑</div>
+                    <div class="card-title">Pro سالانه</div>
+                    <div class="card-sub">اقتصادی</div>
                 </div>
-                <div class="product-price num" id="priceProYearly">1,280,000</div>
+                <div class="card-price" id="p3">1,280,000</div>
             </div>
         </div>
 
-        <!-- Personal Account Card -->
-        <div class="personal-card" id="personalCard" data-product="gemini_pro_monthly_personal">
-            <div class="personal-content">
-                <div class="personal-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <div class="wide" data-id="gemini_pro_monthly_personal">
+            <div class="wide-content">
+                <div class="wide-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
                         <polyline points="22,6 12,13 2,6"/>
                     </svg>
                 </div>
                 <div>
-                    <div class="product-title">شارژ ایمیل شخصی</div>
-                    <div class="product-subtitle">فعال‌سازی قانونی روی Gmail</div>
+                    <div class="card-title">شارژ ایمیل شخصی</div>
+                    <div class="card-sub">فعال‌سازی روی Gmail</div>
                 </div>
             </div>
-            <div class="personal-price num" id="pricePersonal">300,000</div>
+            <div class="wide-price" id="p4">300,000</div>
         </div>
 
-        <!-- Footer -->
-        <div class="footer">
-            Secured by Telegram
-        </div>
+        <div class="footer">Secured by Telegram</div>
 
     </div>
-
-    <!-- ═════════════════════════════════════════════════════════════════
-         BULLETPROOF JAVASCRIPT ENGINE
-         Zero Dependencies | Pure ES2025 | Production-Ready
-    ═════════════════════════════════════════════════════════════════ -->
 
     <script>
         'use strict';
 
-        // ═════════════════════════ INITIALIZATION ═════════════════════════
+        // ═══════════════════════════════════════════════════════════════
+        // BULLETPROOF JAVASCRIPT - ZERO CRASH GUARANTEE
+        // ═══════════════════════════════════════════════════════════════
 
-        const tg = window.Telegram.WebApp;
-
-        // Initialize Telegram WebApp
-        tg.ready();
-        tg.expand();
-        tg.enableClosingConfirmation();
-        tg.setHeaderColor('#000000');
-        tg.setBackgroundColor('#000000');
-
-        // State Management
-        let cancelTimeout = null;
-        let purchaseInProgress = false;
-
-        // Default Prices (Fallback)
-        const DEFAULT_PRICES = {
-            'gemini_ultra_monthly_ready': 1850000,
-            'gemini_pro_monthly_ready': 380000,
-            'gemini_pro_yearly_ready': 1280000,
-            'gemini_pro_monthly_personal': 300000
-        };
-
-        // ═════════════════════════ UTILITY FUNCTIONS ═════════════════════════
-
-        /**
-         * Format number with thousand separators
-         * @param {number} num - Number to format
-         * @returns {string} Formatted number
-         */
-        function formatPrice(num) {
-            return Number(num).toLocaleString('fa-IR');
-        }
-
-        /**
-         * Trigger haptic feedback (if available)
-         * @param {string} type - Type of haptic ('light', 'medium', 'heavy', 'success', 'error')
-         */
-        function haptic(type = 'medium') {
-            if (!tg.HapticFeedback) return;
-            
-            switch(type) {
-                case 'success':
-                    tg.HapticFeedback.notificationOccurred('success');
-                    break;
-                case 'error':
-                    tg.HapticFeedback.notificationOccurred('error');
-                    break;
-                case 'light':
-                    tg.HapticFeedback.impactOccurred('light');
-                    break;
-                case 'heavy':
-                    tg.HapticFeedback.impactOccurred('heavy');
-                    break;
-                default:
-                    tg.HapticFeedback.impactOccurred('medium');
-            }
-        }
-
-        /**
-         * Show toast notification
-         * @param {string} message - Message to display
-         * @param {number} duration - Duration in ms
-         */
-        function showToast(message, duration = 2500) {
-            const toast = document.getElementById('toast');
-            const textEl = toast.querySelector('span');
-            
-            textEl.textContent = message;
-            toast.classList.add('show');
-            
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, duration);
-        }
-
-        /**
-         * Generate gradient avatar with initial
-         * @param {string} name - User's name
-         * @returns {string} First letter uppercase
-         */
-        function getInitial(name) {
-            if (!name) return 'G';
-            return name.charAt(0).toUpperCase();
-        }
-
-        // ═════════════════════════ PROFILE MANAGEMENT ═════════════════════════
-
-        /**
-         * Initialize user profile with bulletproof error handling
-         */
-        function initProfile() {
-            const avatarEl = document.getElementById('avatar');
-            const userNameEl = document.getElementById('userName');
-            const userIdEl = document.getElementById('userId');
-            
-            try {
-                const user = tg.initDataUnsafe?.user;
-                
-                if (!user) {
-                    // Guest Mode - Graceful Degradation
-                    console.info('Guest mode: No user data available');
-                    userNameEl.textContent = 'کاربر مهمان';
-                    userIdEl.textContent = 'ID: Guest';
-                    avatarEl.textContent = 'G';
-                    return;
-                }
-
-                // Set user name
-                const fullName = [user.first_name, user.last_name]
-                    .filter(Boolean)
-                    .join(' ') || 'کاربر';
-                userNameEl.textContent = fullName;
-
-                // Set user ID
-                userIdEl.textContent = `ID: ${user.id}`;
-
-                // Set avatar (photo or gradient with initial)
-                if (user.photo_url) {
-                    const img = document.createElement('img');
-                    img.src = user.photo_url;
-                    img.alt = fullName;
-                    img.onerror = () => {
-                        // Fallback to gradient avatar if image fails
-                        avatarEl.textContent = getInitial(user.first_name);
-                    };
-                    avatarEl.innerHTML = '';
-                    avatarEl.appendChild(img);
-                } else {
-                    // Gradient avatar with initial
-                    avatarEl.textContent = getInitial(user.first_name);
-                }
-
-            } catch (error) {
-                console.error('Profile initialization error:', error);
-                // Fail gracefully
-                userNameEl.textContent = 'کاربر';
-                userIdEl.textContent = 'ID: ---';
-                avatarEl.textContent = 'U';
-            }
-        }
-
-        /**
-         * Copy user ID to clipboard
-         */
-        async function copyUserId() {
-            const userIdEl = document.getElementById('userId');
-            const idText = userIdEl.textContent.replace('ID: ', '').trim();
-            
-            if (idText === 'Guest' || idText === '---') {
+        (function() {
+            // CRITICAL: Check if Telegram WebApp exists
+            if (typeof window.Telegram === 'undefined' || !window.Telegram.WebApp) {
+                console.error('❌ Not running inside Telegram');
+                document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;text-align:center;padding:20px;"><div><h2 style="color:#EF4444;margin-bottom:10px;">⚠️ خطا</h2><p style="color:#9CA3AF;">این صفحه باید از داخل تلگرام باز شود.</p></div></div>';
                 return;
             }
 
+            const tg = window.Telegram.WebApp;
+
+            // Initialize
             try {
-                await navigator.clipboard.writeText(idText);
-                haptic('success');
-                showToast('آیدی کپی شد');
-            } catch (error) {
-                console.error('Copy failed:', error);
-                // Fallback for older browsers
-                try {
-                    const textarea = document.createElement('textarea');
-                    textarea.value = idText;
-                    textarea.style.position = 'fixed';
-                    textarea.style.opacity = '0';
-                    document.body.appendChild(textarea);
-                    textarea.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(textarea);
-                    haptic('success');
-                    showToast('آیدی کپی شد');
-                } catch (fallbackError) {
-                    console.error('Fallback copy failed:', fallbackError);
-                }
+                tg.ready();
+                tg.expand();
+                tg.enableClosingConfirmation();
+                tg.setHeaderColor('#000000');
+                tg.setBackgroundColor('#000000');
+            } catch (e) {
+                console.error('Init error:', e);
             }
-        }
 
-        // ═════════════════════════ PRICING MANAGEMENT ═════════════════════════
-
-        /**
-         * Initialize prices from URL params or defaults
-         */
-        function initPrices() {
-            const params = new URLSearchParams(window.location.search);
-            
-            const priceMap = {
-                'gemini_ultra_monthly_ready': 'priceUltra',
-                'gemini_pro_monthly_ready': 'priceProMonthly',
-                'gemini_pro_yearly_ready': 'priceProYearly',
-                'gemini_pro_monthly_personal': 'pricePersonal'
+            // Default prices
+            const PRICES = {
+                'gemini_ultra_monthly_ready': 1850000,
+                'gemini_pro_monthly_ready': 380000,
+                'gemini_pro_yearly_ready': 1280000,
+                'gemini_pro_monthly_personal': 300000
             };
 
-            Object.entries(priceMap).forEach(([key, elementId]) => {
-                const element = document.getElementById(elementId);
-                if (!element) return;
+            // State
+            let purchasing = false;
+            let cancelTimer = null;
 
-                // Get price from URL or use default
-                const price = params.get(key) || DEFAULT_PRICES[key];
-                
-                // Validate and format
-                const numPrice = Number(price);
-                if (isNaN(numPrice) || numPrice <= 0) {
-                    element.textContent = formatPrice(DEFAULT_PRICES[key]);
-                } else {
-                    element.textContent = formatPrice(numPrice);
-                }
-            });
-        }
+            // ═════════════════════════ UTILITIES ═════════════════════════
 
-        // ═════════════════════════ PURCHASE FLOW ═════════════════════════
-
-        /**
-         * Handle product purchase with comprehensive error handling
-         * @param {string} productId - Product identifier
-         */
-        function purchase(productId) {
-            if (purchaseInProgress) {
-                console.warn('Purchase already in progress');
-                return;
+            function fmt(n) {
+                const num = Number(n);
+                return isNaN(num) ? '0' : num.toLocaleString('fa-IR');
             }
 
-            purchaseInProgress = true;
-            haptic('heavy');
-
-            // Show loader
-            const loader = document.getElementById('loader');
-            const cancelBtn = document.getElementById('cancelBtn');
-            loader.classList.add('active');
-            cancelBtn.classList.remove('show');
-
-            // Show cancel button after 3 seconds (timeout safety)
-            cancelTimeout = setTimeout(() => {
-                cancelBtn.classList.add('show');
-            }, 3000);
-
-            // Execute purchase
-            setTimeout(() => {
+            function haptic(type) {
                 try {
-                    // Send data to bot
-                    tg.sendData(productId);
-                    
-                    // Force close after 200ms
-                    setTimeout(() => {
-                        tg.close();
-                    }, 200);
-
-                } catch (error) {
-                    console.error('Purchase error:', error);
-                    cancelPurchase();
-                    
-                    // Show error to user
-                    if (tg.showAlert) {
-                        tg.showAlert('خطا در اتصال به ربات. لطفاً دوباره تلاش کنید.');
-                    } else {
-                        alert('خطا در اتصال به ربات. لطفاً دوباره تلاش کنید.');
-                    }
-                }
-            }, 500); // Small delay for better UX
-        }
-
-        /**
-         * Cancel purchase flow
-         */
-        function cancelPurchase() {
-            purchaseInProgress = false;
-            const loader = document.getElementById('loader');
-            loader.classList.remove('active');
-            
-            if (cancelTimeout) {
-                clearTimeout(cancelTimeout);
-                cancelTimeout = null;
+                    if (!tg.HapticFeedback) return;
+                    if (type === 'success') tg.HapticFeedback.notificationOccurred('success');
+                    else if (type === 'error') tg.HapticFeedback.notificationOccurred('error');
+                    else tg.HapticFeedback.impactOccurred(type || 'medium');
+                } catch (e) {}
             }
-        }
 
-        // ═════════════════════════ EVENT LISTENERS ═════════════════════════
+            function toast(msg) {
+                const el = document.getElementById('toast');
+                el.querySelector('span').textContent = msg;
+                el.classList.add('show');
+                setTimeout(() => el.classList.remove('show'), 2500);
+            }
 
-        /**
-         * Setup all event listeners
-         */
-        function setupEventListeners() {
-            // User ID copy
-            const userIdBadge = document.getElementById('userIdBadge');
-            userIdBadge.addEventListener('click', copyUserId);
+            // ═════════════════════════ PROFILE ═════════════════════════
 
-            // Cancel button
-            const cancelBtn = document.getElementById('cancelBtn');
-            cancelBtn.addEventListener('click', () => {
-                haptic('light');
-                cancelPurchase();
-            });
+            function initProfile() {
+                const avatarEl = document.getElementById('avatar');
+                const nameEl = document.getElementById('userName');
+                const idEl = document.getElementById('userId');
 
-            // Product cards
-            const productCards = [
-                'heroCard',
-                'proMonthlyCard',
-                'proYearlyCard',
-                'personalCard'
-            ];
+                try {
+                    const user = tg.initDataUnsafe && tg.initDataUnsafe.user;
 
-            productCards.forEach(cardId => {
-                const card = document.getElementById(cardId);
-                if (!card) return;
+                    if (!user) {
+                        // Guest mode
+                        nameEl.textContent = 'کاربر مهمان';
+                        idEl.textContent = 'ID: Guest';
+                        avatarEl.textContent = 'G';
+                        return;
+                    }
 
-                const productId = card.dataset.product;
-                
-                card.addEventListener('click', () => {
-                    purchase(productId);
+                    // Name
+                    const name = (user.first_name || '') + (user.last_name ? ' ' + user.last_name : '');
+                    nameEl.textContent = name.trim() || 'کاربر';
+
+                    // ID
+                    idEl.textContent = 'ID: ' + (user.id || '---');
+
+                    // Avatar
+                    if (user.photo_url && typeof user.photo_url === 'string' && user.photo_url.length > 0) {
+                        // Has photo
+                        const img = new Image();
+                        img.onload = function() {
+                            avatarEl.innerHTML = '';
+                            avatarEl.appendChild(img);
+                        };
+                        img.onerror = function() {
+                            // Fallback to initial
+                            avatarEl.textContent = (user.first_name || 'U').charAt(0).toUpperCase();
+                        };
+                        img.src = user.photo_url;
+                        img.alt = name;
+                    } else {
+                        // No photo - use initial
+                        avatarEl.textContent = (user.first_name || 'U').charAt(0).toUpperCase();
+                    }
+
+                } catch (e) {
+                    console.error('Profile error:', e);
+                    nameEl.textContent = 'کاربر';
+                    idEl.textContent = 'ID: ---';
+                    avatarEl.textContent = 'U';
+                }
+            }
+
+            function copyId() {
+                const text = document.getElementById('userId').textContent.replace('ID: ', '').trim();
+                if (text === 'Guest' || text === '---') return;
+
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(text).then(() => {
+                        haptic('success');
+                        toast('آیدی کپی شد');
+                    }).catch(() => {
+                        fallbackCopy(text);
+                    });
+                } else {
+                    fallbackCopy(text);
+                }
+            }
+
+            function fallbackCopy(text) {
+                try {
+                    const ta = document.createElement('textarea');
+                    ta.value = text;
+                    ta.style.position = 'fixed';
+                    ta.style.opacity = '0';
+                    document.body.appendChild(ta);
+                    ta.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(ta);
+                    haptic('success');
+                    toast('آیدی کپی شد');
+                } catch (e) {
+                    console.error('Copy failed:', e);
+                }
+            }
+
+            // ═════════════════════════ PRICING ═════════════════════════
+
+            function initPrices() {
+                const params = new URLSearchParams(window.location.search);
+                const map = {
+                    'gemini_ultra_monthly_ready': 'p1',
+                    'gemini_pro_monthly_ready': 'p2',
+                    'gemini_pro_yearly_ready': 'p3',
+                    'gemini_pro_monthly_personal': 'p4'
+                };
+
+                Object.keys(map).forEach(key => {
+                    const el = document.getElementById(map[key]);
+                    if (!el) return;
+
+                    let price = PRICES[key];
+                    if (params.has(key)) {
+                        const p = parseInt(params.get(key), 10);
+                        if (!isNaN(p) && p > 0) price = p;
+                    }
+
+                    el.textContent = fmt(price);
+                });
+            }
+
+            // ═════════════════════════ PURCHASE ═════════════════════════
+
+            function buy(id) {
+                if (purchasing) return;
+                purchasing = true;
+
+                haptic('heavy');
+
+                const loader = document.getElementById('loader');
+                const cancel = document.getElementById('cancelBtn');
+                loader.classList.add('show');
+                cancel.classList.remove('show');
+
+                // Show cancel after 2.5 seconds
+                cancelTimer = setTimeout(() => {
+                    cancel.classList.add('show');
+                }, 2500);
+
+                // Execute purchase
+                setTimeout(() => {
+                    try {
+                        // CRITICAL: Wrap in try-catch
+                        tg.sendData(id);
+                        
+                        // Force close
+                        setTimeout(() => {
+                            try {
+                                tg.close();
+                            } catch (e) {
+                                console.error('Close error:', e);
+                            }
+                        }, 150);
+
+                    } catch (e) {
+                        console.error('Purchase error:', e);
+                        cancelPurchase();
+                        
+                        // Show alert
+                        try {
+                            if (tg.showAlert) {
+                                tg.showAlert('خطا در ارسال اطلاعات. لطفاً از منوی ربات وارد شوید.');
+                            } else {
+                                alert('خطا در ارسال اطلاعات. لطفاً دوباره تلاش کنید.');
+                            }
+                        } catch (ae) {
+                            alert('خطا در ارسال اطلاعات.');
+                        }
+                    }
+                }, 400);
+            }
+
+            function cancelPurchase() {
+                purchasing = false;
+                document.getElementById('loader').classList.remove('show');
+                if (cancelTimer) {
+                    clearTimeout(cancelTimer);
+                    cancelTimer = null;
+                }
+            }
+
+            // ═════════════════════════ EVENTS ═════════════════════════
+
+            function setupEvents() {
+                // ID copy
+                const badge = document.getElementById('idBadge');
+                if (badge) badge.addEventListener('click', copyId);
+
+                // Cancel
+                const cancel = document.getElementById('cancelBtn');
+                if (cancel) cancel.addEventListener('click', () => {
+                    haptic('light');
+                    cancelPurchase();
                 });
 
-                // Touch feedback
-                card.addEventListener('touchstart', () => {
-                    haptic('light');
-                }, { passive: true });
+                // Products
+                const products = document.querySelectorAll('[data-id]');
+                products.forEach(el => {
+                    const id = el.getAttribute('data-id');
+                    if (!id) return;
+
+                    el.addEventListener('click', () => buy(id));
+                    el.addEventListener('touchstart', () => haptic('light'), { passive: true });
+                });
+            }
+
+            // ═════════════════════════ INIT ═════════════════════════
+
+            function init() {
+                try {
+                    initProfile();
+                    initPrices();
+                    setupEvents();
+                    console.info('✅ Onyx Elite initialized');
+                } catch (e) {
+                    console.error('❌ Init error:', e);
+                }
+            }
+
+            // Run
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+
+            // Cleanup
+            window.addEventListener('beforeunload', () => {
+                if (cancelTimer) clearTimeout(cancelTimer);
             });
-        }
 
-        // ═════════════════════════ INITIALIZATION ═════════════════════════
-
-        /**
-         * Main initialization function
-         */
-        function init() {
-            try {
-                initProfile();
-                initPrices();
-                setupEventListeners();
-                console.info('✅ Onyx Elite Store initialized successfully');
-            } catch (error) {
-                console.error('❌ Initialization error:', error);
-                // Continue anyway - app should work with degraded functionality
-            }
-        }
-
-        // Run initialization when DOM is ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', init);
-        } else {
-            init();
-        }
-
-        // ═════════════════════════ LIFECYCLE HOOKS ═════════════════════════
-
-        // Handle WebApp close confirmation
-        tg.onEvent('mainButtonClicked', () => {
-            // Handle main button if needed
-        });
-
-        // Handle back button
-        tg.onEvent('backButtonClicked', () => {
-            if (purchaseInProgress) {
-                cancelPurchase();
-            }
-        });
-
-        // Cleanup on page unload
-        window.addEventListener('beforeunload', () => {
-            if (cancelTimeout) {
-                clearTimeout(cancelTimeout);
-            }
-        });
+        })();
 
     </script>
 
