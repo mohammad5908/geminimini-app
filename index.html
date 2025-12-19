@@ -2,132 +2,158 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#000000">
     <title>Gemini Store</title>
-    
+
     <style>
-        #crash-screen { display: none; padding: 20px; color: red; background: #000; position: fixed; inset: 0; z-index: 9999; font-family: monospace; direction: ltr; white-space: pre-wrap; }
-        #init-loader { position: fixed; inset: 0; background: #000; color: #8b5cf6; display: flex; justify-content: center; align-items: center; z-index: 50; font-weight: bold; }
+        body { background-color: #000; margin: 0; padding: 0; font-family: sans-serif; overflow-x: hidden; }
+        #app-loader { position: fixed; inset: 0; z-index: 9999; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s; }
+        .pulse-ring { width: 50px; height: 50px; border-radius: 50%; border: 2px solid #8b5cf6; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { transform: scale(0.8); opacity: 1; } 100% { transform: scale(1.5); opacity: 0; } }
+        .logo-text { color: #8b5cf6; margin-top: 20px; letter-spacing: 4px; font-size: 12px; font-weight: bold; }
+        [v-cloak] { display: none !important; }
     </style>
 </head>
-<body style="background-color: #000; margin: 0;">
+<body>
 
-    <div id="crash-screen"></div>
-    
-    <div id="init-loader">CONNECTING TO TELEGRAM...</div>
-
-    <script>
-        window.onerror = function(msg, url, line, col, error) {
-            document.getElementById('init-loader').style.display = 'none';
-            const screen = document.getElementById('crash-screen');
-            screen.style.display = 'block';
-            screen.innerHTML += `❌ ERROR:\n${msg}\nLine: ${line}\n\n`;
-            return false;
-        };
-    </script>
+    <div id="app-loader">
+        <div class="pulse-ring"></div>
+        <div class="logo-text">GEMINI LOADING...</div>
+    </div>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
 
     <script>
-        try {
-            tailwind.config = {
-                theme: {
-                    extend: {
-                        fontFamily: { sans: ['Vazirmatn', 'sans-serif'] },
-                        colors: {
-                            deep: '#050505',
-                            glass: 'rgba(255, 255, 255, 0.08)',
-                            primary: '#8b5cf6',
-                            accent: '#ec4899',
-                            gold: '#fbbf24'
-                        },
-                        animation: {
-                            'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        }
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Vazirmatn', 'sans-serif'] },
+                    colors: {
+                        deep: '#050505',
+                        glass: 'rgba(255, 255, 255, 0.08)',
+                        glass_active: 'rgba(255, 255, 255, 0.15)',
+                        primary: '#8b5cf6', // بنفش جمینای
+                        accent: '#ec4899',  // صورتی
+                        gold: '#fbbf24'     // طلایی
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } }
                     }
                 }
             }
-        } catch (e) {
-            console.error("Tailwind Config Error", e);
         }
     </script>
 
     <style>
-        body { color: #fff; -webkit-tap-highlight-color: transparent; }
-        .glass-panel {
-            background: linear-gradient(180deg, rgba(30,30,30,0.7) 0%, rgba(10,10,10,0.9) 100%);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        /* Glassmorphism */
+        .glass-card {
+            background: linear-gradient(180deg, rgba(30,30,30,0.6) 0%, rgba(10,10,10,0.9) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
         }
-        .btn-action {
+        
+        /* دکمه گرادیانت */
+        .btn-main {
             background: linear-gradient(135deg, #7c3aed 0%, #db2777 100%);
-            transition: transform 0.1s;
+            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .btn-action:active { transform: scale(0.96); opacity: 0.9; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .btn-main:active { transform: scale(0.96); opacity: 0.9; }
+
+        /* فونت اعداد فارسی/انگلیسی */
+        .num-font { font-feature-settings: "ss01"; }
+        
+        /* حذف هایلایت آبی در موبایل */
+        * { -webkit-tap-highlight-color: transparent; }
+        
+        /* Safe Area (برای آیفون‌های ناچ‌دار) */
+        .safe-top { padding-top: env(safe-area-inset-top); }
+        .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
     </style>
 
-    <div id="app" class="hidden h-full">
+    <div id="app" v-cloak class="min-h-screen text-white pb-10 safe-top">
         
-        <div class="max-w-md mx-auto min-h-screen pb-24 px-5 pt-6 relative z-10">
+        <div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+            <div class="absolute top-[-10%] right-[-20%] w-[300px] h-[300px] bg-primary/20 rounded-full blur-[100px] animate-float"></div>
+            <div class="absolute bottom-[-10%] left-[-10%] w-[250px] h-[250px] bg-accent/10 rounded-full blur-[80px] animate-float" style="animation-delay: 2s;"></div>
+        </div>
+
+        <div class="max-w-md mx-auto px-5 pt-6">
             
-            <header class="flex justify-between items-center mb-8">
+            <header class="flex items-center justify-between mb-8 animate-[fadeIn_0.5s]">
                 <div class="flex items-center gap-3">
-                    <img :src="user.photo_url || 'https://cdn-icons-png.flaticon.com/512/149/149071.png'" class="w-12 h-12 rounded-full border-2 border-white/10 bg-white/5">
+                    <div class="relative">
+                        <img :src="user.photo_url || 'https://cdn-icons-png.flaticon.com/512/149/149071.png'" class="w-12 h-12 rounded-full border-2 border-white/10 object-cover bg-white/5">
+                        <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-black rounded-full"></div>
+                    </div>
                     <div>
                         <h1 class="font-bold text-lg leading-tight">{{ user.first_name }}</h1>
-                        <p class="text-xs text-primary font-mono tracking-wider">ID: {{ user.id }}</p>
+                        <p class="text-[10px] text-primary uppercase tracking-widest font-bold mt-1">Premium Member</p>
                     </div>
                 </div>
-                <button @click="toggleDebug" class="text-xs text-white/20 hover:text-white">v5.0</button>
+                <div class="w-10 h-10 rounded-full glass-card flex items-center justify-center">
+                    <i class="fa-solid fa-bell text-white/50"></i>
+                </div>
             </header>
 
-            <div v-if="debugMode" class="mb-4 p-2 bg-red-900/50 text-[10px] font-mono rounded border border-red-500 overflow-x-hidden">
-                <p>Status: {{ status }}</p>
-                <p>Params: {{ urlParams }}</p>
-                <p>Telegram: {{ isTg }}</p>
-            </div>
-
-            <div @click="selectProduct('gemini_ultra_monthly_ready')" class="relative glass-panel rounded-3xl p-6 mb-6 overflow-hidden group cursor-pointer border border-primary/30">
-                <div class="absolute -right-10 -top-10 w-40 h-40 bg-primary/20 rounded-full blur-[60px]"></div>
+            <div @click="openModal('gemini_ultra_monthly_ready')" class="glass-card rounded-[32px] p-6 mb-6 relative overflow-hidden group cursor-pointer border border-primary/30 active:scale-[0.98] transition-transform">
+                <div class="absolute -right-6 -top-6 w-32 h-32 bg-primary/20 rounded-full blur-[40px]"></div>
                 
                 <div class="relative z-10">
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="bg-primary/20 text-primary text-[10px] font-bold px-2 py-1 rounded border border-primary/20">FLAGSHIP</span>
-                        <i class="fa-solid fa-rocket text-2xl text-white/30"></i>
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="bg-white/10 backdrop-blur px-2 py-1 rounded-lg text-[9px] font-bold border border-white/10">TOP RATED</span>
+                        <i class="fa-solid fa-rocket text-2xl text-white/20 group-hover:text-white/60 transition-colors"></i>
                     </div>
-                    <h2 class="text-3xl font-black text-white mb-1">Gemini <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Ultra</span></h2>
-                    <p class="text-xs text-white/60 mb-4">قدرتمندترین نسخه گوگل</p>
+                    <h2 class="text-3xl font-black mb-1">Gemini <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Ultra</span></h2>
+                    <p class="text-xs text-white/60 mb-5 leading-relaxed max-w-[80%]">
+                        قدرتمندترین مدل هوش مصنوعی گوگل. تحلیل تصویر، کدنویسی و سرعت بالا.
+                    </p>
                     
                     <div class="flex items-center justify-between">
-                        <span class="text-xl font-bold text-gold">{{ formatPrice(getPrice('gemini_ultra_monthly_ready')) }} <span class="text-xs text-white/50">تومان</span></span>
-                        <div class="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center shadow-lg group-active:scale-90 transition-transform">
-                            <i class="fa-solid fa-arrow-left"></i>
+                        <div class="flex flex-col">
+                            <span class="text-[10px] text-white/30 line-through">2,500,000</span>
+                            <span class="text-xl font-bold text-gold num-font">
+                                {{ formatPrice(getProduct('gemini_ultra_monthly_ready').price) }} 
+                                <span class="text-[10px] font-normal text-white/50">تومان</span>
+                            </span>
                         </div>
+                        <button class="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
+                            <i class="fa-solid fa-arrow-left -rotate-45"></i>
+                        </button>
                     </div>
                 </div>
             </div>
 
             <div class="space-y-4">
-                <div v-for="p in regularProducts" :key="p.id" @click="selectProduct(p.id)"
-                     class="glass-panel rounded-2xl p-4 flex items-center gap-4 cursor-pointer active:scale-[0.98] transition-transform">
+                <div class="flex items-center gap-2 mb-2 px-1 opacity-70">
+                    <i class="fa-solid fa-layer-group text-xs"></i>
+                    <h3 class="text-xs font-bold">سایر اشتراک‌ها</h3>
+                </div>
+
+                <div v-for="p in regularProducts" :key="p.id" @click="openModal(p.id)"
+                     class="glass-card rounded-2xl p-4 flex items-center gap-4 cursor-pointer active:scale-[0.98] transition-transform hover:bg-glass_active">
                     
-                    <div class="w-14 h-14 rounded-xl flex items-center justify-center text-2xl bg-white/5 border border-white/5">
+                    <div class="w-14 h-14 rounded-xl flex items-center justify-center text-2xl bg-white/5 border border-white/5 shadow-inner">
                         {{ p.emoji }}
                     </div>
                     
                     <div class="flex-1">
-                        <h3 class="font-bold text-sm">{{ p.name }}</h3>
-                        <p class="text-[10px] text-white/40 mt-0.5">{{ p.desc }}</p>
+                        <h3 class="font-bold text-sm text-white">{{ p.name }}</h3>
+                        <p class="text-[10px] text-white/40 mt-1">{{ p.desc }}</p>
                     </div>
                     
                     <div class="text-left">
-                        <div class="text-gold font-bold text-base">{{ formatPrice(p.price) }}</div>
+                        <div class="text-gold font-bold text-base num-font">{{ formatPrice(p.price) }}</div>
                         <div class="text-[9px] text-white/30">تومان</div>
                     </div>
                 </div>
@@ -135,101 +161,105 @@
 
         </div>
 
-        <div v-if="modal.show" class="fixed inset-0 z-50 flex items-end justify-center sm:items-center bg-black/90 backdrop-blur-sm p-4 animate-[fadeIn_0.2s]">
-            <div class="w-full max-w-sm glass-panel rounded-3xl p-6 border-t border-white/20">
+        <transition name="slide">
+            <div v-if="modal.show" class="fixed inset-0 z-50 flex items-end justify-center sm:items-center" @click.self="closeModal">
+                <div class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity"></div>
                 
-                <div class="text-center mb-6">
-                    <div class="text-5xl mb-4">{{ modal.product.emoji }}</div>
-                    <h3 class="text-xl font-bold">{{ modal.product.name }}</h3>
-                    <p class="text-sm text-white/50 mt-1">{{ modal.product.desc }}</p>
-                </div>
+                <div class="relative w-full max-w-md bg-[#121212] border-t border-white/10 rounded-t-[32px] sm:rounded-[32px] p-6 shadow-2xl animate-[slideUp_0.3s_ease-out]">
+                    <div class="w-12 h-1.5 bg-white/10 rounded-full mx-auto mb-6"></div>
+                    
+                    <div class="text-center mb-6">
+                        <div class="w-20 h-20 mx-auto rounded-2xl bg-white/5 flex items-center justify-center text-5xl mb-4 border border-white/5 shadow-[0_0_30px_rgba(139,92,246,0.1)]">
+                            {{ modal.product.emoji }}
+                        </div>
+                        <h2 class="text-xl font-black text-white">{{ modal.product.name }}</h2>
+                        <div class="inline-block mt-2 px-3 py-1 rounded bg-white/5 text-[10px] text-white/50 border border-white/5">{{ modal.product.desc }}</div>
+                    </div>
 
-                <div class="flex justify-between items-center bg-white/5 p-4 rounded-xl mb-6">
-                    <span class="text-sm text-white/70">مبلغ قابل پرداخت:</span>
-                    <span class="text-xl font-bold text-gold">{{ formatPrice(modal.product.price) }} ت</span>
-                </div>
+                    <div class="grid grid-cols-2 gap-3 mb-6">
+                        <div class="bg-white/5 rounded-xl p-3 flex items-center gap-2 border border-white/5">
+                            <i class="fa-solid fa-bolt text-gold text-xs"></i>
+                            <span class="text-[10px] text-white/70">تحویل آنی</span>
+                        </div>
+                        <div class="bg-white/5 rounded-xl p-3 flex items-center gap-2 border border-white/5">
+                            <i class="fa-solid fa-shield text-primary text-xs"></i>
+                            <span class="text-[10px] text-white/70">ضمانت کامل</span>
+                        </div>
+                    </div>
 
-                <div class="flex gap-3">
-                    <button @click="closeModal" class="flex-1 py-3.5 rounded-xl bg-white/10 font-bold text-sm text-white/70">انصراف</button>
-                    <button @click="sendDataToBot" class="flex-[2] py-3.5 rounded-xl btn-action text-white font-bold text-sm flex items-center justify-center gap-2">
-                        <span v-if="!sending">تایید و پرداخت</span>
-                        <span v-else class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                    <div class="flex justify-between items-center mb-4 px-1">
+                        <span class="text-xs text-white/50">مبلغ نهایی:</span>
+                        <span class="text-xl font-bold text-gold num-font">{{ formatPrice(modal.product.price) }} <span class="text-xs font-normal">تومان</span></span>
+                    </div>
+
+                    <button @click="buyProduct" :disabled="sending" class="w-full py-4 rounded-xl btn-main text-white font-bold text-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:grayscale">
+                        <span v-if="!sending">تایید و پرداخت آنلاین</span>
+                        <span v-else class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
                     </button>
+                    
+                    <p class="text-[9px] text-center text-white/20 mt-4 font-mono">SECURED BY TELEGRAM PAYMENT</p>
                 </div>
             </div>
-        </div>
+        </transition>
 
     </div>
 
     <script>
-        const { createApp, ref, onMounted, computed } = Vue;
+        const { createApp, ref, computed, onMounted } = Vue;
 
         createApp({
             setup() {
-                // وضعیت‌ها
                 const user = ref({ first_name: 'Guest', id: '---' });
-                const loading = ref(true);
-                const sending = ref(false);
                 const modal = ref({ show: false, product: {} });
-                const debugMode = ref(false);
-                const status = ref('Init...');
-                const urlParams = ref('');
-                const isTg = ref(false);
+                const sending = ref(false);
 
-                // دیتابیس محصولات (سینک شده با پایتون)
+                // دیتابیس محصولات (دقیقاً هماهنگ با Config.PRICES پایتون)
                 const products = ref([
-                    { id: 'gemini_pro_monthly_ready', name: 'Gemini Pro ماهانه', desc: 'اکانت آماده • تحویل آنی', price: 380000, emoji: '💎' },
+                    { id: 'gemini_pro_monthly_ready', name: 'Gemini Pro ماهانه', desc: 'اکانت آماده • ۳۰ روزه', price: 380000, emoji: '💎' },
                     { id: 'gemini_pro_yearly_ready', name: 'Gemini Pro سالانه', desc: 'اکانت آماده • یکساله', price: 1280000, emoji: '👑' },
                     { id: 'gemini_pro_monthly_personal', name: 'شارژ ایمیل شخصی', desc: 'فعال‌سازی روی اکانت شما', price: 300000, emoji: '📧' },
                     { id: 'gemini_ultra_monthly_ready', name: 'Gemini Ultra', desc: 'پرقدرت‌ترین مدل گوگل', price: 1850000, emoji: '🚀' }
                 ]);
 
-                // محصولات عادی (غیر از Ultra که Hero است)
+                // جدا کردن محصول ویژه (Ultra) از لیست عادی
                 const regularProducts = computed(() => products.value.filter(p => p.id !== 'gemini_ultra_monthly_ready'));
 
                 // راه‌اندازی
                 onMounted(() => {
+                    setTimeout(() => {
+                        // مخفی کردن لودینگ
+                        document.getElementById('app-loader').style.opacity = '0';
+                        setTimeout(() => document.getElementById('app-loader').style.display = 'none', 500);
+                    }, 800);
+
                     try {
                         const tg = window.Telegram.WebApp;
-                        
-                        // بررسی محیط
-                        if (tg.initData) {
-                            isTg.value = true;
-                            status.value = "Telegram Connected";
-                            tg.expand();
-                            tg.setHeaderColor('#000000');
-                            tg.setBackgroundColor('#000000');
-                            
-                            if (tg.initDataUnsafe?.user) {
-                                user.value = tg.initDataUnsafe.user;
-                            }
-                        } else {
-                            status.value = "Not inside Telegram";
+                        tg.expand();
+                        tg.setHeaderColor('#000000');
+                        tg.setBackgroundColor('#000000');
+                        tg.enableClosingConfirmation();
+
+                        if (tg.initDataUnsafe?.user) {
+                            user.value = tg.initDataUnsafe.user;
                         }
 
-                        // دریافت قیمت‌ها از لینک (اگر ربات فرستاده باشد)
+                        // آپدیت قیمت‌ها از لینک (اگر وجود داشته باشد)
                         const params = new URLSearchParams(window.location.search);
-                        urlParams.value = window.location.search;
                         products.value.forEach(p => {
                             if (params.has(p.id)) p.price = parseInt(params.get(p.id));
                         });
 
-                        // پایان لودینگ
-                        document.getElementById('init-loader').style.display = 'none';
-                        document.getElementById('app').classList.remove('hidden');
-                        loading.value = false;
-
                     } catch (e) {
-                        alert("Critical Error: " + e.message);
+                        console.log("Telegram API not available");
                     }
                 });
 
-                // توابع
+                // توابع کمکی
                 const formatPrice = (n) => Number(n).toLocaleString();
-                const getPrice = (id) => products.value.find(p => p.id === id)?.price;
-                
-                const selectProduct = (id) => {
-                    const p = products.value.find(x => x.id === id);
+                const getProduct = (id) => products.value.find(p => p.id === id);
+
+                const openModal = (id) => {
+                    const p = getProduct(id);
                     if (p) {
                         modal.value = { show: true, product: p };
                         if (window.Telegram.WebApp.HapticFeedback) 
@@ -238,31 +268,29 @@
                 };
 
                 const closeModal = () => modal.value.show = false;
-                const toggleDebug = () => debugMode.value = !debugMode.value;
 
-                // تابع حیاتی ارسال دیتا
-                const sendDataToBot = () => {
+                // تابع نهایی خرید
+                const buyProduct = () => {
                     sending.value = true;
                     const tg = window.Telegram.WebApp;
 
-                    if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('heavy');
+                    // ویبره موفقیت
+                    if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
 
-                    // شبیه‌سازی تاخیر کوتاه برای حس بهتر
                     setTimeout(() => {
                         try {
-                            // فقط شناسه را می‌فرستیم (تضمین کارکرد)
+                            // ارسال شناسه به ربات
                             tg.sendData(modal.value.product.id);
                         } catch (e) {
-                            alert("Send Error: " + e.message);
+                            alert("خطا در اتصال به ربات. لطفاً مجدد تلاش کنید.");
                             sending.value = false;
                         }
                     }, 500);
                 };
 
                 return {
-                    user, loading, sending, modal, products, regularProducts, 
-                    debugMode, status, urlParams, isTg,
-                    formatPrice, getPrice, selectProduct, closeModal, sendDataToBot, toggleDebug
+                    user, modal, sending, products, regularProducts,
+                    formatPrice, getProduct, openModal, closeModal, buyProduct
                 };
             }
         }).mount('#app');
