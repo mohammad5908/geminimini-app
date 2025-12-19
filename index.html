@@ -3,259 +3,266 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#050505">
-    <title>Gemini Premium</title>
+    <meta name="theme-color" content="#000000">
+    <title>Gemini Center</title>
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
 
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Vazirmatn', 'sans-serif'] },
+                    colors: {
+                        bg: '#000000',
+                        glass: 'rgba(255, 255, 255, 0.05)',
+                        border: 'rgba(255, 255, 255, 0.1)',
+                        accent: '#8B5CF6', // بنفش
+                        gold: '#F59E0B',
+                        success: '#10B981'
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'slide-down': 'slideDown 0.5s ease-out forwards',
+                    },
+                    keyframes: {
+                        slideDown: { '0%': { transform: 'translateY(-20px)', opacity: 0 }, '100%': { transform: 'translateY(0)', opacity: 1 } }
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        /* --- 1. تنظیمات هسته (CSS Variables) --- */
-        :root {
-            --bg: #050505;
-            --card-bg: rgba(255, 255, 255, 0.03);
-            --card-border: rgba(255, 255, 255, 0.08);
-            --primary: #8B5CF6;  /* بنفش جمینای */
-            --accent: #EC4899;   /* صورتی */
-            --gold: #F59E0B;     /* طلایی */
-            --text-main: #ffffff;
-            --text-muted: #888888;
-            --ease: cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-
-        body {
-            margin: 0; padding: 0;
-            background-color: var(--bg);
-            color: var(--text-main);
-            font-family: 'Vazirmatn', sans-serif;
-            overflow-x: hidden; user-select: none;
-            min-height: 100vh;
-            display: flex; flex-direction: column;
-        }
-
-        /* --- 2. پس‌زمینه زنده (CSS Gradients) --- */
-        .ambient-light {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none;
-            background: 
-                radial-gradient(circle at 10% 10%, rgba(139, 92, 246, 0.15), transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(236, 72, 153, 0.1), transparent 40%);
-        }
-
-        /* --- 3. کامپوننت‌ها --- */
-        .container { padding: 20px; max-width: 480px; margin: 0 auto; width: 100%; flex: 1; display: flex; flex-direction: column; }
-
-        /* هدر */
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; animation: slideDown 0.6s var(--ease); }
-        .user-badge {
-            display: flex; align-items: center; gap: 12px;
-            background: rgba(255,255,255,0.05); padding: 6px 12px 6px 6px;
-            border-radius: 50px; border: 1px solid var(--card-border);
-        }
-        .avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid #000; }
-        .user-text h3 { margin: 0; font-size: 13px; font-weight: 700; }
-        .user-text p { margin: 0; font-size: 10px; color: var(--text-muted); }
+        body { background-color: #000; color: #fff; -webkit-tap-highlight-color: transparent; user-select: none; overflow-x: hidden; }
         
-        .status-dot { width: 8px; height: 8px; background: #10B981; border-radius: 50%; box-shadow: 0 0 10px #10B981; animation: pulse 2s infinite; }
-
-        /* کارت‌ها (Bento Style) */
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 24px;
-            padding: 20px;
-            position: relative; overflow: hidden;
-            transition: transform 0.2s var(--ease), border-color 0.2s;
-            cursor: pointer;
+        /* افکت شیشه‌ای پیشرفته */
+        .glass-panel {
+            background: linear-gradient(180deg, rgba(30, 30, 30, 0.7) 0%, rgba(10, 10, 10, 0.9) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        .card:active { transform: scale(0.96); border-color: var(--primary); }
 
-        /* کارت ویژه (Hero) */
-        .hero {
-            margin-bottom: 20px; min-height: 200px;
-            display: flex; flex-direction: column; justify-content: space-between;
-            background: linear-gradient(160deg, rgba(20,20,20,0.8) 0%, rgba(10,10,10,0.9) 100%);
-            animation: slideUp 0.7s var(--ease) 0.1s backwards;
-        }
-        .hero::before {
-            content: ''; position: absolute; top: -50%; right: -50%; width: 100%; height: 100%;
-            background: radial-gradient(circle, rgba(139,92,246,0.3), transparent 70%);
-            filter: blur(40px); opacity: 0.6;
+        /* کارت پروفایل */
+        .profile-card {
+            display: flex; align-items: center; gap: 15px;
+            padding: 15px; border-radius: 20px;
+            background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+            margin-bottom: 25px; transition: all 0.3s;
         }
         
-        .badge {
-            align-self: flex-start;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            padding: 5px 12px; border-radius: 8px;
-            font-size: 10px; font-weight: 900; letter-spacing: 1px;
-            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+        .avatar-box {
+            position: relative; width: 50px; height: 50px; flex-shrink: 0;
         }
-
-        .hero-title { font-size: 32px; font-weight: 900; margin: 15px 0 5px; line-height: 1.1; position: relative; z-index: 1; }
-        .text-gradient { background: linear-gradient(to right, #fff, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .hero-desc { font-size: 13px; color: var(--text-muted); max-width: 80%; position: relative; z-index: 1; }
-
-        .price-tag {
-            display: flex; justify-content: space-between; align-items: flex-end; margin-top: 20px;
-            position: relative; z-index: 1;
+        .avatar-img {
+            width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
+            border: 2px solid #000; padding: 2px; background: linear-gradient(45deg, #8B5CF6, #EC4899);
         }
-        .price-val { font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -0.5px; }
-        .price-unit { font-size: 11px; color: var(--text-muted); font-weight: normal; margin-right: 4px; }
-        
-        .btn-icon {
-            width: 44px; height: 44px; border-radius: 14px;
-            background: #fff; color: #000;
+        .avatar-placeholder {
+            width: 100%; height: 100%; border-radius: 50%;
+            background: linear-gradient(45deg, #8B5CF6, #EC4899);
             display: flex; align-items: center; justify-content: center;
-            font-size: 20px; box-shadow: 0 5px 20px rgba(255,255,255,0.2);
+            font-weight: bold; font-size: 18px; text-transform: uppercase;
+        }
+        .status-badge {
+            position: absolute; bottom: 0; right: 0; width: 12px; height: 12px;
+            background: #10B981; border: 2px solid #000; border-radius: 50%;
+            box-shadow: 0 0 10px #10B981; animation: pulse 2s infinite;
         }
 
-        /* گرید محصولات */
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; animation: slideUp 0.8s var(--ease) 0.2s backwards; }
+        /* دکمه کپی آیدی */
+        .id-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(0,0,0,0.3); padding: 4px 10px; border-radius: 8px;
+            font-size: 11px; font-family: monospace; color: #aaa;
+            cursor: pointer; transition: 0.2s; border: 1px solid transparent;
+        }
+        .id-badge:active { background: rgba(139, 92, 246, 0.2); color: #fff; border-color: #8B5CF6; }
+
+        /* تایپوگرافی */
+        .num-font { font-variant-numeric: tabular-nums; letter-spacing: -0.5px; }
         
-        .item-card { height: 160px; display: flex; flex-direction: column; justify-content: space-between; }
-        .item-icon { font-size: 32px; margin-bottom: 10px; filter: drop-shadow(0 0 15px rgba(255,255,255,0.1)); }
-        .item-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
-        .item-sub { font-size: 11px; color: var(--text-muted); }
-        .item-price { font-size: 16px; font-weight: 800; color: var(--gold); text-shadow: 0 0 15px rgba(245, 158, 11, 0.3); }
-
-        /* کارت عریض */
-        .wide-card {
-            display: flex; align-items: center; justify-content: space-between;
-            animation: slideUp 0.9s var(--ease) 0.3s backwards;
+        /* نوتیفیکیشن کپی */
+        #toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(20px);
+            background: #333; color: #fff; padding: 8px 16px; border-radius: 30px;
+            font-size: 12px; opacity: 0; transition: all 0.3s; pointer-events: none; z-index: 100;
+            display: flex; align-items: center; gap: 8px; border: 1px solid #555;
         }
-        .wide-left { display: flex; align-items: center; gap: 15px; }
-        .wide-icon { 
-            width: 48px; height: 48px; border-radius: 14px; 
-            background: rgba(6, 182, 212, 0.1); color: #06B6D4;
-            display: flex; align-items: center; justify-content: center; font-size: 20px;
-            border: 1px solid rgba(6, 182, 212, 0.2);
-        }
-
-        /* فوتر */
-        footer { margin-top: auto; text-align: center; opacity: 0.3; font-size: 10px; padding-bottom: 10px; letter-spacing: 2px; }
+        #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
         /* لودینگ */
         #loader {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+            position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 999;
+            display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: 0.3s;
         }
-        #loader.show { opacity: 1; pointer-events: all; }
-        
-        .spinner {
-            width: 50px; height: 50px; border: 3px solid rgba(255,255,255,0.1);
-            border-top-color: var(--primary); border-radius: 50%;
-            animation: spin 0.8s linear infinite; margin-bottom: 20px;
-        }
-        .loading-text { font-size: 12px; letter-spacing: 1px; color: var(--primary); animation: pulse 1.5s infinite; }
-
-        /* انیمیشن‌ها */
-        @keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        #loader.active { opacity: 1; pointer-events: all; }
+        .spinner { width: 30px; height: 30px; border: 3px solid #333; border-top-color: #8B5CF6; border-radius: 50%; animation: spin 0.8s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
     </style>
 </head>
 <body>
 
-    <div class="ambient-light"></div>
+    <div id="loader"><div class="spinner"></div></div>
 
-    <div id="loader">
-        <div class="spinner"></div>
-        <div class="loading-text">در حال پردازش...</div>
-    </div>
+    <div id="toast"><i class="fa-solid fa-check text-green-500"></i> آیدی کپی شد</div>
 
-    <div class="container">
+    <div class="max-w-md mx-auto min-h-screen flex flex-col p-5 relative">
         
-        <header>
-            <div class="user-badge">
-                <img id="user-photo" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="avatar">
-                <div class="user-text">
-                    <h3 id="user-name">کاربر مهمان</h3>
-                    <p>عضو ویژه</p>
+        <div class="fixed top-0 left-0 w-full h-[300px] bg-gradient-to-b from-accent/10 to-transparent pointer-events-none z-[-1]"></div>
+
+        <header class="profile-card animate-slide-down">
+            <div class="avatar-box">
+                <img id="user-photo" class="avatar-img hidden" src="" alt="Avatar">
+                <div id="user-initials" class="avatar-placeholder hidden">U</div>
+                <div class="status-badge"></div>
+            </div>
+            <div class="flex-1">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h2 id="user-name" class="text-sm font-bold text-white mb-1">کاربر مهمان</h2>
+                        <div onclick="copyId()" class="id-badge">
+                            <span id="user-id">ID: Loading...</span>
+                            <i class="fa-regular fa-copy text-[10px]"></i>
+                        </div>
+                    </div>
+                    <div class="bg-gold/20 text-gold text-[9px] px-2 py-1 rounded-md font-bold border border-gold/20">
+                        PREMIUM
+                    </div>
                 </div>
             </div>
-            <div class="status-dot"></div>
         </header>
 
-        <section class="card hero" onclick="buy('gemini_ultra_monthly_ready')">
-            <div class="badge">BEST CHOICE</div>
-            <div>
-                <h1 class="hero-title">Gemini <br><span class="text-gradient">Ultra 1.5</span></h1>
-                <p class="hero-desc">قدرتمندترین هوش مصنوعی جهان. تحلیل تصویر و کدنویسی.</p>
-            </div>
-            <div class="price-tag">
-                <div>
-                    <span class="price-val" id="p-ultra">1,850,000</span>
-                    <span class="price-unit">تومان</span>
+        <div onclick="buy('gemini_ultra_monthly_ready')" class="relative glass-panel rounded-[28px] p-6 mb-4 cursor-pointer group overflow-hidden">
+            <div class="absolute top-0 right-0 w-40 h-40 bg-accent/20 rounded-full blur-[50px] group-hover:bg-accent/30 transition-all"></div>
+            
+            <div class="relative z-10">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="text-[10px] font-bold text-accent bg-accent/10 px-2 py-0.5 rounded border border-accent/20">پیشنهاد ویژه</span>
                 </div>
-                <div class="btn-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+                <h1 class="text-3xl font-black mb-2">Gemini <span class="text-transparent bg-clip-text bg-gradient-to-r from-accent to-pink-500">Ultra</span></h1>
+                <p class="text-xs text-zinc-400 mb-6 max-w-[80%]">قدرتمندترین مدل هوش مصنوعی گوگل با قابلیت کدنویسی و تحلیل تصویر.</p>
+                
+                <div class="flex justify-between items-end">
+                    <div>
+                        <span id="p-ultra" class="text-xl font-bold text-white num-font">1,850,000</span>
+                        <span class="text-[10px] text-zinc-500">تومان</span>
+                    </div>
+                    <button class="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-arrow-left -rotate-45"></i>
+                    </button>
                 </div>
-            </div>
-        </section>
-
-        <div class="grid">
-            <div class="card item-card" onclick="buy('gemini_pro_monthly_ready')">
-                <div class="item-icon">💎</div>
-                <div>
-                    <div class="item-title">Pro ماهانه</div>
-                    <div class="item-sub">اکانت آماده • تحویل آنی</div>
-                </div>
-                <div class="item-price" id="p-pro-m">380,000</div>
-            </div>
-
-            <div class="card item-card" onclick="buy('gemini_pro_yearly_ready')">
-                <div class="item-icon">👑</div>
-                <div>
-                    <div class="item-title">Pro سالانه</div>
-                    <div class="item-sub">۱۲ ماه اعتبار کامل</div>
-                </div>
-                <div class="item-price" id="p-pro-y">1,280,000</div>
             </div>
         </div>
 
-        <section class="card wide-card" onclick="buy('gemini_pro_monthly_personal')">
-            <div class="wide-left">
-                <div class="wide-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                </div>
+        <div class="grid grid-cols-2 gap-3 mb-4">
+            
+            <div onclick="buy('gemini_pro_monthly_ready')" class="glass-panel rounded-[24px] p-4 cursor-pointer active:scale-95 transition-transform flex flex-col justify-between h-[150px]">
+                <div class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-xl border border-white/5">💎</div>
                 <div>
-                    <div class="item-title">شارژ ایمیل شخصی</div>
-                    <div class="item-sub">فعال‌سازی قانونی روی Gmail</div>
+                    <h3 class="font-bold text-sm mb-1">Pro ماهانه</h3>
+                    <p class="text-[10px] text-zinc-500 mb-2">تحویل آنی</p>
+                    <div id="p-pro-m" class="text-gold font-bold text-base num-font">380,000</div>
                 </div>
             </div>
-            <div class="item-price" style="color: #06B6D4;" id="p-personal">300,000</div>
-        </section>
 
-        <footer>
-            SECURED BY TELEGRAM
-        </footer>
+            <div onclick="buy('gemini_pro_yearly_ready')" class="glass-panel rounded-[24px] p-4 cursor-pointer active:scale-95 transition-transform flex flex-col justify-between h-[150px]">
+                <div class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-xl border border-white/5">👑</div>
+                <div>
+                    <h3 class="font-bold text-sm mb-1">Pro سالانه</h3>
+                    <p class="text-[10px] text-zinc-500 mb-2">اقتصادی</p>
+                    <div id="p-pro-y" class="text-gold font-bold text-base num-font">1,280,000</div>
+                </div>
+            </div>
+        </div>
+
+        <div onclick="buy('gemini_pro_monthly_personal')" class="glass-panel rounded-[24px] p-4 flex items-center justify-between cursor-pointer active:scale-95 transition-transform">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 text-xl border border-blue-500/20">
+                    <i class="fa-solid fa-envelope"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-sm">شارژ ایمیل شخصی</h3>
+                    <p class="text-[10px] text-zinc-500">فعال‌سازی روی Gmail</p>
+                </div>
+            </div>
+            <div id="p-personal" class="text-white font-bold num-font">300,000</div>
+        </div>
+
+        <div class="mt-auto pt-8 text-center opacity-30 pb-4">
+            <i class="fa-brands fa-telegram text-xl"></i>
+            <p class="text-[9px] mt-2 font-mono tracking-widest">SECURED BY TELEGRAM</p>
+        </div>
 
     </div>
 
     <script>
-        // --- هسته مرکزی جاواسکریپت (بدون کتابخانه) ---
         const tg = window.Telegram.WebApp;
         
-        // 1. تنظیمات اولیه
+        // تنظیمات اولیه
         tg.expand();
         tg.enableClosingConfirmation();
-        tg.setHeaderColor('#050505');
-        tg.setBackgroundColor('#050505');
+        tg.setHeaderColor('#000000');
+        tg.setBackgroundColor('#000000');
 
-        // 2. لود اطلاعات کاربر
+        // ==========================================
+        // 👤 مدیریت کاربر (User Data Management)
+        // ==========================================
         const user = tg.initDataUnsafe.user;
+        
         if (user) {
-            document.getElementById('user-name').innerText = user.first_name;
-            if (user.photo_url) document.getElementById('user-photo').src = user.photo_url;
+            // 1. نمایش نام
+            document.getElementById('user-name').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '');
+            
+            // 2. نمایش آیدی عددی (User ID)
+            document.getElementById('user-id').innerText = user.id;
+
+            // 3. مدیریت عکس پروفایل (Photo Handling)
+            const photoEl = document.getElementById('user-photo');
+            const initialEl = document.getElementById('user-initials');
+
+            if (user.photo_url) {
+                photoEl.src = user.photo_url;
+                photoEl.classList.remove('hidden');
+            } else {
+                // اگر عکس نداشت، حرف اول اسم را نشان بده
+                initialEl.innerText = user.first_name.charAt(0).toUpperCase();
+                initialEl.classList.remove('hidden');
+            }
+        } else {
+            // حالت مهمان (اگر خارج از تلگرام باز شود)
+            document.getElementById('user-id').innerText = 'Unknown';
+            document.getElementById('user-initials').classList.remove('hidden');
         }
 
-        // 3. آپدیت قیمت‌ها از لینک (Dynamic Pricing)
-        // اگر ربات لینک را با قیمت بفرستد، اینجا آپدیت می‌شود
+        // ==========================================
+        // 📋 تابع کپی آیدی (Copy Utility)
+        // ==========================================
+        function copyId() {
+            const idText = document.getElementById('user-id').innerText;
+            if (idText === 'Unknown') return;
+
+            navigator.clipboard.writeText(idText).then(() => {
+                // نمایش تست (Toast)
+                if(tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+                const toast = document.getElementById('toast');
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
+        // ==========================================
+        // 💲 قیمت‌دهی داینامیک (URL Parsing)
+        // ==========================================
         const params = new URLSearchParams(window.location.search);
         const format = (n) => Number(n).toLocaleString();
         
@@ -264,26 +271,22 @@
         if(params.has('gemini_pro_yearly_ready')) document.getElementById('p-pro-y').innerText = format(params.get('gemini_pro_yearly_ready'));
         if(params.has('gemini_pro_monthly_personal')) document.getElementById('p-personal').innerText = format(params.get('gemini_pro_monthly_personal'));
 
-        // 4. تابع خرید (Safe & Direct)
+        // ==========================================
+        // 🚀 تابع خرید امن (Secure Buy)
+        // ==========================================
         function buy(productId) {
-            // الف: ویبره برای حس کلیک
             if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('heavy');
+            document.getElementById('loader').classList.add('active');
 
-            // ب: نمایش لودینگ
-            document.getElementById('loader').classList.add('show');
-
-            // ج: تاخیر کوتاه برای نمایش انیمیشن و سپس ارسال
             setTimeout(() => {
                 try {
                     tg.sendData(productId);
-                    
-                    // اطمینان از بسته شدن
                     setTimeout(() => tg.close(), 100);
                 } catch (e) {
                     alert('Error: ' + e.message);
-                    document.getElementById('loader').classList.remove('show');
+                    document.getElementById('loader').classList.remove('active');
                 }
-            }, 400); // 400ms delay for smooth UX
+            }, 500);
         }
     </script>
 </body>
