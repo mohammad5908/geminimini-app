@@ -6,68 +6,123 @@
     <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Gemini Center Elite 3.0</title>
+    <title>Gemini Center | Premium Store</title>
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Vazirmatn', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'] },
+                    colors: {
+                        void: '#000000',
+                        glass: {
+                            light: 'rgba(255, 255, 255, 0.05)',
+                            medium: 'rgba(255, 255, 255, 0.08)',
+                            heavy: 'rgba(20, 20, 20, 0.8)'
+                        },
+                        neon: {
+                            purple: '#8B5CF6',
+                            pink: '#EC4899',
+                            cyan: '#06B6D4',
+                            gold: '#F59E0B'
+                        }
+                    },
+                    animation: {
+                        'blob': 'blob 8s infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'slide-up': 'slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+                        'pop-in': 'popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                        'shimmer': 'shimmer 3s linear infinite',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%, 100%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(40px)', opacity: 0 },
+                            '100%': { transform: 'translateY(0)', opacity: 1 }
+                        },
+                        popIn: {
+                            '0%': { transform: 'scale(0.8)', opacity: 0 },
+                            '100%': { transform: 'scale(1)', opacity: 1 }
+                        },
+                        shimmer: {
+                            'from': { backgroundPosition: '0 0' },
+                            'to': { backgroundPosition: '-200% 0' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 
     <style>
         /* ═══════════════════════════════════════════════════════════════
-           GEMINI CENTER ELITE 3.0 - ULTIMATE PRODUCTION VERSION
-           Inspired by: Apple iOS + Stripe + Linear + Web-Lab
-           Features: Glassmorphism + 3D Transforms + Particle System
+           GEMINI CENTER ELITE - ULTIMATE PRODUCTION VERSION
+           Channel: @GeminiCenter_IR
         ═══════════════════════════════════════════════════════════════ */
 
-        :root {
-            --black: #000000;
-            --dark: #0a0a0a;
-            --purple: #8B5CF6;
-            --purple-light: #A78BFA;
-            --purple-dark: #6D28D9;
-            --pink: #EC4899;
-            --gold: #F59E0B;
-            --cyan: #06B6D4;
-            --green: #10B981;
-            --red: #EF4444;
-            --white: #FFFFFF;
-            --gray: #9CA3AF;
-            --gray-dark: #6B7280;
-            --gray-light: #D1D5DB;
-            --border: rgba(255,255,255,0.08);
-            --glass: rgba(255,255,255,0.05);
-            --glass-strong: rgba(255,255,255,0.1);
-            --safe-top: env(safe-area-inset-top, 20px);
-            --safe-bottom: env(safe-area-inset-bottom, 20px);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-            outline: none;
-        }
-
-        html, body {
-            width: 100%;
-            height: 100%;
-            overflow-x: hidden;
-            overscroll-behavior: none;
-        }
-
+        * { -webkit-tap-highlight-color: transparent; }
+        
         body {
-            background: var(--black);
-            color: var(--white);
-            font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            min-height: 100dvh;
-            position: relative;
+            background-color: #000;
+            color: #fff;
+            overflow-x: hidden;
+            user-select: none;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
 
-        /* ═════════════════════════ PARTICLES CANVAS ═════════════════════════ */
+        /* Glassmorphism Ultra */
+        .glass-panel {
+            background: linear-gradient(180deg, rgba(30, 30, 30, 0.6) 0%, rgba(10, 10, 10, 0.8) 100%);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
+        }
+
+        .nav-glass {
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Gold Gradient Text */
+        .text-gold-gradient {
+            background: linear-gradient(to bottom, #FCD34D, #F59E0B);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 2px 4px rgba(245, 158, 11, 0.3));
+        }
+
+        /* Hero Button with Shimmer */
+        .hero-btn {
+            background: linear-gradient(to right, #7C3AED 0%, #9333EA 20%, #DB2777 40%, #7C3AED 100%);
+            background-size: 200% auto;
+            box-shadow: 0 0 25px rgba(124, 58, 237, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
         
+        .hero-btn:active {
+            transform: scale(0.96);
+            box-shadow: 0 0 10px rgba(124, 58, 237, 0.2);
+        }
+
+        /* Particles Canvas */
         #particles {
             position: fixed;
             inset: 0;
@@ -75,1338 +130,675 @@
             z-index: 0;
         }
 
-        /* ═════════════════════════ ANIMATED BACKGROUND ═════════════════════════ */
-        
-        .bg-ambient {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 0;
-            overflow: hidden;
-        }
+        /* Custom Scrollbar */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        .bg-mesh {
-            position: absolute;
-            inset: 0;
-            background-image: 
-                radial-gradient(circle at 20% 30%, rgba(139,92,246,0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(236,72,153,0.12) 0%, transparent 50%),
-                radial-gradient(circle at 50% 50%, rgba(6,182,212,0.08) 0%, transparent 60%);
-            animation: mesh-move 20s ease-in-out infinite;
-        }
+        /* Safe Area */
+        .safe-top { padding-top: env(safe-area-inset-top, 20px); }
+        .safe-bottom { padding-bottom: env(safe-area-inset-bottom, 20px); }
 
-        @keyframes mesh-move {
-            0%, 100% { transform: scale(1) rotate(0deg); }
-            50% { transform: scale(1.1) rotate(2deg); }
-        }
-
-        /* ═════════════════════════ CONTAINER ═════════════════════════ */
-        
-        .app {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            max-width: 480px;
-            margin: 0 auto;
-            padding: 18px;
-            padding-top: calc(var(--safe-top) + 10px);
-            padding-bottom: calc(var(--safe-bottom) + 18px);
-            min-height: 100dvh;
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-        }
-
-        /* ═════════════════════════ TEST MODE BANNER ═════════════════════════ */
-        
-        .test-banner {
-            background: linear-gradient(135deg, rgba(251,146,60,0.2), rgba(239,68,68,0.2));
-            border: 1px solid rgba(251,146,60,0.4);
-            border-radius: 16px;
-            padding: 12px 16px;
-            text-align: center;
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--white);
-            display: none;
-            animation: slideDown 0.6s cubic-bezier(0.34,1.56,0.64,1);
-            backdrop-filter: blur(20px);
-        }
-
-        .test-banner.show {
-            display: block;
-        }
-
-        @keyframes slideDown {
-            from { transform: translateY(-30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        /* ═════════════════════════ PROFILE CARD ═════════════════════════ */
-        
-        .profile-card {
-            background: linear-gradient(145deg, rgba(30,30,40,0.85), rgba(15,15,25,0.95));
-            backdrop-filter: blur(40px) saturate(180%);
-            -webkit-backdrop-filter: blur(40px) saturate(180%);
-            border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 32px;
-            padding: 26px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 
-                0 25px 70px rgba(0,0,0,0.6),
-                0 10px 30px rgba(139,92,246,0.1),
-                inset 0 1px 0 rgba(255,255,255,0.15);
-            animation: slideDown 0.8s cubic-bezier(0.34,1.56,0.64,1) 0.1s backwards;
-        }
-
-        .profile-glow {
-            position: absolute;
-            top: -100%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(from 0deg, transparent, rgba(139,92,246,0.15), transparent);
-            animation: rotate 8s linear infinite;
-        }
-
-        @keyframes rotate {
-            to { transform: rotate(360deg); }
-        }
-
-        .shimmer-line {
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            animation: shimmer-slide 3s infinite;
-        }
-
-        @keyframes shimmer-slide {
-            to { left: 100%; }
-        }
-
-        .profile-header {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-            margin-bottom: 22px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .avatar-container {
-            position: relative;
-            flex-shrink: 0;
-        }
-
-        /* Animated Ring */
-        .avatar-ring {
-            position: absolute;
-            inset: -6px;
+        /* Loading Spinner */
+        .spinner-ring {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(139, 92, 246, 0.1);
+            border-top-color: #8B5CF6;
             border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
-
-        .avatar-ring svg {
-            width: 100%;
-            height: 100%;
-            transform: rotate(-90deg);
-        }
-
-        .ring-bg {
-            fill: none;
-            stroke: rgba(255,255,255,0.1);
-            stroke-width: 3;
-        }
-
-        .ring-progress {
-            fill: none;
-            stroke: url(#ring-gradient);
-            stroke-width: 3;
-            stroke-linecap: round;
-            stroke-dasharray: 250;
-            stroke-dashoffset: 62.5;
-            animation: ring-pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes ring-pulse {
-            0%, 100% { stroke-dashoffset: 62.5; }
-            50% { stroke-dashoffset: 50; }
-        }
-
-        .avatar-wrap {
-            position: relative;
-            width: 76px;
-            height: 76px;
-            border-radius: 50%;
-            overflow: hidden;
-            background: linear-gradient(135deg, var(--purple), var(--pink));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 34px;
-            font-weight: 900;
-            color: var(--white);
-            box-shadow: 
-                0 10px 30px rgba(139,92,246,0.5),
-                inset 0 2px 10px rgba(255,255,255,0.2);
-            border: 4px solid var(--black);
-        }
-
-        .avatar-wrap img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .status-dot {
-            position: absolute;
-            bottom: 4px;
-            right: 4px;
-            width: 18px;
-            height: 18px;
-            background: var(--green);
-            border: 4px solid var(--black);
-            border-radius: 50%;
-            box-shadow: 0 0 20px rgba(16,185,129,0.9);
-            animation: pulse-glow 2s infinite;
-        }
-
-        @keyframes pulse-glow {
-            0%, 100% { 
-                opacity: 1; 
-                transform: scale(1);
-                box-shadow: 0 0 20px rgba(16,185,129,0.9);
-            }
-            50% { 
-                opacity: 0.8; 
-                transform: scale(0.92);
-                box-shadow: 0 0 30px rgba(16,185,129,0.7);
-            }
-        }
-
-        .user-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .user-name {
-            font-size: 20px;
-            font-weight: 900;
-            margin-bottom: 8px;
-            letter-spacing: -0.6px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .name-text {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            background: linear-gradient(135deg, var(--white), var(--gray-light));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .verified-badge {
-            width: 22px;
-            height: 22px;
-            background: linear-gradient(135deg, var(--purple), var(--pink));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            box-shadow: 0 0 20px rgba(139,92,246,0.6);
-            animation: badge-float 3s ease-in-out infinite;
-        }
-
-        @keyframes badge-float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-3px); }
-        }
-
-        .user-id-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            font-size: 13px;
-            font-family: 'SF Mono', 'Courier New', monospace;
-            font-weight: 700;
-            color: var(--gray);
-            background: rgba(255,255,255,0.08);
-            padding: 6px 14px;
-            border-radius: 12px;
-            cursor: pointer;
-            border: 1px solid transparent;
-            transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
-            user-select: text;
-        }
-
-        .user-id-badge:hover {
-            background: rgba(255,255,255,0.12);
-        }
-
-        .user-id-badge:active {
-            transform: scale(0.96);
-            background: rgba(139,92,246,0.25);
-            border-color: var(--purple);
-            color: var(--purple-light);
-        }
-
-        .elite-tag {
-            position: absolute;
-            top: 26px;
-            left: 26px;
-            font-size: 11px;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 1.2px;
-            color: var(--gold);
-            background: rgba(245,158,11,0.25);
-            padding: 6px 12px;
-            border-radius: 10px;
-            border: 1px solid rgba(245,158,11,0.5);
-            box-shadow: 0 0 25px rgba(245,158,11,0.4);
-            z-index: 2;
-            animation: glow-pulse 2.5s infinite;
-        }
-
-        @keyframes glow-pulse {
-            0%, 100% { box-shadow: 0 0 25px rgba(245,158,11,0.4); }
-            50% { box-shadow: 0 0 35px rgba(245,158,11,0.6); }
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-top: 22px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .stat-card {
-            background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border);
-            border-radius: 18px;
-            padding: 16px 12px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, transparent, rgba(255,255,255,0.1));
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .stat-card:hover::before {
-            opacity: 1;
-        }
-
-        .stat-card:active {
-            transform: scale(0.95) translateY(-3px);
-            background: rgba(255,255,255,0.1);
-            box-shadow: 0 12px 30px rgba(0,0,0,0.4);
-        }
-
-        .stat-value {
-            font-size: 24px;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--white), var(--gray));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-variant-numeric: tabular-nums;
-            margin-bottom: 6px;
-        }
-
-        .stat-label {
-            font-size: 11px;
-            color: var(--gray-dark);
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-        }
-
-        /* ═════════════════════════ HERO PRODUCT ═════════════════════════ */
         
-        .hero-card {
-            background: linear-gradient(145deg, #1e1e32 0%, #0a0a0a 100%);
-            border: 1px solid rgba(255,255,255,0.18);
-            border-radius: 30px;
-            padding: 30px;
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
-            animation: slideUp 0.9s cubic-bezier(0.34,1.56,0.64,1) 0.2s backwards;
-            box-shadow: 
-                0 30px 80px rgba(0,0,0,0.5),
-                0 10px 40px rgba(139,92,246,0.2);
-        }
-
-        @keyframes slideUp {
-            from { transform: translateY(70px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        .hero-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 
-                0 35px 90px rgba(0,0,0,0.6),
-                0 15px 50px rgba(139,92,246,0.3);
-        }
-
-        .hero-card:active {
-            transform: scale(0.98);
-        }
-
-        .hero-glow {
-            position: absolute;
-            top: -80%;
-            right: -60%;
-            width: 180%;
-            height: 180%;
-            background: radial-gradient(circle, rgba(139,92,246,0.35), transparent 60%);
-            filter: blur(80px);
-            pointer-events: none;
-            animation: float-hero 10s ease-in-out infinite;
-        }
-
-        @keyframes float-hero {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(-35px, -35px) scale(1.08); }
-        }
-
-        .best-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, var(--purple), var(--pink));
-            color: var(--white);
-            font-size: 11px;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            padding: 8px 16px;
-            border-radius: 50px;
-            margin-bottom: 16px;
-            position: relative;
-            z-index: 1;
-            box-shadow: 0 6px 25px rgba(139,92,246,0.6);
-            animation: badge-glow 2.5s infinite;
-        }
-
-        @keyframes badge-glow {
-            0%, 100% { box-shadow: 0 6px 25px rgba(139,92,246,0.6); }
-            50% { box-shadow: 0 8px 35px rgba(139,92,246,0.8); }
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero-title {
-            font-size: 32px;
-            font-weight: 900;
-            line-height: 1.2;
-            margin-bottom: 12px;
-            letter-spacing: -1.4px;
-        }
-
-        .gradient-text {
-            background: linear-gradient(120deg, #ffffff, #d8b4fe, #8b5cf6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-size: 200% 100%;
-            animation: shimmer-text 4.5s ease-in-out infinite;
-        }
-
-        @keyframes shimmer-text {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        .version-badge {
-            display: inline-block;
-            background: rgba(6,182,212,0.15);
-            color: var(--cyan);
-            font-size: 12px;
-            font-weight: 900;
-            padding: 4px 10px;
-            border-radius: 8px;
-            margin-right: 8px;
-            border: 1px solid rgba(6,182,212,0.4);
-            box-shadow: 0 0 20px rgba(6,182,212,0.3);
-        }
-
-        .hero-desc {
-            font-size: 14px;
-            color: var(--gray);
-            line-height: 1.8;
-            margin-bottom: 24px;
-            max-width: 90%;
-        }
-
-        .hero-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .hero-price {
-            font-size: 30px;
-            font-weight: 900;
-            letter-spacing: -1.4px;
-            font-variant-numeric: tabular-nums;
-        }
-
-        .price-suffix {
-            font-size: 15px;
-            color: var(--gray);
-            margin-right: 7px;
-        }
-
-        .buy-btn {
-            width: 60px;
-            height: 60px;
-            background: var(--white);
-            color: var(--black);
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 40px rgba(255,255,255,0.5);
-            transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
-        }
-
-        .hero-card:hover .buy-btn {
-            box-shadow: 0 0 50px rgba(255,255,255,0.7);
-        }
-
-        .hero-card:active .buy-btn {
-            transform: scale(0.88) rotate(15deg);
-        }
-
-        /* ═════════════════════════ PRODUCTS GRID ═════════════════════════ */
-        
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-            animation: slideUp 0.9s cubic-bezier(0.34,1.56,0.64,1) 0.35s backwards;
-        }
-
-        .product-card {
-            background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 22px;
-            display: flex;
-            flex-direction: column;
-            min-height: 190px;
-            cursor: pointer;
-            transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .product-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, transparent, rgba(255,255,255,0.08));
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .product-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(255,255,255,0.15);
-        }
-
-        .product-card:hover::before {
-            opacity: 1;
-        }
-
-        .product-card:active {
-            transform: scale(0.96);
-            background: rgba(255,255,255,0.1);
-        }
-
-        .product-icon {
-            font-size: 46px;
-            margin-bottom: 16px;
-            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.5));
-            animation: bounce-icon 4s ease-in-out infinite;
-        }
-
-        @keyframes bounce-icon {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-6px); }
-        }
-
-        .product-title {
-            font-size: 17px;
-            font-weight: 900;
-            margin-bottom: 6px;
-            letter-spacing: -0.5px;
-        }
-
-        .product-sub {
-            font-size: 12px;
-            color: var(--gray-dark);
-            margin-bottom: auto;
-        }
-
-        .product-price {
-            font-size: 20px;
-            font-weight: 900;
-            color: var(--gold);
-            margin-top: 18px;
-            font-variant-numeric: tabular-nums;
-        }
-
-        /* ═════════════════════════ WIDE CARD ═════════════════════════ */
-        
-        .wide-card {
-            background: linear-gradient(90deg, rgba(6,182,212,0.12), transparent);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 22px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-            transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
-            animation: slideUp 0.9s cubic-bezier(0.34,1.56,0.64,1) 0.5s backwards;
-        }
-
-        .wide-card:hover {
-            transform: translateY(-3px);
-            border-color: var(--cyan);
-            background: linear-gradient(90deg, rgba(6,182,212,0.18), transparent);
-        }
-
-        .wide-card:active {
-            transform: scale(0.98);
-        }
-
-        .wide-left {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-        }
-
-        .wide-icon {
-            width: 56px;
-            height: 56px;
-            background: rgba(6,182,212,0.2);
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 26px;
-            color: var(--cyan);
-            flex-shrink: 0;
-        }
-
-        .wide-price {
-            font-size: 20px;
-            font-weight: 900;
-            color: var(--cyan);
-            font-variant-numeric: tabular-nums;
-        }
-
-        /* ═════════════════════════ LOADER ═════════════════════════ */
-        
-        .loader {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.98);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            z-index: 99999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s;
-        }
-
-        .loader.show {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .spinner {
-            width: 56px;
-            height: 56px;
-            border: 4px solid rgba(255,255,255,0.12);
-            border-top-color: var(--purple);
-            border-right-color: var(--pink);
-            border-radius: 50%;
-            animation: spin 0.85s linear infinite;
-            margin-bottom: 20px;
-        }
-
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
 
-        .loader-text {
-            font-size: 15px;
-            color: var(--gray);
-            letter-spacing: 1.5px;
-            margin-bottom: 28px;
+        /* Fade Transitions */
+        .fade-enter-active, .fade-leave-active {
+            transition: opacity 0.3s ease;
         }
-
-        .cancel-btn {
-            color: var(--red);
-            font-size: 15px;
-            font-weight: 900;
-            padding: 12px 28px;
-            border: 1px solid var(--red);
-            border-radius: 16px;
-            background: rgba(239,68,68,0.12);
-            cursor: pointer;
+        .fade-enter-from, .fade-leave-to {
             opacity: 0;
-            pointer-events: none;
-            transition: all 0.3s;
         }
 
-        .cancel-btn.show {
-            opacity: 1;
-            pointer-events: all;
+        /* Slide Up Transition */
+        .slide-up-enter-active {
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
-
-        .cancel-btn:active {
-            transform: scale(0.95);
-            background: rgba(239,68,68,0.3);
-        }
-
-        /* ═════════════════════════ TOAST ═════════════════════════ */
-        
-        .toast {
-            position: fixed;
-            top: calc(var(--safe-top) + 20px);
-            left: 50%;
-            transform: translateX(-50%) translateY(-150px);
-            background: rgba(10,10,10,0.98);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            padding: 14px 24px;
-            border-radius: 50px;
-            border: 1px solid var(--green);
-            box-shadow: 
-                0 15px 50px rgba(0,0,0,0.7),
-                0 0 40px rgba(16,185,129,0.5);
-            font-size: 15px;
-            font-weight: 900;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            z-index: 100000;
+        .slide-up-enter-from {
+            transform: translateY(100%);
             opacity: 0;
-            transition: all 0.7s cubic-bezier(0.34,1.56,0.64,1);
         }
 
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
+        /* Avatar Glow */
+        .avatar-glow {
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.6);
         }
-
-        /* ═════════════════════════ FOOTER ═════════════════════════ */
-        
-        .footer {
-            margin-top: auto;
-            padding-top: 32px;
-            text-align: center;
-            font-size: 11px;
-            color: var(--gray-dark);
-            letter-spacing: 2.5px;
-            text-transform: uppercase;
-            opacity: 0.3;
-        }
-
     </style>
 </head>
-<body>
+<body class="antialiased min-h-screen">
 
     <!-- Particles Canvas -->
     <canvas id="particles"></canvas>
 
-    <!-- Animated Background -->
-    <div class="bg-ambient">
-        <div class="bg-mesh"></div>
+    <!-- Animated Background Blobs -->
+    <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+        <div class="absolute top-[-10%] left-[-20%] w-[500px] h-[500px] bg-neon-purple/20 rounded-full blur-[120px] animate-blob"></div>
+        <div class="absolute bottom-[-10%] right-[-20%] w-[400px] h-[400px] bg-neon-pink/10 rounded-full blur-[100px] animate-blob" style="animation-delay: 2s;"></div>
+        <div class="absolute top-[40%] left-[40%] w-[350px] h-[350px] bg-neon-cyan/10 rounded-full blur-[100px] animate-blob" style="animation-delay: 4s;"></div>
     </div>
 
-    <!-- Loader -->
-    <div class="loader" id="loader">
-        <div class="spinner"></div>
-        <div class="loader-text">در حال پردازش...</div>
-        <button class="cancel-btn" id="cancelBtn">لغو عملیات</button>
-    </div>
+    <!-- Vue App -->
+    <div id="app" class="relative z-10 max-w-lg mx-auto min-h-screen flex flex-col">
 
-    <!-- Toast -->
-    <div class="toast" id="toast">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="20 6 9 17 4 12"></polyline>
-        </svg>
-        <span id="toastText">عملیات موفق</span>
-    </div>
+        <!-- Loading Screen -->
+        <transition name="fade">
+            <div v-if="loading" class="fixed inset-0 z-50 bg-black flex flex-col items-center justify-center">
+                <div class="spinner-ring mb-6"></div>
+                <p class="text-[10px] tracking-[0.4em] text-neon-purple font-bold animate-pulse">GEMINI CENTER</p>
+                <p class="text-[8px] text-white/30 mt-2 tracking-widest">@GeminiCenter_IR</p>
+            </div>
+        </transition>
 
-    <!-- Main App -->
-    <div class="app">
+        <!-- Main Content -->
+        <div v-else class="flex-1 flex flex-col pb-24 safe-top">
 
-        <!-- Test Mode Banner -->
-        <div class="test-banner" id="testBanner">
-            🧪 حالت تست - داده‌های نمونه نمایش داده می‌شود
+            <!-- Header -->
+            <header class="px-6 py-4 flex justify-between items-center animate-slide-up">
+                <div class="flex items-center gap-3">
+                    <div class="relative cursor-pointer" @click="changeTab('profile')">
+                        <img 
+                            :src="user.photo_url || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.first_name) + '&background=8B5CF6&color=fff&size=128'" 
+                            class="w-11 h-11 rounded-full border-2 border-white/10 object-cover avatar-glow"
+                            @error="handleAvatarError"
+                        >
+                        <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-black rounded-full shadow-[0_0_8px_#22c55e] animate-pulse"></div>
+                    </div>
+                    <div>
+                        <h2 class="text-sm font-bold text-white">{{ user.first_name }}</h2>
+                        <div class="flex items-center gap-1.5 mt-0.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-neon-purple animate-pulse"></span>
+                            <span class="text-[10px] text-white/50 uppercase tracking-wide font-bold">Premium Shop</span>
+                        </div>
+                    </div>
+                </div>
+                <button @click="changeTab('cart')" class="relative w-10 h-10 rounded-full glass-panel flex items-center justify-center text-white/70 hover:text-white transition-all active:scale-95">
+                    <i class="fa-solid fa-basket-shopping"></i>
+                    <span v-if="cart.length" class="absolute -top-1 -right-1 w-5 h-5 bg-neon-pink text-white text-[10px] font-bold rounded-full flex items-center justify-center border border-black animate-pop-in">
+                        {{ cart.length }}
+                    </span>
+                </button>
+            </header>
+
+            <!-- Main Content Area -->
+            <main class="px-5 flex-1 relative">
+
+                <!-- Store Tab -->
+                <transition name="fade" mode="out-in">
+                    <div v-if="activeTab === 'store'" key="store" class="animate-slide-up space-y-6">
+
+                        <!-- Hero Card - Gemini Ultra 3.0 -->
+                        <div class="relative w-full rounded-[32px] overflow-hidden p-6 min-h-[220px] flex flex-col justify-between group cursor-pointer border border-neon-purple/20"
+                             @click="openModal('gemini_ultra_monthly_ready')">
+                            <div class="absolute inset-0 bg-gradient-to-br from-[#2E1065] to-[#000000]"></div>
+                            <div class="absolute right-[-20%] top-[-20%] w-[300px] h-[300px] bg-neon-purple/30 rounded-full blur-[60px] animate-pulse-slow"></div>
+                            
+                            <div class="relative z-10">
+                                <div class="flex justify-between items-start">
+                                    <span class="px-3 py-1 rounded-full bg-white/10 backdrop-blur border border-white/20 text-[9px] font-bold tracking-widest text-white">FLAGSHIP</span>
+                                    <i class="fa-solid fa-gem text-2xl text-white/20 group-hover:text-white/40 transition-colors animate-float"></i>
+                                </div>
+                                <div class="mt-4">
+                                    <h1 class="text-3xl font-black text-white leading-tight">
+                                        Gemini<br>
+                                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-neon-purple to-neon-pink">Ultra 3.0</span>
+                                    </h1>
+                                    <p class="text-xs text-white/60 mt-2 max-w-[200px] leading-relaxed">
+                                        قدرتمندترین هوش مصنوعی گوگل با قابلیت تحلیل تصویر، ویدئو و کدنویسی پیشرفته.
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <div class="relative z-10 flex items-center justify-between mt-4">
+                                <div>
+                                    <p class="text-[10px] text-white/40 line-through">2,500,000</p>
+                                    <p class="text-xl font-bold text-white">
+                                        {{ formatPrice(getPrice('gemini_ultra_monthly_ready')) }} 
+                                        <span class="text-[10px] font-normal text-white/50">تومان</span>
+                                    </p>
+                                </div>
+                                <button class="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center hover:scale-110 transition-transform">
+                                    <i class="fa-solid fa-arrow-left -rotate-45"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Categories -->
+                        <div class="flex gap-3 overflow-x-auto no-scrollbar pb-2">
+                            <button 
+                                v-for="cat in categories" 
+                                :key="cat.id" 
+                                @click="selectedCategory = cat.id"
+                                class="px-5 py-2.5 rounded-2xl text-xs font-bold whitespace-nowrap transition-all border"
+                                :class="selectedCategory === cat.id ? 'bg-white text-black border-white shadow-lg' : 'bg-glass-light text-white/50 border-white/5'">
+                                {{ cat.name }}
+                            </button>
+                        </div>
+
+                        <!-- Products Grid -->
+                        <div class="grid grid-cols-1 gap-4 pb-4">
+                            <div 
+                                v-for="product in filteredProducts" 
+                                :key="product.id"
+                                class="glass-panel rounded-2xl p-4 flex items-center gap-4 cursor-pointer relative overflow-hidden group active:scale-[0.98] transition-transform"
+                                @click="openModal(product.id)">
+                                
+                                <div class="w-16 h-16 rounded-xl flex items-center justify-center text-2xl shadow-inner border border-white/5" :class="product.theme">
+                                    {{ product.emoji }}
+                                </div>
+                                
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <h3 class="font-bold text-sm text-white truncate">{{ product.name }}</h3>
+                                        <span v-if="product.tag" class="px-1.5 py-0.5 rounded text-[8px] font-bold uppercase bg-white/5 border border-white/10 text-white/70">
+                                            {{ product.tag }}
+                                        </span>
+                                    </div>
+                                    <p class="text-[10px] text-white/40 line-clamp-1 mb-2">{{ product.desc }}</p>
+                                    <div class="flex justify-between items-end">
+                                        <div class="text-gold-gradient font-bold text-base">
+                                            {{ formatPrice(product.price) }} 
+                                            <span class="text-[9px] text-white/30 font-normal">تومان</span>
+                                        </div>
+                                        <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-white/30 group-hover:bg-neon-purple group-hover:text-white transition-all">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Channel Link -->
+                        <a href="https://t.me/GeminiCenter_IR" target="_blank" class="glass-panel rounded-2xl p-4 flex items-center gap-3 hover:border-neon-cyan/50 transition-all border border-white/5">
+                            <div class="w-12 h-12 rounded-xl bg-neon-cyan/10 flex items-center justify-center text-neon-cyan text-xl">
+                                <i class="fa-brands fa-telegram"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-bold text-sm text-white">کانال رسمی</h4>
+                                <p class="text-[10px] text-white/40 mt-0.5">@GeminiCenter_IR</p>
+                            </div>
+                            <i class="fa-solid fa-chevron-left text-white/30"></i>
+                        </a>
+
+                    </div>
+                </transition>
+
+                <!-- Cart Tab -->
+                <transition name="fade" mode="out-in">
+                    <div v-if="activeTab === 'cart'" key="cart" class="animate-slide-up h-full flex flex-col">
+                        <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+                            <i class="fa-solid fa-basket-shopping text-neon-pink"></i> سبد خرید
+                        </h2>
+
+                        <div v-if="cart.length === 0" class="flex-1 flex flex-col items-center justify-center text-center opacity-50">
+                            <i class="fa-solid fa-cart-arrow-down text-6xl mb-4 text-white/20"></i>
+                            <p class="text-sm">سبد خرید خالی است</p>
+                            <button @click="activeTab = 'store'" class="mt-4 text-xs text-neon-purple border-b border-neon-purple pb-0.5">
+                                بازگشت به فروشگاه
+                            </button>
+                        </div>
+
+                        <div v-else class="flex-1 overflow-y-auto no-scrollbar space-y-3 pb-4">
+                            <div v-for="(item, idx) in cart" :key="idx" class="glass-panel rounded-xl p-3 flex items-center gap-3">
+                                <div class="w-12 h-12 rounded-lg bg-white/5 flex items-center justify-center text-lg">
+                                    {{ item.emoji }}
+                                </div>
+                                <div class="flex-1">
+                                    <h4 class="text-sm font-bold">{{ item.name }}</h4>
+                                    <p class="text-xs text-neon-gold">{{ formatPrice(item.price) }} تومان</p>
+                                </div>
+                                <button @click="removeFromCart(idx)" class="w-8 h-8 rounded-full bg-red-500/10 text-red-500 flex items-center justify-center active:scale-95 transition-transform">
+                                    <i class="fa-solid fa-trash text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div v-if="cart.length > 0" class="mt-auto pt-4 border-t border-white/10">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="text-xs text-white/50">مبلغ قابل پرداخت</span>
+                                <span class="text-xl font-black text-white">
+                                    {{ formatPrice(cartTotal) }} 
+                                    <span class="text-xs font-normal">تومان</span>
+                                </span>
+                            </div>
+                            <button @click="checkout" class="w-full py-4 rounded-xl hero-btn text-white font-bold flex items-center justify-center gap-2" :disabled="processing">
+                                <span v-if="!processing">پرداخت نهایی</span>
+                                <span v-else class="spinner-ring !w-5 !h-5 !border-2"></span>
+                            </button>
+                        </div>
+                    </div>
+                </transition>
+
+                <!-- Profile Tab -->
+                <transition name="fade" mode="out-in">
+                    <div v-if="activeTab === 'profile'" key="profile" class="animate-slide-up">
+                        <div class="glass-panel rounded-3xl p-8 text-center relative overflow-hidden mb-6">
+                            <div class="absolute inset-0 bg-gradient-to-b from-neon-purple/10 to-transparent"></div>
+                            <img 
+                                :src="user.photo_url || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.first_name) + '&background=8B5CF6&color=fff&size=256'" 
+                                class="w-24 h-24 rounded-full border-4 border-black mx-auto mb-4 relative z-10 object-cover avatar-glow"
+                                @error="handleAvatarError"
+                            >
+                            <h2 class="text-2xl font-bold relative z-10">{{ user.first_name }}</h2>
+                            <p class="text-xs text-white/40 mt-1 font-mono relative z-10">User ID: {{ user.id }}</p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3 mb-6">
+                            <div class="glass-panel rounded-2xl p-4 text-center">
+                                <i class="fa-solid fa-wallet text-neon-gold text-xl mb-2"></i>
+                                <p class="text-[10px] text-white/50">موجودی</p>
+                                <p class="font-bold text-lg">0</p>
+                            </div>
+                            <div class="glass-panel rounded-2xl p-4 text-center">
+                                <i class="fa-solid fa-box-open text-neon-cyan text-xl mb-2"></i>
+                                <p class="text-[10px] text-white/50">سفارشات</p>
+                                <p class="font-bold text-lg">0</p>
+                            </div>
+                        </div>
+
+                        <a href="https://t.me/GeminiCenter_IR" target="_blank" class="w-full glass-panel p-4 rounded-xl flex items-center justify-between hover:bg-white/5 transition-colors">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-brands fa-telegram text-neon-cyan text-xl"></i>
+                                <span class="text-sm">کانال رسمی ما</span>
+                            </div>
+                            <i class="fa-solid fa-chevron-left text-xs text-white/30"></i>
+                        </a>
+
+                        <button class="w-full glass-panel p-4 rounded-xl flex items-center justify-between hover:bg-white/5 transition-colors mt-3">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-headset text-neon-purple"></i>
+                                <span class="text-sm">تماس با پشتیبانی</span>
+                            </div>
+                            <i class="fa-solid fa-chevron-left text-xs text-white/30"></i>
+                        </button>
+                    </div>
+                </transition>
+
+            </main>
+
+            <!-- Bottom Navigation -->
+            <nav class="fixed bottom-0 left-0 right-0 nav-glass pb-8 pt-4 px-8 z-30 safe-bottom">
+                <div class="flex justify-between items-center max-w-lg mx-auto">
+                    <button 
+                        @click="changeTab('store')" 
+                        class="flex flex-col items-center gap-1 transition-all duration-300 w-16"
+                        :class="activeTab === 'store' ? 'text-neon-purple -translate-y-1' : 'text-white/40'">
+                        <i class="fa-solid fa-store text-xl" :class="activeTab === 'store' ? 'drop-shadow-[0_0_10px_rgba(139,92,246,0.8)]' : ''"></i>
+                        <span class="text-[9px] font-bold">فروشگاه</span>
+                    </button>
+                    <button 
+                        @click="changeTab('cart')" 
+                        class="flex flex-col items-center gap-1 transition-all duration-300 w-16"
+                        :class="activeTab === 'cart' ? 'text-neon-purple -translate-y-1' : 'text-white/40'">
+                        <i class="fa-solid fa-basket-shopping text-xl" :class="activeTab === 'cart' ? 'drop-shadow-[0_0_10px_rgba(139,92,246,0.8)]' : ''"></i>
+                        <span class="text-[9px] font-bold">سبد</span>
+                    </button>
+                    <button 
+                        @click="changeTab('profile')" 
+                        class="flex flex-col items-center gap-1 transition-all duration-300 w-16"
+                        :class="activeTab === 'profile' ? 'text-neon-purple -translate-y-1' : 'text-white/40'">
+                        <i class="fa-solid fa-user text-xl" :class="activeTab === 'profile' ? 'drop-shadow-[0_0_10px_rgba(139,92,246,0.8)]' : ''"></i>
+                        <span class="text-[9px] font-bold">پروفایل</span>
+                    </button>
+                </div>
+            </nav>
+
         </div>
 
-        <!-- Profile Card -->
-        <div class="profile-card">
-            <div class="profile-glow"></div>
-            <div class="shimmer-line"></div>
-            <div class="elite-tag">ELITE</div>
-            
-            <div class="profile-header">
-                <div class="avatar-container">
-                    <div class="avatar-ring">
-                        <svg width="88" height="88">
-                            <defs>
-                                <linearGradient id="ring-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" style="stop-color:#8B5CF6"/>
-                                    <stop offset="50%" style="stop-color:#EC4899"/>
-                                    <stop offset="100%" style="stop-color:#06B6D4"/>
-                                </linearGradient>
-                            </defs>
-                            <circle class="ring-bg" cx="44" cy="44" r="40" stroke-dasharray="251" stroke-dashoffset="0"/>
-                            <circle class="ring-progress" cx="44" cy="44" r="40" stroke-dasharray="251" stroke-dashoffset="62.75"/>
-                        </svg>
-                    </div>
+        <!-- Product Modal -->
+        <transition name="slide-up">
+            <div v-if="modal.show" class="fixed inset-0 z-50 flex items-end justify-center sm:items-center" @click.self="closeModal">
+                <div class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity"></div>
+                <div class="relative w-full max-w-lg bg-[#111] border-t border-white/10 rounded-t-[32px] sm:rounded-[32px] p-6 shadow-2xl animate-slide-up">
+                    <div class="w-12 h-1 bg-white/20 rounded-full mx-auto mb-6"></div>
                     
-                    <div class="avatar-wrap" id="avatar">
-                        <span id="avatarInitial">G</span>
+                    <div class="text-center mb-6">
+                        <div class="w-20 h-20 mx-auto rounded-2xl bg-white/5 flex items-center justify-center text-4xl mb-4 border border-white/5 shadow-[0_0_30px_rgba(139,92,246,0.1)]">
+                            {{ modal.product.emoji }}
+                        </div>
+                        <h2 class="text-2xl font-black text-white">{{ modal.product.name }}</h2>
+                        <p class="text-xs text-white/50 mt-2 max-w-[80%] mx-auto">{{ modal.product.desc }}</p>
                     </div>
-                    <div class="status-dot"></div>
-                </div>
 
-                <div class="user-info">
-                    <h1 class="user-name">
-                        <span class="name-text" id="userName">کاربر تلگرام</span>
-                        <span class="verified-badge">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
-                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                        </span>
-                    </h1>
-                    <div class="user-id-badge" id="userIdBadge">
-                        <span id="userId">ID: ********</span>
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                        </svg>
+                    <div class="space-y-3 mb-8">
+                        <div class="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5">
+                            <i class="fa-solid fa-bolt text-neon-gold"></i>
+                            <span class="text-xs text-white/80">تحویل آنی و اتوماتیک</span>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5">
+                            <i class="fa-solid fa-shield-halved text-neon-cyan"></i>
+                            <span class="text-xs text-white/80">ضمانت کامل تا آخرین روز</span>
+                        </div>
                     </div>
-                </div>
-            </div>
 
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-value" id="statPurchases">0</div>
-                    <div class="stat-label">خرید</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="statReferrals">0</div>
-                    <div class="stat-label">دعوت</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="statLevel">1</div>
-                    <div class="stat-label">سطح</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Hero Product -->
-        <div class="hero-card" data-id="gemini_ultra_monthly_ready">
-            <div class="hero-glow"></div>
-            <div class="best-badge">⚡ پرفروش‌ترین محصول</div>
-            <div class="hero-content">
-                <h2 class="hero-title">
-                    Gemini <span class="gradient-text">Ultra</span> <span class="version-badge">v3.0</span>
-                </h2>
-                <p class="hero-desc">
-                    قدرتمندترین نسخه هوش مصنوعی گوگل با قابلیت تحلیل پیشرفته تصویر، ویدئو، صوت و کدنویسی حرفه‌ای.
-                </p>
-                <div class="hero-footer">
-                    <div class="hero-price" id="priceUltra">
-                        1,850,000<span class="price-suffix">تومان</span>
-                    </div>
-                    <div class="buy-btn">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M5 12h14"/><path d="M12 5l7 7-7 7"/>
-                        </svg>
+                    <div class="flex gap-4">
+                        <div class="flex-1">
+                            <p class="text-[10px] text-white/40">قیمت نهایی</p>
+                            <p class="text-2xl font-black text-gold-gradient">{{ formatPrice(modal.product.price) }}</p>
+                        </div>
+                        <button @click="buyDirect" class="flex-[2] py-4 rounded-xl hero-btn text-white font-bold text-sm shadow-xl active:scale-95 transition-transform">
+                            خرید مستقیم
+                        </button>
+                        <button @click="addToCart(modal.product)" class="w-14 rounded-xl bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors active:scale-95">
+                            <i class="fa-solid fa-cart-plus"></i>
+                        </button>
                     </div>
                 </div>
             </div>
-        </div>
+        </transition>
 
-        <!-- Products Grid -->
-        <div class="products-grid">
-            <div class="product-card" data-id="gemini_pro_monthly_ready">
-                <div class="product-icon">💎</div>
-                <div>
-                    <div class="product-title">Pro ماهانه</div>
-                    <div class="product-sub">تحویل فوری</div>
-                </div>
-                <div class="product-price" id="priceProM">380,000</div>
+        <!-- Toast Notification -->
+        <transition name="fade">
+            <div v-if="toast.show" class="fixed top-6 left-1/2 -translate-x-1/2 z-[60] glass-panel px-6 py-3 rounded-full flex items-center gap-3 shadow-2xl border border-neon-purple/30 safe-top">
+                <i class="fa-solid fa-check-circle text-neon-purple"></i>
+                <span class="text-xs font-bold">{{ toast.message }}</span>
             </div>
-
-            <div class="product-card" data-id="gemini_pro_yearly_ready">
-                <div class="product-icon">👑</div>
-                <div>
-                    <div class="product-title">Pro سالانه</div>
-                    <div class="product-sub">پیشنهاد ویژه</div>
-                </div>
-                <div class="product-price" id="priceProY">1,280,000</div>
-            </div>
-        </div>
-
-        <!-- Wide Product -->
-        <div class="wide-card" data-id="gemini_pro_monthly_personal">
-            <div class="wide-left">
-                <div class="wide-icon">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                        <polyline points="22,6 12,13 2,6"/>
-                    </svg>
-                </div>
-                <div>
-                    <div class="product-title">شارژ ایمیل شخصی</div>
-                    <div class="product-sub">فعال‌سازی روی Gmail شما</div>
-                </div>
-            </div>
-            <div class="wide-price" id="pricePersonal">300,000</div>
-        </div>
-
-        <!-- Footer -->
-        <div class="footer">
-            Powered by Telegram WebApp
-        </div>
+        </transition>
 
     </div>
 
     <script>
-        'use strict';
+        // ═══════════════════════════════════════════════════════════════
+        // GEMINI CENTER ELITE - JAVASCRIPT ENGINE
+        // Channel: @GeminiCenter_IR
+        // ═══════════════════════════════════════════════════════════════
 
-        /* ═══════════════════════════════════════════════════════════════
-           GEMINI CENTER ELITE 3.0 - PRODUCTION VERSION
-           با Mock Data System و Test Mode
-        ═══════════════════════════════════════════════════════════════ */
+        const { createApp, ref, computed, onMounted } = Vue;
 
-        (function() {
-            console.log('%c═══════════════════════════════════════════', 'color: #8B5CF6; font-weight: bold');
-            console.log('%c🚀 Gemini Center Elite 3.0', 'color: #EC4899; font-size: 18px; font-weight: bold');
-            console.log('%c═══════════════════════════════════════════', 'color: #8B5CF6; font-weight: bold');
-
-            // ═══════════════════════ TELEGRAM INIT ═══════════════════════
-
-            let tg = null;
-            let isTestMode = false;
-
-            if (typeof window.Telegram !== 'undefined' && window.Telegram.WebApp) {
-                tg = window.Telegram.WebApp;
+        createApp({
+            setup() {
+                const tg = window.Telegram.WebApp;
+                const loading = ref(true);
+                const processing = ref(false);
+                const activeTab = ref('store');
+                const selectedCategory = ref('all');
                 
-                try {
-                    tg.ready();
-                    tg.expand();
-                    tg.enableClosingConfirmation();
-                    tg.setHeaderColor('#000000');
-                    tg.setBackgroundColor('#000000');
-                    console.log('%c✅ Telegram WebApp initialized', 'color: #10B981');
-                } catch (e) {
-                    console.error('Init error:', e);
-                }
-
-                // Check if we have real data
-                if (!tg.initDataUnsafe || !tg.initDataUnsafe.user || Object.keys(tg.initDataUnsafe).length === 0) {
-                    console.warn('%c⚠️ No user data - enabling TEST MODE', 'color: #F59E0B; font-weight: bold');
-                    isTestMode = true;
-                }
-            } else {
-                console.warn('%c⚠️ Not in Telegram - enabling TEST MODE', 'color: #F59E0B; font-weight: bold');
-                isTestMode = true;
-            }
-
-            // ═══════════════════════ MOCK DATA ═══════════════════════
-
-            const MOCK_USER = {
-                id: 123456789,
-                first_name: 'کاربر',
-                last_name: 'نمونه',
-                username: 'testuser',
-                photo_url: null
-            };
-
-            // ═══════════════════════ CONFIG ═══════════════════════
-
-            const PRICES = {
-                'gemini_ultra_monthly_ready': 1850000,
-                'gemini_pro_monthly_ready': 380000,
-                'gemini_pro_yearly_ready': 1280000,
-                'gemini_pro_monthly_personal': 300000
-            };
-
-            let purchasing = false;
-            let cancelTimer = null;
-
-            // ═══════════════════════ PARTICLES ═══════════════════════
-
-            function initParticles() {
-                const canvas = document.getElementById('particles');
-                const ctx = canvas.getContext('2d');
-                
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-
-                const particles = [];
-                const count = 70;
-
-                class Particle {
-                    constructor() {
-                        this.x = Math.random() * canvas.width;
-                        this.y = Math.random() * canvas.height;
-                        this.size = Math.random() * 2.5 + 0.5;
-                        this.speedX = Math.random() * 0.6 - 0.3;
-                        this.speedY = Math.random() * 0.6 - 0.3;
-                        this.opacity = Math.random() * 0.6 + 0.2;
-                    }
-
-                    update() {
-                        this.x += this.speedX;
-                        this.y += this.speedY;
-                        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-                        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
-                    }
-
-                    draw() {
-                        ctx.fillStyle = `rgba(139,92,246,${this.opacity})`;
-                        ctx.beginPath();
-                        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                        ctx.fill();
-                    }
-                }
-
-                for (let i = 0; i < count; i++) {
-                    particles.push(new Particle());
-                }
-
-                function animate() {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    particles.forEach(p => {
-                        p.update();
-                        p.draw();
-                    });
-                    requestAnimationFrame(animate);
-                }
-
-                animate();
-
-                window.addEventListener('resize', () => {
-                    canvas.width = window.innerWidth;
-                    canvas.height = window.innerHeight;
+                const user = ref({
+                    first_name: 'کاربر',
+                    id: '---',
+                    photo_url: null
                 });
-            }
-
-            // ═══════════════════════ UTILITIES ═══════════════════════
-
-            function fmt(n) {
-                const num = Number(n);
-                return isNaN(num) ? '0' : num.toLocaleString('fa-IR');
-            }
-
-            function haptic(type) {
-                if (!tg || !tg.HapticFeedback) return;
-                try {
-                    if (type === 'success') tg.HapticFeedback.notificationOccurred('success');
-                    else if (type === 'error') tg.HapticFeedback.notificationOccurred('error');
-                    else tg.HapticFeedback.impactOccurred(type || 'medium');
-                } catch (e) {}
-            }
-
-            function toast(msg) {
-                const el = document.getElementById('toast');
-                const text = document.getElementById('toastText');
-                text.textContent = msg;
-                el.classList.add('show');
-                setTimeout(() => el.classList.remove('show'), 3000);
-            }
-
-            // ═══════════════════════ PROFILE ═══════════════════════
-
-            function initProfile() {
-                console.log('───────────────────────────────────────');
-                console.log('🔍 Initializing Profile...');
-
-                const avatarEl = document.getElementById('avatar');
-                const avatarInitial = document.getElementById('avatarInitial');
-                const nameEl = document.getElementById('userName');
-                const idEl = document.getElementById('userId');
-                const testBanner = document.getElementById('testBanner');
-
-                let user = null;
-
-                // Get user data (real or mock)
-                if (isTestMode) {
-                    console.log('%c🧪 Using MOCK data', 'color: #F59E0B; font-weight: bold');
-                    user = MOCK_USER;
-                    testBanner.classList.add('show');
-                } else if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                    console.log('%c✅ Using REAL data', 'color: #10B981; font-weight: bold');
-                    user = tg.initDataUnsafe.user;
-                } else {
-                    console.error('%c❌ No data available', 'color: #EF4444; font-weight: bold');
-                    user = MOCK_USER;
-                    isTestMode = true;
-                    testBanner.classList.add('show');
-                }
-
-                console.log('User:', user);
-
-                // Set Name
-                const firstName = user.first_name || 'کاربر';
-                const lastName = user.last_name || '';
-                const fullName = [firstName, lastName].filter(Boolean).join(' ').trim();
-                nameEl.textContent = fullName || 'کاربر تلگرام';
-                console.log('✅ Name:', nameEl.textContent);
-
-                // Set ID
-                if (user.id) {
-                    idEl.textContent = 'ID: ' + user.id;
-                    console.log('✅ ID:', user.id);
-                } else {
-                    idEl.textContent = 'ID: ********';
-                }
-
-                // Set Avatar
-                const initial = firstName.charAt(0).toUpperCase();
                 
-                if (user.photo_url) {
-                    console.log('📸 Loading photo:', user.photo_url);
-                    const img = new Image();
-                    img.onload = () => {
-                        console.log('✅ Photo loaded');
-                        avatarInitial.style.display = 'none';
-                        avatarEl.innerHTML = '';
-                        avatarEl.appendChild(img);
-                    };
-                    img.onerror = () => {
-                        console.warn('⚠️ Photo failed, using initial');
-                        avatarInitial.textContent = initial;
-                    };
-                    img.src = user.photo_url;
-                    img.alt = fullName;
-                } else {
-                    console.log('📝 Using initial:', initial);
-                    avatarInitial.textContent = initial;
-                }
+                const cart = ref([]);
+                const modal = ref({ show: false, product: {} });
+                const toast = ref({ show: false, message: '' });
 
-                // Set Stats (mock for now)
-                document.getElementById('statPurchases').textContent = '0';
-                document.getElementById('statReferrals').textContent = '0';
-                document.getElementById('statLevel').textContent = '1';
+                // Products Data
+                const products = ref([
+                    { 
+                        id: 'gemini_ultra_monthly_ready', 
+                        name: 'Gemini Ultra 3.0', 
+                        desc: 'قدرتمندترین مدل گوگل', 
+                        price: 1850000, 
+                        emoji: '🚀', 
+                        category: 'ready', 
+                        theme: 'bg-neon-purple/10 text-neon-purple', 
+                        tag: 'NEW' 
+                    },
+                    { 
+                        id: 'gemini_pro_monthly_ready', 
+                        name: 'Gemini Pro ماهانه', 
+                        desc: 'اکانت آماده • ۳۰ روزه', 
+                        price: 380000, 
+                        emoji: '💎', 
+                        category: 'ready', 
+                        theme: 'bg-neon-purple/10 text-neon-purple', 
+                        tag: 'POPULAR' 
+                    },
+                    { 
+                        id: 'gemini_pro_yearly_ready', 
+                        name: 'Gemini Pro سالانه', 
+                        desc: 'اکانت آماده • یکساله', 
+                        price: 1280000, 
+                        emoji: '👑', 
+                        category: 'ready', 
+                        theme: 'bg-neon-pink/10 text-neon-pink', 
+                        tag: '-30%' 
+                    },
+                    { 
+                        id: 'gemini_pro_monthly_personal', 
+                        name: 'شارژ ایمیل شخصی', 
+                        desc: 'فعال‌سازی روی Gmail شما', 
+                        price: 300000, 
+                        emoji: '📧', 
+                        category: 'personal', 
+                        theme: 'bg-neon-cyan/10 text-neon-cyan', 
+                        tag: 'LEGAL' 
+                    }
+                ]);
 
-                console.log('✅ Profile initialized');
-                console.log('───────────────────────────────────────');
-            }
+                const categories = [
+                    { id: 'all', name: 'همه' },
+                    { id: 'ready', name: 'اکانت آماده' },
+                    { id: 'personal', name: 'شخصی' }
+                ];
 
-            function copyId() {
-                const text = document.getElementById('userId').textContent.replace('ID: ', '').trim();
+                // Computed
+                const filteredProducts = computed(() => {
+                    let list = products.value.filter(p => p.id !== 'gemini_ultra_monthly_ready');
+                    if (selectedCategory.value !== 'all') {
+                        list = list.filter(p => p.category === selectedCategory.value);
+                    }
+                    return list;
+                });
+
+                const cartTotal = computed(() => {
+                    return cart.value.reduce((sum, item) => sum + item.price, 0);
+                });
+
+                // Helpers
+                const formatPrice = (n) => Number(n).toLocaleString('fa-IR');
                 
-                if (text === '********' || text === '') {
-                    toast('⚠️ آیدی موجود نیست');
-                    return;
-                }
-
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(text).then(() => {
-                        haptic('success');
-                        toast('✓ آیدی کپی شد: ' + text);
-                    }).catch(() => fallbackCopy(text));
-                } else {
-                    fallbackCopy(text);
-                }
-            }
-
-            function fallbackCopy(text) {
-                try {
-                    const ta = document.createElement('textarea');
-                    ta.value = text;
-                    ta.style.position = 'fixed';
-                    ta.style.opacity = '0';
-                    document.body.appendChild(ta);
-                    ta.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(ta);
-                    haptic('success');
-                    toast('✓ آیدی کپی شد: ' + text);
-                } catch (e) {
-                    toast('❌ خطا در کپی');
-                }
-            }
-
-            // ═══════════════════════ PRICING ═══════════════════════
-
-            function initPrices() {
-                const params = new URLSearchParams(window.location.search);
-                const map = {
-                    'gemini_ultra_monthly_ready': 'priceUltra',
-                    'gemini_pro_monthly_ready': 'priceProM',
-                    'gemini_pro_yearly_ready': 'priceProY',
-                    'gemini_pro_monthly_personal': 'pricePersonal'
+                const haptic = (style) => {
+                    if (tg.HapticFeedback) {
+                        tg.HapticFeedback.impactOccurred(style);
+                    }
                 };
 
-                Object.keys(map).forEach(key => {
-                    const el = document.getElementById(map[key]);
-                    if (!el) return;
+                const showToast = (msg) => {
+                    toast.value = { show: true, message: msg };
+                    setTimeout(() => toast.value.show = false, 2500);
+                };
 
-                    let price = PRICES[key];
-                    if (params.has(key)) {
-                        const p = parseInt(params.get(key), 10);
-                        if (!isNaN(p) && p > 0) price = p;
+                const handleAvatarError = (e) => {
+                    e.target.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.value.first_name) + '&background=8B5CF6&color=fff&size=256';
+                };
+
+                // Actions
+                const changeTab = (tab) => {
+                    haptic('light');
+                    activeTab.value = tab;
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                };
+
+                const openModal = (id) => {
+                    haptic('light');
+                    const p = products.value.find(x => x.id === id);
+                    if (p) {
+                        modal.value = { show: true, product: p };
                     }
+                };
 
-                    if (key === 'gemini_ultra_monthly_ready') {
-                        el.innerHTML = fmt(price) + '<span class="price-suffix">تومان</span>';
-                    } else {
-                        el.textContent = fmt(price);
-                    }
-                });
-            }
+                const closeModal = () => {
+                    modal.value.show = false;
+                };
 
-            // ═══════════════════════ PURCHASE ═══════════════════════
+                const addToCart = (product) => {
+                    haptic('medium');
+                    cart.value.push(product);
+                    showToast('✓ به سبد خرید اضافه شد');
+                    closeModal();
+                };
 
-            function purchase(id) {
-                if (purchasing) return;
-                purchasing = true;
+                const removeFromCart = (index) => {
+                    haptic('light');
+                    cart.value.splice(index, 1);
+                };
 
-                console.log('💳 Purchase:', id);
-                haptic('heavy');
-
-                const loader = document.getElementById('loader');
-                const cancel = document.getElementById('cancelBtn');
-                loader.classList.add('show');
-                cancel.classList.remove('show');
-
-                cancelTimer = setTimeout(() => {
-                    cancel.classList.add('show');
-                }, 2500);
-
-                if (isTestMode) {
-                    // Test mode - just show message
+                const buyDirect = () => {
+                    haptic('heavy');
+                    processing.value = true;
                     setTimeout(() => {
-                        cancelPurchase();
-                        toast('🧪 حالت تست - خرید واقعی انجام نشد');
-                    }, 1500);
-                    return;
-                }
+                        tg.sendData(modal.value.product.id);
+                    }, 500);
+                };
 
-                setTimeout(() => {
-                    try {
-                        if (!tg) throw new Error('Telegram not available');
-                        
-                        console.log('📤 Sending data:', id);
-                        tg.sendData(id);
-                        
-                        setTimeout(() => {
-                            try {
-                                tg.close();
-                            } catch (e) {}
-                        }, 150);
-                    } catch (error) {
-                        console.error('Purchase error:', error);
-                        cancelPurchase();
-                        
-                        if (tg && tg.showAlert) {
-                            tg.showAlert('خطا در ارسال. لطفاً از منوی ربات استفاده کنید.');
+                const checkout = () => {
+                    if (cart.value.length === 0) return;
+                    haptic('heavy');
+                    processing.value = true;
+                    
+                    setTimeout(() => {
+                        if (cart.value.length === 1) {
+                            tg.sendData(cart.value[0].id);
                         } else {
-                            toast('❌ خطا در ارسال اطلاعات');
+                            const payload = JSON.stringify({
+                                type: 'cart_checkout',
+                                items: cart.value.map(i => i.id),
+                                total: cartTotal.value
+                            });
+                            tg.sendData(payload);
+                        }
+                    }, 600);
+                };
+
+                const getPrice = (id) => {
+                    const product = products.value.find(p => p.id === id);
+                    return product ? product.price : 0;
+                };
+
+                // Particles System
+                const initParticles = () => {
+                    const canvas = document.getElementById('particles');
+                    const ctx = canvas.getContext('2d');
+                    
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
+
+                    const particles = [];
+                    const count = 80;
+
+                    class Particle {
+                        constructor() {
+                            this.x = Math.random() * canvas.width;
+                            this.y = Math.random() * canvas.height;
+                            this.size = Math.random() * 2.5 + 0.5;
+                            this.speedX = Math.random() * 0.6 - 0.3;
+                            this.speedY = Math.random() * 0.6 - 0.3;
+                            this.opacity = Math.random() * 0.6 + 0.2;
+                        }
+
+                        update() {
+                            this.x += this.speedX;
+                            this.y += this.speedY;
+                            if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                            if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+                        }
+
+                        draw() {
+                            ctx.fillStyle = `rgba(139,92,246,${this.opacity})`;
+                            ctx.beginPath();
+                            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                            ctx.fill();
                         }
                     }
-                }, 400);
-            }
 
-            function cancelPurchase() {
-                purchasing = false;
-                document.getElementById('loader').classList.remove('show');
-                if (cancelTimer) {
-                    clearTimeout(cancelTimer);
-                    cancelTimer = null;
-                }
-                haptic('light');
-            }
-
-            // ═══════════════════════ EVENTS ═══════════════════════
-
-            function setupEvents() {
-                document.getElementById('userIdBadge').addEventListener('click', copyId);
-                document.getElementById('cancelBtn').addEventListener('click', cancelPurchase);
-
-                document.querySelectorAll('[data-id]').forEach(el => {
-                    const id = el.getAttribute('data-id');
-                    if (!id) return;
-                    el.addEventListener('click', () => purchase(id));
-                    el.addEventListener('touchstart', () => haptic('light'), { passive: true });
-                });
-            }
-
-            // ═══════════════════════ INIT ═══════════════════════
-
-            function init() {
-                try {
-                    initParticles();
-                    initProfile();
-                    initPrices();
-                    setupEvents();
-                    
-                    console.log('%c═══════════════════════════════════════════', 'color: #8B5CF6; font-weight: bold');
-                    console.log('%c✅ Gemini Center Elite 3.0 Ready!', 'color: #10B981; font-size: 16px; font-weight: bold');
-                    if (isTestMode) {
-                        console.log('%c🧪 TEST MODE is active', 'color: #F59E0B; font-weight: bold');
+                    for (let i = 0; i < count; i++) {
+                        particles.push(new Particle());
                     }
-                    console.log('%c═══════════════════════════════════════════', 'color: #8B5CF6; font-weight: bold');
-                } catch (e) {
-                    console.error('Init error:', e);
-                }
+
+                    function animate() {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        particles.forEach(p => {
+                            p.update();
+                            p.draw();
+                        });
+                        requestAnimationFrame(animate);
+                    }
+
+                    animate();
+
+                    window.addEventListener('resize', () => {
+                        canvas.width = window.innerWidth;
+                        canvas.height = window.innerHeight;
+                    });
+                };
+
+                // Initialize
+                onMounted(() => {
+                    tg.expand();
+                    tg.setHeaderColor('#000000');
+                    tg.setBackgroundColor('#000000');
+                    tg.enableClosingConfirmation();
+
+                    // Get user data
+                    if (tg.initDataUnsafe?.user) {
+                        user.value = tg.initDataUnsafe.user;
+                        console.log('✅ User loaded:', user.value);
+                    } else {
+                        console.warn('⚠️ No user data');
+                        user.value = {
+                            first_name: 'کاربر مهمان',
+                            id: 'Guest',
+                            photo_url: null
+                        };
+                    }
+
+                    // Update prices from URL
+                    const params = new URLSearchParams(window.location.search);
+                    products.value.forEach(p => {
+                        if (params.has(p.id)) {
+                            const newPrice = parseInt(params.get(p.id), 10);
+                            if (!isNaN(newPrice) && newPrice > 0) {
+                                p.price = newPrice;
+                            }
+                        }
+                    });
+
+                    // Init particles
+                    initParticles();
+
+                    // Remove loading
+                    setTimeout(() => {
+                        loading.value = false;
+                    }, 1000);
+                });
+
+                return {
+                    loading,
+                    processing,
+                    activeTab,
+                    selectedCategory,
+                    user,
+                    cart,
+                    modal,
+                    toast,
+                    products,
+                    categories,
+                    filteredProducts,
+                    cartTotal,
+                    formatPrice,
+                    handleAvatarError,
+                    changeTab,
+                    openModal,
+                    closeModal,
+                    addToCart,
+                    removeFromCart,
+                    buyDirect,
+                    checkout,
+                    getPrice
+                };
             }
-
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', init);
-            } else {
-                init();
-            }
-
-            window.addEventListener('beforeunload', () => {
-                if (cancelTimer) clearTimeout(cancelTimer);
-            });
-
-        })();
+        }).mount('#app');
     </script>
 
 </body>
